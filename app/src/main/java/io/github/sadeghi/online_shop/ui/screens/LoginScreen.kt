@@ -1,10 +1,9 @@
-package io.github.sadeghi.online_shop.ui.screens.loginscreen
+package io.github.sadeghi.online_shop.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -12,27 +11,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.BGShape
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.ConfirmCodeContent
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.EnterEmailContent
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoadingOverlay
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitInfoContent
 import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
+
 @Composable
-fun LoginScreens(
-    viewModel: LoginViewModel = hiltViewModel()
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val focusManager = LocalFocusManager.current
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
-        Box(modifier = Modifier.fillMaxSize().clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        ) {
-            focusManager.clearFocus()
-        }) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    focusManager.clearFocus()
+                }) {
             BGShape()
 
             when (viewModel.step) {
@@ -40,15 +49,25 @@ fun LoginScreens(
                     viewModel = viewModel,
                     focusManager = focusManager
                 )
+
                 LoginStep.CONFIRM_CODE -> ConfirmCodeContent(
                     viewModel = viewModel,
                     focusManager = focusManager
                 )
-                LoginStep.LOADING ->  LoadingOverlay( )
 
-                LoginStep.SUBMIT_INFO -> SubmitInfoContent()
+                LoginStep.SUBMIT_INFO -> SubmitInfoContent(
+                    viewModel, focusManager, onNavigateToHome = {
+                        navController.navigate(Screens.Home.route) {
+                            popUpTo(Screens.Login.route) { inclusive = true }
+                        }
+                    })
 
             }
+
         }
     }
+    if (viewModel.isLoading) {
+        LoadingOverlay()
+    }
 }
+

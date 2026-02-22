@@ -14,6 +14,7 @@ fun isNetworkAvailable(context: Context): Boolean {
         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> true
         else -> false
     }
 

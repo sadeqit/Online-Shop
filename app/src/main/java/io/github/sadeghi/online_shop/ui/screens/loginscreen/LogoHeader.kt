@@ -16,24 +16,26 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import io.github.sadeghi.online_shop.R
+import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 
 @Composable
 fun LogoHeader() {
+
     Image(
         painter = painterResource(R.drawable.sadegh),
         contentDescription = null,
-          contentScale = ContentScale.Fit,
+        contentScale = ContentScale.Fit,
         modifier = Modifier.size(150.dp)
     )
 
     Text(
         text = buildAnnotatedString {
             append("فروشگاه اینترنتی ") // متن معمولی
-            withStyle(style = SpanStyle(color = Color(0xFFEF472C))) { // متن قرمز
+            withStyle(style = SpanStyle(color = Color(0xFFEF472C))) {
                 append("آنلاین شاپ")
             }
         },
         style = MaterialTheme.typography.titleLarge
     )
-    Spacer(Modifier.height(100.dp))
+    SpacerHeight(100)
 }

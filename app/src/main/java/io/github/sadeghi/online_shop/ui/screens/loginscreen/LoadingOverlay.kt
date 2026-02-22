@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,42 +19,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 
-
 @Composable
-fun LoadingOverlay() {
+fun LoadingOverlay(
+    text: String = "لطفا صبر کنید",
+    showLoading: Boolean = true
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.3f)), // پس‌زمینه نیمه شفاف
+            .background(Color.Black.copy(alpha = 0.7f)),
         contentAlignment = Alignment.Center
     ) {
-        // کارت سفید کوچک وسط صفحه
         Box(
             modifier = Modifier
                 .wrapContentSize()
                 .background(
                     color = Color.White,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(16.dp)
                 )
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(horizontal = 32.dp, vertical = 24.dp),
             contentAlignment = Alignment.Center
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CircularProgressIndicator(
-                    color = Color(0xFFE02508), // رنگ اصلی برند یا سفید
-                    strokeWidth = 3.dp,
-                    modifier = Modifier.size(24.dp)
-                )
+
+
                 Text(
-                    text = "لطفا صبر کنید",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = text,
+                    style = MaterialTheme.typography.titleMedium,
                     color = Color.Black
                 )
+                if (showLoading) {
+                    CircularProgressIndicator(
+                        color = Color(0xFFE02508),
+                        strokeWidth = 4.dp,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
         }
     }
 }
-

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +34,8 @@ import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.BGShape
+import io.github.sadeghi.online_shop.ui.component.SpacerHeight
+import io.github.sadeghi.online_shop.ui.theme.greeny
 import io.github.sadeghi.online_shop.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
 
@@ -55,7 +56,7 @@ fun SplashScreen(
 
         showLogo.value = true
         showTypography.value = true
-        delay(1000) // می‌توانید کمی فاصله بین تایپو و بخش status بدهید
+        delay(1000)
         showStatus.value = true
     }
 
@@ -71,7 +72,7 @@ fun SplashScreen(
             AnimatedVisibility(
                 visible = showLogo.value,
                 enter = slideInVertically(
-                    initialOffsetY = { -it * 2 },   // خیلی خارج صفحه
+                    initialOffsetY = { -it },
                     animationSpec = tween(
                         durationMillis = 1000,
                         easing = FastOutSlowInEasing
@@ -80,8 +81,9 @@ fun SplashScreen(
                     animationSpec = tween(600)
                 )
             ) {
+
                 Image(
-                    painter = painterResource(R.drawable.logo),
+                    painter = painterResource(R.drawable.logo1),
                     contentDescription = "logo",
                     modifier = Modifier.size(150.dp)
                 )
@@ -90,7 +92,7 @@ fun SplashScreen(
             AnimatedVisibility(
                 visible = showTypography.value,
                 enter = slideInVertically(
-                    initialOffsetY = { it * 2 },
+                    initialOffsetY = { it },
                     animationSpec = tween(
                         durationMillis = 1000,
                         easing = FastOutSlowInEasing
@@ -100,7 +102,7 @@ fun SplashScreen(
                 )
             ) {
                 Image(
-                    painter = painterResource(R.drawable.typographi),
+                    painter = painterResource(R.drawable.typographi1),
                     contentDescription = "typography",
                     modifier = Modifier.size(150.dp)
                 )
@@ -110,7 +112,7 @@ fun SplashScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 100.dp),
+                .padding(bottom = 130.dp),
             contentAlignment = Alignment.BottomCenter,
         ) {
             if (showStatus.value) {
@@ -122,9 +124,10 @@ fun SplashScreen(
                             Text(
                                 text = "...درحال بررسی اینترنت",
                                 color = MaterialTheme.colorScheme.primary,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium
                             )
-                            Spacer(Modifier.height(20.dp))
+                            SpacerHeight(20)
                             CircularProgressIndicator()
 
                         }
@@ -133,9 +136,10 @@ fun SplashScreen(
                             Text(
                                 text = "!اینترنت شما متصل نیست",
                                 color = Color.Red,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium
                             )
-                            Spacer(Modifier.height(50.dp))
+                            SpacerHeight(50)
 
                             Button(onClick = { viewModel.checkInternet() })
                             {
@@ -148,14 +152,15 @@ fun SplashScreen(
                             Text(
                                 text = "اینترنت وصل است",
                                 textAlign = TextAlign.Center,
-                                color = Color.Blue,
+                                color = greeny,
+                                style = MaterialTheme.typography.titleMedium
 
                             )
 
                             LaunchedEffect(Unit) {
                                 delay(1000)
                                 navController.navigate(Screens.Login.route) {
-                                    popUpTo("splash") {
+                                    popUpTo(Screens.Splash.route) {
                                         inclusive = true
                                     }
                                 }

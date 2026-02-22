@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.loginscreen
+package io.github.sadeghi.online_shop.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val app: Application
+    private val application: Application
 ) : ViewModel() {
 
     private val _isConnected = MutableStateFlow<Boolean?>(null)
@@ -28,10 +28,9 @@ class SplashViewModel @Inject constructor(
         _isConnected.value=null
         viewModelScope.launch {
             delay(3000)
-            _isConnected.value = isNetworkAvailable(app)
+            _isConnected.value = isNetworkAvailable(application)
 
         }
     }
-
 
 }

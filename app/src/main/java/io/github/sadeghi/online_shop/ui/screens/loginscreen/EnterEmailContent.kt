@@ -68,7 +68,9 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
             Text(
                 text = message,
                 color = Color.Red,
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 textAlign = TextAlign.Right,
                 style = MaterialTheme.typography.titleSmall
             )

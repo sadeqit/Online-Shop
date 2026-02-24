@@ -1,10 +1,14 @@
 package io.github.sadeghi.online_shop.ui.screens.loginscreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,6 +61,11 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
             placeholder = "ایمیل خود را وارد کنید",
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Email,
+                    contentDescription = null
+                )},
             onImeAction = {
                 focusManager.clearFocus()
                 viewModel.onEmailSubmit()
@@ -85,6 +94,19 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
                 focusManager.clearFocus()
                 viewModel.onEmailSubmit()
             }
+        )
+        SpacerHeight(12)
+        Text(
+            text = "بازگشت",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 4.dp)
+                .clickable {
+                focusManager.clearFocus()
+                viewModel.backToSetup()
+            },
+            textAlign = TextAlign.Left,
+            style = MaterialTheme.typography.titleSmall
         )
     }
 }

@@ -43,13 +43,24 @@ class LoginViewModel @Inject constructor(
     var code by mutableStateOf("")
         private set
 
-    var step by mutableStateOf(LoginStep.ENTER_EMAIL)
+    var step by mutableStateOf(LoginStep.SETUP)
         private set
 
     var timer by mutableIntStateOf(30)
         private set
 
     private var timerJob: Job? = null
+
+    fun goToRegister() {
+        step = LoginStep.ENTER_EMAIL
+    }
+
+    fun goToSignIn() {
+        step = LoginStep.SIGN_IN
+    }
+    fun backToSetup() {
+        step = LoginStep.SETUP
+    }
 
     fun onEmailSubmit() {
         when {
@@ -218,5 +229,25 @@ class LoginViewModel @Inject constructor(
         // فعلاً خالی — فقط برای آینده
         // viewModelScope.launch { userPreferences.saveFullName(fullName) }
     }*/
+    var password by mutableStateOf("")
+        private set
 
+    fun onPasswordChange(value: String) {
+        password = value
+    }
+
+    fun signIn(onSuccess: () -> Unit) {
+        if (email.isBlank() || password.isBlank()) {
+            errorMessage = "ایمیل و رمز عبور را وارد کنید"
+            return
+        }
+
+        isLoading = true
+
+        viewModelScope.launch {
+            delay(1200)
+            isLoading = false
+            onSuccess()
+        }
+    }
 }

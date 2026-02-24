@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -23,6 +24,8 @@ fun AppTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
     trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onImeAction: () -> Unit = {}
 ) {
     TextField(
@@ -39,6 +42,8 @@ fun AppTextField(
             onNext = { onImeAction() }
         ),
         trailingIcon = trailingIcon,
+        leadingIcon = leadingIcon,
+        visualTransformation = visualTransformation,
         shape = RoundedCornerShape(12.dp),
         modifier = modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(

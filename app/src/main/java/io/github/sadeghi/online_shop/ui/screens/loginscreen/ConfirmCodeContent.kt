@@ -35,102 +35,109 @@ fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 120.dp),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
+    ) {
         LogoHeader()
 
-        Text(
-            text = "کد تائید:",
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.titleLarge
-        )
-        Text(
-            text = "کد ارسال شده به ایمیل ${viewModel.email} را وارد کنید",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Right,
-            color = text,
-            style = MaterialTheme.typography.bodyMedium
-        )
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 120.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
 
-        SpacerHeight(12)
-
-        AppTextField(
-            value = viewModel.code,
-            onValueChange = viewModel::onCodeChange,
-            placeholder = "کد تایید را وارد کنید",
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done,
-            trailingIcon = {
-                Text(
-                    text = timeText,
-                    color = if (viewModel.timer == 0) Color.Red else Color.Gray
-                )
-            },
-            onImeAction = {
-                focusManager.clearFocus()
-                viewModel.verifyCode()
-            }
-        )
-        SpacerHeight(12)
-
-        if (viewModel.errorMessage != null) {
             Text(
-                text = viewModel.errorMessage!!,
+                text = "کد تائید:",
                 modifier = Modifier
                     .fillMaxWidth()
-                    ,
+                    .padding(bottom = 8.dp),
                 textAlign = TextAlign.Right,
-                color = Color.Red,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleLarge
             )
-        }
-
-        SpacerHeight(12)
-        GradientButton(
-            text = "تایید کد و ادامه",
-            enabled = viewModel.code.isNotBlank() && !viewModel.isLoading,
-            onClick = {
-                focusManager.clearFocus()
-                viewModel.verifyCode()
-            }
-        )
-
-        SpacerHeight(12)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Text(
-                text = "ویرایش ایمیل",
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .clickable {
-                        focusManager.clearFocus()
-                        viewModel.editEmail()
-                    },
-                style = MaterialTheme.typography.titleSmall
+                text = "کد ارسال شده به ایمیل ${viewModel.email} را وارد کنید",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Right,
+                color = text,
+                style = MaterialTheme.typography.bodyMedium
             )
 
-            Text(
-                text = "ارسال مجدد کد",
-                color = if (viewModel.timer == 0) Color.Black else Color.Gray,
-                modifier = Modifier.clickable(
-                    enabled = viewModel.timer == 0
-                ) {
-                    viewModel.resendCode()
+
+            SpacerHeight(12)
+
+            AppTextField(
+                value = viewModel.code,
+                onValueChange = viewModel::onCodeChange,
+                placeholder = "کد تایید را وارد کنید",
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+                trailingIcon = {
+                    Text(
+                        text = timeText,
+                        color = if (viewModel.timer == 0) Color.Red else Color.Gray
+                    )
                 },
-                style = MaterialTheme.typography.titleSmall
+                onImeAction = {
+                    focusManager.clearFocus()
+                    viewModel.verifyCode()
+                }
             )
+            SpacerHeight(12)
+
+            if (viewModel.errorMessage != null) {
+                Text(
+                    text = viewModel.errorMessage!!,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Right,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+
+            SpacerHeight(12)
+            GradientButton(
+                text = "تایید کد و ادامه",
+                enabled = viewModel.code.isNotBlank() && !viewModel.isLoading,
+                onClick = {
+                    focusManager.clearFocus()
+                    viewModel.verifyCode()
+                }
+            )
+
+            SpacerHeight(12)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "ویرایش ایمیل",
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .clickable {
+                            focusManager.clearFocus()
+                            viewModel.editEmail()
+                        },
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                Text(
+                    text = "ارسال مجدد کد",
+                    color = if (viewModel.timer == 0) Color.Black else Color.Gray,
+                    modifier = Modifier.clickable(
+                        enabled = viewModel.timer == 0
+                    ) {
+                        viewModel.resendCode()
+                    },
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+
+
         }
-
-
     }
 }

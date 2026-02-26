@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,78 +32,89 @@ fun SubmitInfoContent(
     onNavigateToHome: () -> Unit
 
 ) {
+
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 120.dp),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
         LogoHeader()
-
-        Text(
-            text = "اطلاعات کاربری:",
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.titleLarge
-        )
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 120.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
 
-        SpacerHeight(12)
-
-        AppTextField(
-            value = viewModel.fullName,
-            onValueChange = viewModel::onFullNameChange,
-            placeholder = "نام و نام خانوادگی خود را وارد کنید",
-            imeAction = ImeAction.Done,
-            onImeAction = {
-                focusManager.clearFocus()
-            }
-        )
-
-        viewModel.errorMessage?.let { message ->
             Text(
-                text = message,
-                color = Color.Red,
+                text = "اطلاعات کاربری:",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(bottom = 8.dp),
                 textAlign = TextAlign.Right,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleLarge
             )
-        }
-        SpacerHeight(20)
 
-        GradientButton(
-            text = "ثبت اطلاعات",
-            enabled = viewModel.fullName.isNotBlank() && !viewModel.isLoading && viewModel.isInternetAvailable,
-            onClick = {
-                focusManager.clearFocus()
-                viewModel.submitFullName {
 
-                    onNavigateToHome()
-                }
-            }
-        )
+            SpacerHeight(12)
 
-        SpacerHeight(20)
-
-        Text(
-            text = "عبور از این مرحله",
-            modifier = Modifier
-                .clickable {
+            AppTextField(
+                value = viewModel.fullName,
+                onValueChange = viewModel::onFullNameChange,
+                placeholder = "نام و نام خانوادگی خود را وارد کنید",
+                imeAction = ImeAction.Done,
+                onImeAction = {
                     focusManager.clearFocus()
-                    viewModel.onSubmitInfo()
+                },
+                trailingIcon = {
+                    Icon(Icons.Default.Person,
+                        contentDescription = null)
+                }
+            )
 
-                    // viewModel.saveFullNameAndProceed()
+            viewModel.errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Right,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+            SpacerHeight(20)
 
-                    onNavigateToHome()
-                }.align(Alignment.Start),
-            style = MaterialTheme.typography.titleMedium
-        )
+            GradientButton(
+                text = "ثبت اطلاعات",
+                enabled = viewModel.fullName.isNotBlank() && !viewModel.isLoading && viewModel.isInternetAvailable,
+                onClick = {
+                    focusManager.clearFocus()
+                    viewModel.submitFullName {
+                        onNavigateToHome()
+                    }
+                }
+            )
+
+            SpacerHeight(20)
+
+            Text(
+                text = "عبور از این مرحله",
+                modifier = Modifier
+                    .clickable {
+                        focusManager.clearFocus()
+                        viewModel.onSubmitInfo()
+
+                        onNavigateToHome()
+                    }
+                    .align(Alignment.Start),
+                style = MaterialTheme.typography.titleMedium
+            )
+
+        }
 
     }
-
 }

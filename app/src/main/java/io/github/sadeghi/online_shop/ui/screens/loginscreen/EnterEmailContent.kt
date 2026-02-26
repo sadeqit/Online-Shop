@@ -31,82 +31,92 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 110.dp),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
+    ) {
         LogoHeader()
 
-        Text(
-            text = "جهت ورود به فروشگاه اینترنتی آنلاین شاپ ایمیل خود را در کادر زیر وارد کرده و کد ارسالی به ایمیل خود را در مرحله بعد وارد کنید.",
-            color = text,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 110.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        SpacerHeight(50)
-        Text(
-            text = "ایمیل:",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.titleLarge
-        )
 
-        SpacerHeight(12)
+            Text(
+                text = "جهت ورود به فروشگاه اینترنتی آنلاین شاپ ایمیل خود را در کادر زیر وارد کرده و کد ارسالی به ایمیل خود را در مرحله بعد وارد کنید.",
+                color = text,
+                style = MaterialTheme.typography.bodyMedium
+            )
 
-        AppTextField(
-            value = viewModel.email,
-            onValueChange = viewModel::onEmailChange,
-            placeholder = "ایمیل خود را وارد کنید",
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Done,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Email,
-                    contentDescription = null
-                )},
-            onImeAction = {
-                focusManager.clearFocus()
-                viewModel.onEmailSubmit()
+            SpacerHeight(50)
+            Text(
+                text = "ایمیل:",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Right,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            SpacerHeight(12)
+
+            AppTextField(
+                value = viewModel.email,
+                onValueChange = viewModel::onEmailChange,
+                placeholder = "ایمیل خود را وارد کنید",
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Done,
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Email,
+                        contentDescription = null
+                    )
+                },
+                onImeAction = {
+                    focusManager.clearFocus()
+                    viewModel.onEmailSubmit()
+                }
+
+            )
+
+            viewModel.errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    textAlign = TextAlign.Right,
+                    style = MaterialTheme.typography.titleSmall
+                )
             }
 
-        )
+            SpacerHeight(24)
 
-        viewModel.errorMessage?.let { message ->
+            GradientButton(
+                text = "تایید و ادامه",
+                enabled = viewModel.email.contains("@")
+                        && viewModel.email.isNotBlank()
+                        && !viewModel.isLoading && viewModel.isInternetAvailable,
+                onClick = {
+                    focusManager.clearFocus()
+                    viewModel.onEmailSubmit()
+                }
+            )
+            SpacerHeight(12)
             Text(
-                text = message,
-                color = Color.Red,
+                text = "بازگشت",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                textAlign = TextAlign.Right,
+                    .padding(start = 4.dp)
+                    .clickable {
+                        focusManager.clearFocus()
+                        viewModel.backToSetup()
+                    }
+                    .align(Alignment.End),
                 style = MaterialTheme.typography.titleSmall
             )
         }
-
-        SpacerHeight(24)
-
-        GradientButton(
-            text = "تایید و ادامه",
-            enabled = viewModel.email.isNotBlank() && !viewModel.isLoading && viewModel.isInternetAvailable,
-            onClick = {
-                focusManager.clearFocus()
-                viewModel.onEmailSubmit()
-            }
-        )
-        SpacerHeight(12)
-        Text(
-            text = "بازگشت",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp)
-                .clickable {
-                focusManager.clearFocus()
-                viewModel.backToSetup()
-            },
-            textAlign = TextAlign.Left,
-            style = MaterialTheme.typography.titleSmall
-        )
     }
 }

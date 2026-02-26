@@ -25,44 +25,52 @@ fun SetupContent(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 110.dp),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
+    ) {
         LogoHeader()
 
-        Text(
-            text = "به آنلاین شاپ خوش آمدید!",
-            color = Color.Black,
-            style = MaterialTheme.typography.titleLarge
-        )
-
-
-        SpacerHeight(100)
-
-        Text(
-            text = "در صورت دارا بودن حساب کاربری، وارد شوید؛\nدر غیر این صورت ثبت نام نمایید.",
-            color = Color.Black,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 16.dp),
-            textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        SpacerHeight(40)
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 110.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        GradientButton(
-            text = "ورود",
-            onClick = onSignInClick
-        )
-        SpacerHeight(20)
 
-        GradientButton(
-            text = "ثبت نام",
-            onClick = onRegisterClick
-        )
+            Text(
+                text = "به آنلاین شاپ خوش آمدید!",
+                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+
+            SpacerHeight(100)
+
+            Text(
+                text = "در صورت دارا بودن حساب کاربری، وارد شوید؛\nدر غیر این صورت ثبت نام نمایید.",
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 16.dp),
+                textAlign = TextAlign.Right,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            SpacerHeight(40)
+
+            GradientButton(
+                text = "ورود",
+                onClick = onSignInClick
+            )
+            SpacerHeight(20)
+
+            GradientButton(
+                text = "ثبت نام",
+                onClick = onRegisterClick
+            )
+        }
+
     }
-
 }

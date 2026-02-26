@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
+import io.github.sadeghi.online_shop.ui.ui_utils.PasswordStrength
+import io.github.sadeghi.online_shop.ui.ui_utils.calculatePasswordStrength
 import io.github.sadeghi.online_shop.utils.isNetworkAvailable
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -138,13 +140,14 @@ class LoginViewModel @Inject constructor(
             isLoading = false
 
             if (code == "1234") {
-                step = LoginStep.SUBMIT_INFO
+                step = LoginStep.SET_PASSWORD
             } else {
                 errorMessage = "کد وارد شده اشتباه است"
 
             }
         }
     }
+
 
     fun resendCode() {
         if (timer > 0) return
@@ -232,9 +235,6 @@ class LoginViewModel @Inject constructor(
     var password by mutableStateOf("")
         private set
 
-    fun onPasswordChange(value: String) {
-        password = value
-    }
 
     fun signIn(onSuccess: () -> Unit) {
         if (email.isBlank() || password.isBlank()) {
@@ -250,4 +250,55 @@ class LoginViewModel @Inject constructor(
             onSuccess()
         }
     }
+    var confirmPassword by mutableStateOf("")
+        private set
+
+    var passwordError by mutableStateOf<String?>(null)
+
+
+    fun submitPassword() {
+        validatePassword()
+
+        if (passwordError != null) return
+
+        isLoading = true
+
+        viewModelScope.launch {
+            // شبیه‌سازی API
+            delay(1200)
+
+            isLoading = false
+            step = LoginStep.SUBMIT_INFO
+        }
+    }
+
+    var passwordStrength by mutableStateOf(PasswordStrength.NONE)
+        private set
+
+
+
+    private fun validatePassword() {
+        passwordError = when {
+            password.isNotEmpty() &&
+                    confirmPassword.isNotEmpty() &&
+                    password != confirmPassword ->
+                "رمز عبور و تکرار آن یکسان نیست"
+
+            else -> null
+        }
+    }
+
+
+    fun onPasswordChange(value: String) {
+        password = value
+        passwordStrength = calculatePasswordStrength(value)
+        validatePassword()
+    }
+
+    fun onConfirmPasswordChange(value: String) {
+        confirmPassword = value
+        passwordStrength = calculatePasswordStrength(value)
+        validatePassword()
+    }
+
 }

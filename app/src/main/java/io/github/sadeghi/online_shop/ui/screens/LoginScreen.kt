@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -23,6 +22,7 @@ import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetupContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SignInContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitInfoContent
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitPassword
 import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 
@@ -45,6 +45,7 @@ fun LoginScreen(
                 ) {
                     focusManager.clearFocus()
                 }) {
+
             BGShape()
 
             when (viewModel.step) {
@@ -53,6 +54,7 @@ fun LoginScreen(
                     onRegisterClick = { viewModel.goToRegister() },
                     onSignInClick = { viewModel.goToSignIn() }
                 )
+
                 LoginStep.SIGN_IN -> SignInContent(
                     email = viewModel.email,
                     password = viewModel.password,
@@ -64,7 +66,8 @@ fun LoginScreen(
                                 popUpTo(Screens.Login.route) { inclusive = true }
                             }
                         }
-                    }
+                    },
+                    focusManager = focusManager
                 )
 
 
@@ -78,6 +81,18 @@ fun LoginScreen(
                     focusManager = focusManager
                 )
 
+
+                LoginStep.SET_PASSWORD -> SubmitPassword(
+                    password = viewModel.password,
+                    confirmPassword = viewModel.confirmPassword,
+                    onPasswordChange = viewModel::onPasswordChange,
+                    onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
+                    passwordError = viewModel.passwordError,
+                    onSubmitClick = viewModel::submitPassword,
+                    passwordStrength = viewModel.passwordStrength,
+                    focusManager = focusManager
+                )
+
                 LoginStep.SUBMIT_INFO -> SubmitInfoContent(
                     viewModel, focusManager, onNavigateToHome = {
                         navController.navigate(Screens.Home.route) {
@@ -87,10 +102,12 @@ fun LoginScreen(
 
             }
 
+            if (viewModel.isLoading) {
+                LoadingOverlay()
+            }
+
         }
     }
-    if (viewModel.isLoading) {
-        LoadingOverlay()
-    }
+
 }
 

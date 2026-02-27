@@ -5,10 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 class AuthRepository(
     private val userPreferences: UserPreferences
-) {
+) : IAuthRepository {
 
-    // فیک: بررسی OTP
-    suspend fun verifyOtp(email: String, otp: String): Boolean {
+    override suspend fun verifyOtp(email: String, otp: String): Boolean {
         return if (otp == "123456") {
             userPreferences.saveLogin(email)
             true
@@ -17,11 +16,11 @@ class AuthRepository(
         }
     }
 
-    fun isUserLoggedIn(): Flow<Boolean> {
+    override fun isUserLoggedIn(): Flow<Boolean> {
         return userPreferences.isLoggedIn
     }
 
-    suspend fun logout() {
+    override suspend fun logout() {
         userPreferences.clearLogin()
     }
 }

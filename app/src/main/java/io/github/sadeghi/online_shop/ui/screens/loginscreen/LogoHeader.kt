@@ -28,7 +28,7 @@ fun LogoHeader() {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(R.drawable.sadegh),
+            painter = painterResource(R.drawable.logo),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier.size(150.dp)

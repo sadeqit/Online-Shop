@@ -6,9 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,6 +41,7 @@ import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.BGShape
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.theme.greeny
+import io.github.sadeghi.online_shop.ui.ui_utils.SplashState
 import io.github.sadeghi.online_shop.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
 
@@ -53,16 +52,24 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
 
-    val isConnected by viewModel.isConnected.collectAsState()
+    val splashState by viewModel.splashState.collectAsState()
 
-    LaunchedEffect(isConnected) {
-        if (isConnected == true) {
-            delay(1500)
-            navController.navigate(Screens.Login.route) {
-                popUpTo(Screens.Splash.route) {
-                    inclusive = true
+
+    LaunchedEffect(splashState) {
+        when (splashState) {
+            SplashState.NavigateToHome -> {
+                navController.navigate(Screens.Home.route) {
+                    popUpTo(Screens.Splash.route) { inclusive = true }
                 }
             }
+
+            SplashState.NavigateToAuth -> {
+                navController.navigate(Screens.Login.route) {
+                    popUpTo(Screens.Splash.route) { inclusive = true }
+                }
+            }
+
+            else -> Unit
         }
     }
 
@@ -109,7 +116,7 @@ fun SplashScreen(
         {
             // 🔵 عکس
             Image(
-                painter = painterResource(R.drawable.sadegh),
+                painter = painterResource(R.drawable.logo),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -151,10 +158,10 @@ fun SplashScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    when (isConnected) {
 
-                        null -> {
+                    when (splashState) {
 
+                        SplashState.Loading -> {
                             Text(
                                 text = "...درحال بررسی اینترنت",
                                 color = MaterialTheme.colorScheme.primary,
@@ -164,11 +171,9 @@ fun SplashScreen(
                             SpacerHeight(20)
 
                             CircularProgressIndicator()
-
                         }
 
-                        false -> {
-
+                        SplashState.NoInternet -> {
                             Text(
                                 text = "!اینترنت شما متصل نیست",
                                 color = Color.Red,
@@ -176,14 +181,12 @@ fun SplashScreen(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             SpacerHeight(30)
-
-                            Button(onClick = { viewModel.checkInternet() })
-                            {
+                            Button(onClick = { viewModel.retry() }) {
                                 Text("تلاش مجدد")
                             }
                         }
 
-                        else -> {
+                        SplashState.InternetConnected -> {
                             Text(
                                 text = "اینترنت وصل است",
                                 textAlign = TextAlign.Center,
@@ -191,10 +194,11 @@ fun SplashScreen(
                                 style = MaterialTheme.typography.titleMedium
 
                             )
-
                         }
 
+                        else -> Unit
                     }
+
 
                 }
             }

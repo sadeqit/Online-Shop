@@ -3,6 +3,7 @@
 # ======================
 .gradle/
 build/
+**/build/
 
 # ======================
 # Local config
@@ -31,6 +32,7 @@ output-metadata.json
 # ======================
 *.apk
 *.aab
+*.ap_
 
 # ======================
 # Logs
@@ -48,6 +50,7 @@ Thumbs.db
 # ======================
 *.jks
 *.keystore
+*.pem
 
 # ======================
 # Supabase / Secrets
@@ -57,13 +60,26 @@ supabase/
 .env
 .env.*
 secrets.properties
-
-# ======================
-# Profiling
-# ======================
-*.hprof
+apikey.properties
+keys.properties
 
 # ======================
 # Kotlin
 # ======================
 .kotlin/
+
+# ======================
+# Hilt / KSP / KAPT
+# ======================
+kapt/
+ksp/
+
+# ======================
+# Crash / Profiling
+# ======================
+*.hprof
+
+# ======================
+# macOS/Linux temp
+# ======================
+*.swp

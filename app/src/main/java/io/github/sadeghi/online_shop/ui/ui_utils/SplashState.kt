@@ -11,4 +11,7 @@ sealed class SplashState {
     data object NavigateToHome : SplashState()
 
     data object NavigateToAuth : SplashState()
+
+    data object NavigateToSetPassword : SplashState()
+    data object NavigateToSubmitInfo : SplashState()
 }

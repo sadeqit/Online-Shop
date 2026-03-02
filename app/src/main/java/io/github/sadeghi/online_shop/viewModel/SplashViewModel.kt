@@ -25,8 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    /*private val application: Application,
-    private val authRepository: AuthRepository*/
+
     private val context: Application,
     private val authRepository: IAuthRepository
 ) : ViewModel() {
@@ -59,6 +58,7 @@ class SplashViewModel @Inject constructor(
 
             val isLoggedIn = authRepository.isUserLoggedIn().first()
 
+
             _splashState.value =
                 if (isLoggedIn)
                     SplashState.NavigateToHome
@@ -66,62 +66,11 @@ class SplashViewModel @Inject constructor(
                     SplashState.NavigateToAuth
         }
     }
-    /*private fun checkAppState() {
-
-        splashJob?.cancel()
-
-        viewModelScope.launch {
-
-            delay(5000) // مدت زمان انیمیشن اسپلش
-
-            if (!isNetworkAvailable(context)) {
-                _splashState.value = SplashState.NoInternet
-                return@launch
-            }
-
-            _splashState.value = SplashState.InternetConnected
-
-            delay(1200) // زمان نمایش متن سبز
-
-            val isLoggedIn = authRepository.isUserLoggedIn().first()
-
-            _splashState.value =
-                if (isLoggedIn)
-                    SplashState.NavigateToHome
-                else
-                    SplashState.NavigateToAuth
-        }
-    }*/
 
     fun retry() {
         _splashState.value = SplashState.Loading
         checkAppState()
     }
 
-
-    /*
-        var isLoggedIn by mutableStateOf<Boolean?>(null)
-            private set
-
-        private val _isConnected = MutableStateFlow<Boolean?>(null)
-        val isConnected : StateFlow<Boolean?> = _isConnected
-
-        init {
-            checkInternet()
-            viewModelScope.launch {
-                authRepository.isUserLoggedIn().collect {
-                    isLoggedIn = it
-                }
-            }
-
-        }
-        fun checkInternet(){
-            _isConnected.value=null
-            viewModelScope.launch {
-                delay(3000)
-                _isConnected.value = isNetworkAvailable(application)
-
-            }
-        }*/
 
 }

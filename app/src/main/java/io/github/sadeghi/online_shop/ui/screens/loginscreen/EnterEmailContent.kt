@@ -24,10 +24,19 @@ import io.github.sadeghi.online_shop.ui.component.AppTextField
 import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.theme.text
-import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 @Composable
-fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
+fun EnterEmailContent(
+
+    email: String,
+    errorMessage: String?,
+    isLoading: Boolean,
+    isInternetAvailable: Boolean,
+    onEmailChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onBack: () -> Unit,
+    focusManager: FocusManager
+) {
 
     Column(
         modifier = Modifier
@@ -63,8 +72,8 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
             SpacerHeight(12)
 
             AppTextField(
-                value = viewModel.email,
-                onValueChange = viewModel::onEmailChange,
+                value = email,
+                onValueChange = onEmailChange,
                 placeholder = "ایمیل خود را وارد کنید",
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
@@ -76,12 +85,12 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
                 },
                 onImeAction = {
                     focusManager.clearFocus()
-                    viewModel.onEmailSubmit()
+                    onSubmit()
                 }
 
             )
 
-            viewModel.errorMessage?.let { message ->
+            errorMessage?.let { message ->
                 Text(
                     text = message,
                     color = Color.Red,
@@ -97,12 +106,13 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
 
             GradientButton(
                 text = "تایید و ادامه",
-                enabled = viewModel.email.contains("@")
-                        && viewModel.email.isNotBlank()
-                        && !viewModel.isLoading && viewModel.isInternetAvailable,
+                enabled = email.contains("@")
+                        && email.isNotBlank()
+                        && !isLoading &&
+                        isInternetAvailable,
                 onClick = {
                     focusManager.clearFocus()
-                    viewModel.onEmailSubmit()
+                    onSubmit()
                 }
             )
             SpacerHeight(12)
@@ -112,7 +122,7 @@ fun EnterEmailContent(viewModel: LoginViewModel, focusManager: FocusManager) {
                     .padding(start = 4.dp)
                     .clickable {
                         focusManager.clearFocus()
-                        viewModel.backToSetup()
+                        onBack()
                     }
                     .align(Alignment.End),
                 style = MaterialTheme.typography.titleSmall

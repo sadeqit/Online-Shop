@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
 import io.github.sadeghi.online_shop.ui.ui_utils.PasswordStrength
 import io.github.sadeghi.online_shop.ui.ui_utils.calculatePasswordStrength
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val application: Application
+    private val application: Application,
+    private val repository: AuthRepository
 
 ) : ViewModel() {
 
@@ -41,7 +43,6 @@ class LoginViewModel @Inject constructor(
     )
 
 
-
     var code by mutableStateOf("")
         private set
 
@@ -60,6 +61,7 @@ class LoginViewModel @Inject constructor(
     fun goToSignIn() {
         step = LoginStep.SIGN_IN
     }
+
     fun backToSetup() {
         step = LoginStep.SETUP
     }
@@ -84,6 +86,7 @@ class LoginViewModel @Inject constructor(
     fun isEmailValid(): Boolean {
         return emailRegex.matches(email)
     }
+
     fun sendEmail() {
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
@@ -103,7 +106,6 @@ class LoginViewModel @Inject constructor(
     fun hasInternet(): Boolean {
         return isNetworkAvailable(application)
     }
-
 
 
     fun onEmailChange(value: String) {
@@ -135,16 +137,18 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
+            val success = repository.verifyOtp(email, code)
             delay(1200) // شبیه‌سازی API
 
             isLoading = false
 
-            if (code == "1234") {
+            if (success) {
                 step = LoginStep.SET_PASSWORD
             } else {
                 errorMessage = "کد وارد شده اشتباه است"
-
             }
+
+
         }
     }
 
@@ -221,17 +225,15 @@ class LoginViewModel @Inject constructor(
 
             delay(1200)
 
+            repository.saveLogin(email)
+
             isLoading = false
 
             onSuccess()
         }
     }
 
-    // بعداً وقتی API یا DataStore اضافه کردی، این تابع رو پر کن:
-    /*fun saveFullNameAndProceed() {
-        // فعلاً خالی — فقط برای آینده
-        // viewModelScope.launch { userPreferences.saveFullName(fullName) }
-    }*/
+
     var password by mutableStateOf("")
         private set
 
@@ -250,6 +252,7 @@ class LoginViewModel @Inject constructor(
             onSuccess()
         }
     }
+
     var confirmPassword by mutableStateOf("")
         private set
 
@@ -274,7 +277,6 @@ class LoginViewModel @Inject constructor(
 
     var passwordStrength by mutableStateOf(PasswordStrength.NONE)
         private set
-
 
 
     private fun validatePassword() {

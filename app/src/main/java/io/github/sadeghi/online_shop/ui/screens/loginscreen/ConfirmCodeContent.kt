@@ -27,10 +27,21 @@ import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
+fun ConfirmCodeContent(
+    email: String,
+    code: String,
+    timer: Int,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onCodeChange: (String) -> Unit,
+    onVerifyCode: () -> Unit,
+    onEditEmail: () -> Unit,
+    onResendCode: () -> Unit,
+    focusManager: FocusManager
+) {
 
-    val minutes = viewModel.timer / 60
-    val seconds = viewModel.timer % 60
+    val minutes = timer / 60
+    val seconds = timer % 60
     val timeText = String.format("%02d:%02d", minutes, seconds)
 
     Column(
@@ -59,7 +70,7 @@ fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
-                text = "کد ارسال شده به ایمیل ${viewModel.email} را وارد کنید",
+                text = " کد ارسال شده به ایمیل $email را وارد کنید ",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Right,
                 color = text,
@@ -70,29 +81,28 @@ fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
             SpacerHeight(12)
 
             AppTextField(
-                value = viewModel.code,
-                onValueChange = viewModel::onCodeChange,
+                value = code,
+                onValueChange = onCodeChange,
                 placeholder = "کد تایید را وارد کنید",
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done,
                 trailingIcon = {
                     Text(
                         text = timeText,
-                        color = if (viewModel.timer == 0) Color.Red else Color.Gray
+                        color = if (timer == 0) Color.Red else Color.Gray
                     )
                 },
                 onImeAction = {
                     focusManager.clearFocus()
-                    viewModel.verifyCode()
+                    onVerifyCode()
                 }
             )
             SpacerHeight(12)
 
-            if (viewModel.errorMessage != null) {
+            errorMessage?.let {
                 Text(
-                    text = viewModel.errorMessage!!,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Right,
                     color = Color.Red,
                     style = MaterialTheme.typography.titleSmall
@@ -100,12 +110,13 @@ fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
             }
 
             SpacerHeight(12)
+
             GradientButton(
                 text = "تایید کد و ادامه",
-                enabled = viewModel.code.isNotBlank() && !viewModel.isLoading,
+                enabled = code.isNotBlank() && !isLoading,
                 onClick = {
                     focusManager.clearFocus()
-                    viewModel.verifyCode()
+                    onVerifyCode()
                 }
             )
 
@@ -120,18 +131,18 @@ fun ConfirmCodeContent(viewModel: LoginViewModel, focusManager: FocusManager) {
                         .padding(top = 4.dp)
                         .clickable {
                             focusManager.clearFocus()
-                            viewModel.editEmail()
+                            onEditEmail()
                         },
                     style = MaterialTheme.typography.titleSmall
                 )
 
                 Text(
                     text = "ارسال مجدد کد",
-                    color = if (viewModel.timer == 0) Color.Black else Color.Gray,
+                    color = if (timer == 0) Color.Black else Color.Gray,
                     modifier = Modifier.clickable(
-                        enabled = viewModel.timer == 0
+                        enabled = timer == 0
                     ) {
-                        viewModel.resendCode()
+                        onResendCode()
                     },
                     style = MaterialTheme.typography.titleSmall
                 )

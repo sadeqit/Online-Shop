@@ -16,7 +16,9 @@ import androidx.compose.ui.unit.dp
 import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 
-
+/*
+* صفحه اول ورود
+* */
 @Composable
 fun SetupContent(
     onRegisterClick: () -> Unit,

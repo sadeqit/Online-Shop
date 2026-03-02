@@ -30,7 +30,8 @@ import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavController
-) {
+)
+{
     val focusManager = LocalFocusManager.current
 
     CompositionLocalProvider(
@@ -47,6 +48,11 @@ fun LoginScreen(
                 }) {
 
             BGShape()
+            val navigateToHome: () -> Unit = {
+                navController.navigate(Screens.Home.route) {
+                    popUpTo(Screens.Login.route) { inclusive = true }
+                }
+            }
 
             when (viewModel.step) {
 
@@ -72,12 +78,26 @@ fun LoginScreen(
 
 
                 LoginStep.ENTER_EMAIL -> EnterEmailContent(
-                    viewModel = viewModel,
+                    email = viewModel.email,
+                    errorMessage = viewModel.errorMessage,
+                    isLoading = viewModel.isLoading,
+                    isInternetAvailable = viewModel.isInternetAvailable,
+                    onEmailChange = viewModel::onEmailChange,
+                    onSubmit = viewModel::onEmailSubmit,
+                    onBack = viewModel::backToSetup,
                     focusManager = focusManager
                 )
 
                 LoginStep.CONFIRM_CODE -> ConfirmCodeContent(
-                    viewModel = viewModel,
+                    email = viewModel.email,
+                    code = viewModel.code,
+                    timer = viewModel.timer,
+                    isLoading = viewModel.isLoading,
+                    errorMessage = viewModel.errorMessage,
+                    onCodeChange = viewModel::onCodeChange,
+                    onVerifyCode = viewModel::verifyCode,
+                    onEditEmail = viewModel::editEmail,
+                    onResendCode = viewModel::resendCode,
                     focusManager = focusManager
                 )
 
@@ -94,12 +114,22 @@ fun LoginScreen(
                 )
 
                 LoginStep.SUBMIT_INFO -> SubmitInfoContent(
-                    viewModel, focusManager, onNavigateToHome = {
-                        navController.navigate(Screens.Home.route) {
-                            popUpTo(Screens.Login.route) { inclusive = true }
+                    fullName = viewModel.fullName,
+                    errorMessage = viewModel.errorMessage,
+                    isLoading = viewModel.isLoading,
+                    isInternetAvailable = viewModel.isInternetAvailable,
+                    onFullNameChange = viewModel::onFullNameChange,
+                    onSubmit = {
+                        viewModel.submitFullName {
+                            navigateToHome()
                         }
-                    })
-
+                    },
+                    onSkip = {
+                        viewModel.onSubmitInfo()
+                        navigateToHome()
+                    },
+                    focusManager = focusManager
+                )
             }
 
             if (viewModel.isLoading) {

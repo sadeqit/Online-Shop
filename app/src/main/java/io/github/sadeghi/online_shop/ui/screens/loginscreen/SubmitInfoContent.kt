@@ -27,9 +27,14 @@ import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 @Composable
 fun SubmitInfoContent(
-    viewModel: LoginViewModel,
-    focusManager: FocusManager,
-    onNavigateToHome: () -> Unit
+    fullName: String,
+    errorMessage: String?,
+    isLoading: Boolean,
+    isInternetAvailable: Boolean,
+    onFullNameChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onSkip: () -> Unit,
+    focusManager: FocusManager
 
 ) {
 
@@ -62,8 +67,8 @@ fun SubmitInfoContent(
             SpacerHeight(12)
 
             AppTextField(
-                value = viewModel.fullName,
-                onValueChange = viewModel::onFullNameChange,
+                value = fullName,
+                onValueChange = onFullNameChange,
                 placeholder = "نام و نام خانوادگی خود را وارد کنید",
                 imeAction = ImeAction.Done,
                 onImeAction = {
@@ -75,7 +80,7 @@ fun SubmitInfoContent(
                 }
             )
 
-            viewModel.errorMessage?.let { message ->
+            errorMessage?.let { message ->
                 Text(
                     text = message,
                     color = Color.Red,
@@ -90,12 +95,10 @@ fun SubmitInfoContent(
 
             GradientButton(
                 text = "ثبت اطلاعات",
-                enabled = viewModel.fullName.isNotBlank() && !viewModel.isLoading && viewModel.isInternetAvailable,
+                enabled = fullName.isNotBlank() && !isLoading && isInternetAvailable,
                 onClick = {
                     focusManager.clearFocus()
-                    viewModel.submitFullName {
-                        onNavigateToHome()
-                    }
+                    onSubmit()
                 }
             )
 
@@ -106,9 +109,7 @@ fun SubmitInfoContent(
                 modifier = Modifier
                     .clickable {
                         focusManager.clearFocus()
-                        viewModel.onSubmitInfo()
-
-                        onNavigateToHome()
+                        onSkip()
                     }
                     .align(Alignment.Start),
                 style = MaterialTheme.typography.titleMedium

@@ -3,17 +3,15 @@ package io.github.sadeghi.online_shop.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.ui.component.BGShape
-import io.github.sadeghi.online_shop.ui.screens.loginscreen.LogoHeader
+import io.github.sadeghi.online_shop.ui.screens.homescreen.MainScreen
 
 @Composable
-fun  HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -23,5 +21,6 @@ fun  HomeScreen(navController: NavController){
     ) {
 
         BGShape()
+        MainScreen()
     }
 }

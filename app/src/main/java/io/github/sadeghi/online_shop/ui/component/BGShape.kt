@@ -62,16 +62,3 @@ fun BGShape(
         )
     }
 }
-
-/*
-@Composable
-fun SampleScreen() {
-    Box {
-        BGShape()
-
-        // محتوای صفحه
-        Column {
-            // UI Content
-        }
-    }
-}*/

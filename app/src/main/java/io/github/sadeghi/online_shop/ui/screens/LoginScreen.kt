@@ -21,8 +21,8 @@ import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoadingOverlay
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetupContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SignInContent
-import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitInfoContent
-import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitPassword
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitUserInfoContent
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetPasswordContent
 import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 
@@ -73,6 +73,7 @@ fun LoginScreen(
                             }
                         }
                     },
+                    onBack = viewModel::backToSetup,
                     focusManager = focusManager
                 )
 
@@ -102,7 +103,7 @@ fun LoginScreen(
                 )
 
 
-                LoginStep.SET_PASSWORD -> SubmitPassword(
+                LoginStep.SET_PASSWORD -> SetPasswordContent(
                     password = viewModel.password,
                     confirmPassword = viewModel.confirmPassword,
                     onPasswordChange = viewModel::onPasswordChange,
@@ -113,7 +114,7 @@ fun LoginScreen(
                     focusManager = focusManager
                 )
 
-                LoginStep.SUBMIT_INFO -> SubmitInfoContent(
+                LoginStep.SUBMIT_INFO -> SubmitUserInfoContent(
                     fullName = viewModel.fullName,
                     errorMessage = viewModel.errorMessage,
                     isLoading = viewModel.isLoading,

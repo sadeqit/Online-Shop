@@ -42,7 +42,6 @@ class LoginViewModel @Inject constructor(
         "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
     )
 
-
     var code by mutableStateOf("")
         private set
 
@@ -54,18 +53,64 @@ class LoginViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
+    var password by mutableStateOf("")
+        private set
+
+    var confirmPassword by mutableStateOf("")
+        private set
+
+    var passwordError by mutableStateOf<String?>(null)
+
+
+    var passwordStrength by mutableStateOf(PasswordStrength.NONE)
+        private set
+
+
+
+
+
+
+
+
+    // ====================
+    // صفحه Setup
+    // ====================
     fun goToRegister() {
         step = LoginStep.ENTER_EMAIL
     }
-
     fun goToSignIn() {
         step = LoginStep.SIGN_IN
     }
 
-    fun backToSetup() {
-        step = LoginStep.SETUP
+    // ====================
+    // صفحه Sign In
+    // ====================
+    fun signIn(onSuccess: () -> Unit) {
+        if (email.isBlank() || password.isBlank()) {
+            errorMessage = "ایمیل و رمز عبور را وارد کنید"
+            return
+        }
+
+        isLoading = true
+
+        viewModelScope.launch {
+            delay(1200)
+            isLoading = false
+            onSuccess()
+        }
     }
 
+
+    // ====================
+    // صفحه Enter Email
+    // ====================
+    fun onEmailChange(value: String) {
+        email = value.trim()
+        if (errorMessage != "اینترنت متصل نیست") {
+            errorMessage = null
+        }
+
+    }
     fun onEmailSubmit() {
         when {
             email.isBlank() -> {
@@ -82,11 +127,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-    fun isEmailValid(): Boolean {
-        return emailRegex.matches(email)
-    }
-
     fun sendEmail() {
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
@@ -103,25 +143,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun hasInternet(): Boolean {
-        return isNetworkAvailable(application)
-    }
-
-
-    fun onEmailChange(value: String) {
-        email = value.trim()
-        if (errorMessage != "اینترنت متصل نیست") {
-            errorMessage = null
-        }
-
-    }
-
+    // ====================
+    // صفحه Confirm Code
+    // ====================
     fun onCodeChange(value: String) {
         if (value.length <= 6)
             code = value
         errorMessage = null
     }
-
     fun verifyCode() {
 
         if (code.isBlank()) {
@@ -151,8 +180,6 @@ class LoginViewModel @Inject constructor(
 
         }
     }
-
-
     fun resendCode() {
         if (timer > 0) return
 
@@ -171,14 +198,6 @@ class LoginViewModel @Inject constructor(
 
         }
     }
-
-    fun editEmail() {
-        code = ""
-        timerJob?.cancel()
-        step = LoginStep.ENTER_EMAIL
-    }
-
-
     private fun startTimer() {
         timerJob?.cancel()
         timer = 30
@@ -190,29 +209,60 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+    fun editEmail() {
+        code = ""
+        timerJob?.cancel()
+        step = LoginStep.ENTER_EMAIL
+    }
 
-    fun onSubmitInfo() {
-        if (!hasInternet()) {
-            errorMessage = "اینترنت متصل نیست"
-            return
-        }
-        errorMessage = null
+    // ====================
+    // صفحه Set Password
+    // ====================
+    fun onPasswordChange(value: String) {
+        password = value
+        passwordStrength = calculatePasswordStrength(value)
+        validatePassword()
+    }
+    fun onConfirmPasswordChange(value: String) {
+        confirmPassword = value
+        passwordStrength = calculatePasswordStrength(value)
+        validatePassword()
+    }
+    fun submitPassword() {
+        validatePassword()
+
+        if (passwordError != null) return
+
         isLoading = true
 
         viewModelScope.launch {
+            // شبیه‌سازی API
             delay(1200)
-            isLoading = false
 
+            isLoading = false
+            step = LoginStep.SUBMIT_INFO
+        }
+    }
+    private fun validatePassword() {
+        passwordError = when {
+            password.isNotEmpty() &&
+                    confirmPassword.isNotEmpty() &&
+                    password != confirmPassword ->
+                "رمز عبور و تکرار آن یکسان نیست"
+
+            else -> null
         }
     }
 
+    // ====================
+    // صفحه Submit User Info
+    // ====================
     fun onFullNameChange(value: String) {
         fullName = value.trim()
         if (errorMessage != "اینترنت متصل نیست") {
             errorMessage = null
         }
     }
-
     fun submitFullName(onSuccess: () -> Unit) {
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
@@ -232,75 +282,33 @@ class LoginViewModel @Inject constructor(
             onSuccess()
         }
     }
-
-
-    var password by mutableStateOf("")
-        private set
-
-
-    fun signIn(onSuccess: () -> Unit) {
-        if (email.isBlank() || password.isBlank()) {
-            errorMessage = "ایمیل و رمز عبور را وارد کنید"
+    fun onSubmitInfo() {
+        if (!hasInternet()) {
+            errorMessage = "اینترنت متصل نیست"
             return
         }
-
+        errorMessage = null
         isLoading = true
 
         viewModelScope.launch {
             delay(1200)
             isLoading = false
-            onSuccess()
+
         }
     }
 
-    var confirmPassword by mutableStateOf("")
-        private set
-
-    var passwordError by mutableStateOf<String?>(null)
-
-
-    fun submitPassword() {
-        validatePassword()
-
-        if (passwordError != null) return
-
-        isLoading = true
-
-        viewModelScope.launch {
-            // شبیه‌سازی API
-            delay(1200)
-
-            isLoading = false
-            step = LoginStep.SUBMIT_INFO
-        }
+    // ====================
+    // توابع مشترک و کمکی
+    // ====================
+    fun backToSetup() {
+        step = LoginStep.SETUP
+    }
+    fun isEmailValid(): Boolean {
+        return emailRegex.matches(email)
+    }
+    fun hasInternet(): Boolean {
+        return isNetworkAvailable(application)
     }
 
-    var passwordStrength by mutableStateOf(PasswordStrength.NONE)
-        private set
-
-
-    private fun validatePassword() {
-        passwordError = when {
-            password.isNotEmpty() &&
-                    confirmPassword.isNotEmpty() &&
-                    password != confirmPassword ->
-                "رمز عبور و تکرار آن یکسان نیست"
-
-            else -> null
-        }
-    }
-
-
-    fun onPasswordChange(value: String) {
-        password = value
-        passwordStrength = calculatePasswordStrength(value)
-        validatePassword()
-    }
-
-    fun onConfirmPasswordChange(value: String) {
-        confirmPassword = value
-        passwordStrength = calculatePasswordStrength(value)
-        validatePassword()
-    }
 
 }

@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
-import io.github.sadeghi.online_shop.database.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.local.database.datastore.UserPreferences
 import javax.inject.Singleton
 
 @Module

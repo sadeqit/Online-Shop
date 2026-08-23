@@ -45,7 +45,7 @@ fun SignInContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
-    viewModel: LoginViewModel = viewModel(),
+    onBack: () -> Unit,
     focusManager: FocusManager
 ) {
 
@@ -150,7 +150,7 @@ fun SignInContent(
                     .padding(start = 4.dp)
                     .clickable {
                         focusManager.clearFocus()
-                        viewModel.backToSetup()
+                        onBack()
                     },
                 textAlign = TextAlign.Left,
                 style = MaterialTheme.typography.titleSmall

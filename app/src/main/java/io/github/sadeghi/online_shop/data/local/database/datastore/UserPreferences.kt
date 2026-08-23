@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.database.datastore
+package io.github.sadeghi.online_shop.data.local.database.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

@@ -14,6 +14,7 @@ android {
     defaultConfig {
         applicationId = "io.github.sadeghi.online_shop"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -69,7 +70,7 @@ dependencies {
     implementation(libs.androidx.work)
     implementation(libs.okhttp)
 
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

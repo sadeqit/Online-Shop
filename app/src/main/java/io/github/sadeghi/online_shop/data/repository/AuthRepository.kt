@@ -1,6 +1,6 @@
 package io.github.sadeghi.online_shop.data.repository
 
-import io.github.sadeghi.online_shop.database.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.local.database.datastore.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

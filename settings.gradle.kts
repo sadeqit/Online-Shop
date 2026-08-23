@@ -1,12 +1,12 @@
 pluginManagement {
     repositories {
-        maven(url="https://maven.myket.ir")
+        /*maven(url="https://maven.myket.ir")
         maven("https://jitpack.io")
         maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://gradle.jamko.ir") }
         maven { url = uri("https://en-mirror.ir") }
-        maven { url = uri("https://google403.ir") }
+        maven { url = uri("https://google403.ir") }*/
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -24,13 +24,13 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven(url="https://maven.myket.ir")
+        /*maven(url="https://maven.myket.ir")
         maven("https://jitpack.io")
         maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://gradle.jamko.ir") }
         maven { url = uri("https://en-mirror.ir") }
-        maven { url = uri("https://google403.ir") }
+        maven { url = uri("https://google403.ir") }*/
         google()
         mavenCentral()
     }

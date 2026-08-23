@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.database.model
+package io.github.sadeghi.online_shop.data.local.database.model
 
 /*
 @Entity(tableName = "messages")

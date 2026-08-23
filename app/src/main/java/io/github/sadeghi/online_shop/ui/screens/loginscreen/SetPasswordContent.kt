@@ -34,7 +34,7 @@ import io.github.sadeghi.online_shop.ui.ui_utils.PasswordStrength
 
 
 @Composable
-fun SubmitPassword(
+fun SetPasswordContent(
     password: String,
     confirmPassword: String,
     onPasswordChange: (String) -> Unit,

@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.database
+package io.github.sadeghi.online_shop.data.local.database
 
 
 /*

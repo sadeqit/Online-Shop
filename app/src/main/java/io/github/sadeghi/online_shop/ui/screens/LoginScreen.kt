@@ -47,7 +47,7 @@ fun LoginScreen(
                     focusManager.clearFocus()
                 }) {
 
-            BGShape()
+
             val navigateToHome: () -> Unit = {
                 navController.navigate(Screens.Home.route) {
                     popUpTo(Screens.Login.route) { inclusive = true }

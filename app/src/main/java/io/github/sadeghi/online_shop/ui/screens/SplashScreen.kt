@@ -108,8 +108,6 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        BGShape()
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         )

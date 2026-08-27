@@ -46,7 +46,6 @@ fun ProfileScreen(
                     interactionSource = remember { MutableInteractionSource() }
                 ) { focusManager.clearFocus() })
         {
-            BGShape()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,

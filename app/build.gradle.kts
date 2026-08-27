@@ -79,6 +79,10 @@ dependencies {
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
 
+    implementation(libs.androidx.constraintlayout)
+    // To use constraintlayout in compose
+    implementation(libs.androidx.constraintlayout.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

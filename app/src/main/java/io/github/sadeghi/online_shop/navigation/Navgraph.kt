@@ -5,10 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.github.sadeghi.online_shop.ui.screens.HomeScreen
 import io.github.sadeghi.online_shop.ui.screens.LoginScreen
-import io.github.sadeghi.online_shop.ui.screens.ProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.SplashScreen
+import io.github.sadeghi.online_shop.ui.screens.MainScreen
 
 
 @Composable
@@ -17,7 +16,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route
+        startDestination = Screens.Main.route
     ) {
 
         composable(Screens.Splash.route) {
@@ -26,12 +25,9 @@ fun NavGraph(
         composable(Screens.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable(Screens.Home.route) {
-            HomeScreen(navController)
-        }
 
-        composable(Screens.Profile.route) {
-            ProfileScreen()
+        composable(Screens.Main.route) {
+            MainScreen()
         }
 
     }

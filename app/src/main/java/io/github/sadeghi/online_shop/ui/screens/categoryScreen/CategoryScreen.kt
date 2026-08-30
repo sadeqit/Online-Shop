@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar
+package io.github.sadeghi.online_shop.ui.screens.categoryScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,7 +24,9 @@ import io.github.sadeghi.online_shop.ui.component.card.categories
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.BannerScreen
 
 @Composable
-fun CategoryScreen() {
+fun CategoryScreen(
+    onCategoryClick: (Int) -> Unit
+) {
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -32,8 +34,7 @@ fun CategoryScreen() {
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -45,7 +46,7 @@ fun CategoryScreen() {
             item {
                 Text(
                     text = "دسته ‌بندی",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(start = 20.dp),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Right
@@ -55,7 +56,7 @@ fun CategoryScreen() {
             items(categories.chunked(3)) { rowItems ->
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     rowItems.forEach { category ->
@@ -65,7 +66,7 @@ fun CategoryScreen() {
                             title = category.title,
                             modifier = Modifier.weight(1f),
                             onClick = {
-                              
+                                onCategoryClick(category.id)
                             }
                         )
                     }

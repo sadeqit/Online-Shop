@@ -17,7 +17,9 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onCategoryClick: (Int) -> Unit
+) {
 
     val focusManager = LocalFocusManager.current
 
@@ -33,16 +35,19 @@ fun HomeScreen() {
 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item { SpacerHeight(20) }
 
         item { BannerScreen() }
 
-        item { SearchBar() }
+        item { SearchBar("تنها با یک کلیک خرید کن!") }
 
-        item { CategoryRow() }
+        item {
+            CategoryRow(onCategoryClick = onCategoryClick)
+        }
 
         item { SpacerHeight(30) }
 
-        item { Bestselling() }
+        item { Bestselling("پرفروش ترین ها") }
 
         item { SpacerHeight(20) }
 

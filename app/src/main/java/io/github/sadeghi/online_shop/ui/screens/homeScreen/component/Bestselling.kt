@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.product.ProductItem
@@ -38,134 +42,129 @@ import io.github.sadeghi.online_shop.ui.component.product.bestsellingProducts
 
 
 @Composable
-fun Bestselling() {
-
-    var showAll by remember { mutableStateOf(false) }
-    val itemCount = if (showAll) bestsellingProducts.size else 3
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.clickable { showAll = !showAll },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    if (showAll) Icons.AutoMirrored.Filled.ArrowForward
-                    else Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "",
-                    tint = Color(0xFFEF472C),
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = if (showAll) "بستن" else "مشاهده همه",
-                    fontSize = 14.sp,
-                )
-            }
-            Text(
-                text = "پرفروش ترین ها",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // نمایش آیتم‌ها
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            reverseLayout = true,
-            contentPadding = PaddingValues(end = 20.dp)
-        ) {
-            items(bestsellingProducts.take(itemCount)) { product ->
-                ProductItem(product = product)
-            }
-        }
-    }
-}
-/*
-@Composable
-fun Bestselling() {
+fun Bestselling(
+    text: String,
+    grid: Boolean = false,
+    showAllButton: Boolean = true
+) {
 
     var showAll by remember { mutableStateOf(false) }
 
-    // لیست آیتم‌هایی که باید نمایش داده شوند
-    val displayItems = if (showAll) {
-        bestsellingProducts
+    val itemCount = if (showAllButton) {
+        if (showAll) bestsellingProducts.size else 3
     } else {
-        bestsellingProducts.take(2) // فقط دو آیتم اول
+        bestsellingProducts.size
     }
 
+
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp) ,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        )
-        {
+       Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = if (showAllButton) {
+            Arrangement.SpaceBetween
+        } else {
+            Arrangement.End
+        },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        if (showAllButton) {
+
             Row(
                 modifier = Modifier.clickable {
                     showAll = !showAll
                 },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
-            )
-            {
+            ) {
+
                 Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
+                    if (showAll)
+                        Icons.AutoMirrored.Filled.ArrowForward
+                    else
+                        Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",
                     tint = Color(0xFFEF472C),
                     modifier = Modifier.size(20.dp)
                 )
+
                 Text(
-                    text = "مشاهده همه",
-                    fontSize = 14.sp,
-
-                    )
-
+                    text = if (showAll) "بستن" else "مشاهده همه",
+                    fontSize = 14.sp
+                )
             }
-            Text(
-                text = "پرفروش ترین ها",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-
         }
 
-        SpacerHeight(12)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Right
+        )
+    }
 
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            reverseLayout = true,
-            contentPadding = PaddingValues(end = 20.dp)
-        ) {
-            items(bestsellingProducts) { product ->
+        Spacer(modifier = Modifier.height(12.dp))
 
-                ProductItem(
-                    product = product
-                )
+        if (grid) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                bestsellingProducts
+                    .take(itemCount)
+                    .chunked(2)
+                    .forEach { rowItems ->
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+
+                            rowItems.forEach { product ->
+
+                                ProductItem(
+                                    product = product,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+
+                            if (rowItems.size == 1) {
+                                Spacer(
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
+            }
+
+        } else {
+
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                reverseLayout = true,
+                contentPadding = PaddingValues(end = 20.dp)
+            ) {
+
+                items(
+                    bestsellingProducts.take(itemCount)
+                ) { product ->
+
+                    ProductItem(
+                        product = product
+                    )
+                }
             }
         }
     }
 }
-*/

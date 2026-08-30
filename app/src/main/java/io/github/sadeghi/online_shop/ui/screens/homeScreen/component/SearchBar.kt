@@ -32,7 +32,9 @@ import io.github.sadeghi.online_shop.ui.component.AppTextField
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 
 @Composable
-fun SearchBar() {
+fun SearchBar(
+    text : String
+) {
 
     var searchQuery by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -49,7 +51,7 @@ fun SearchBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "تنها با یک کلیک خرید کن!",
+                text = text ,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Right,

@@ -37,7 +37,8 @@ import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 
 @Composable
 fun ProductItem(
-    product: Product
+    product: Product,
+    modifier: Modifier = Modifier
 ) {
 
     val constraints = ConstraintSet {
@@ -88,8 +89,7 @@ fun ProductItem(
 
     ConstraintLayout(
         constraintSet = constraints,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
 
     ) {
 

@@ -70,16 +70,12 @@ fun MainScreen(
                 showBackButton = currentRoute != Screens.Home.route,
 
                 onBackClick = {
-                    navController.navigate(Screens.Home.route) {
-                        popUpTo(Screens.Home.route) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
+                    navController.popBackStack()
                 },
 
                 hasNotification = hasNotification
             )
+
         },
 
         bottomBar = {

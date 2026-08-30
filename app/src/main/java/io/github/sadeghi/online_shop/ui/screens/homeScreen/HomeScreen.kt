@@ -1,23 +1,50 @@
 package io.github.sadeghi.online_shop.ui.screens.homeScreen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalFocusManager
+import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.BannerScreen
+import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
+import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.CategoryRow
+import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
+
 
 @Composable
 fun HomeScreen() {
+
+    val focusManager = LocalFocusManager.current
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                focusManager.clearFocus()
+            },
 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         item { BannerScreen() }
+
+        item { SearchBar() }
+
+        item { CategoryRow() }
+
+        item { SpacerHeight(30) }
+
+        item { Bestselling() }
+
+        item { SpacerHeight(20) }
+
     }
 }

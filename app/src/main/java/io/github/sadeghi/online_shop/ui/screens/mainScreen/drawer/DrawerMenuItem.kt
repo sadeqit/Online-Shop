@@ -12,7 +12,7 @@ data class DrawerMenuItem(
 val drawerItems = listOf(
     DrawerMenuItem(
         "پروفایل کاربری",
-        R.drawable.user_dr,
+        R.drawable.userpctagon,
         Screens.Profile.route
     ),
     DrawerMenuItem(

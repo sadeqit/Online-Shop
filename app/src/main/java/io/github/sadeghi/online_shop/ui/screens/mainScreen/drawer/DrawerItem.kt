@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -40,7 +41,8 @@ fun DrawerItem(
             Icon(
                 painter = painterResource(item.icon),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
             )
 
             SpacerWidth(12)

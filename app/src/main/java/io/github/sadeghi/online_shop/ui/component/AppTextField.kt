@@ -47,6 +47,8 @@ fun AppTextField(
         shape = RoundedCornerShape(12.dp),
         modifier = modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,

@@ -109,23 +109,6 @@ fun MainScreen(
                     }
                 }
 
-                /*onItemSelected = { route ->
-                    if (route == Screens.Home.route) {
-                        navController.navigate(Screens.Home.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = false
-                            }
-                            launchSingleTop = true
-                        }
-                    } else {
-                        navController.navigate(route) {
-                            popUpTo(Screens.Home.route) {
-                                inclusive = false
-                            }
-                            launchSingleTop = true
-                        }
-                    }
-                }*/
             )
         }
 

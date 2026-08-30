@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -31,42 +32,41 @@ import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 fun ProfileScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     viewModel1: ProfileViewModel = hiltViewModel(),
-    ) {
-
+) {
     val focusManager = LocalFocusManager.current
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) { focusManager.clearFocus() })
-        {
+                ) { focusManager.clearFocus() }
+        ) {
+            // ✅ هدر ثابت در بالا
+            HeaderProfile(
+
+            )
+
+            // ✅ بقیه محتوا با اسکرول
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-
             ) {
-                HeaderProfile()
                 SpacerHeight(25)
-                SubmitContent(viewModel,viewModel1)
+                SubmitContent(viewModel, viewModel1)
                 SpacerHeight(15)
                 GradientButton(
                     text = "ثبت تغییرات",
                     enabled = true
-                    ){}
-
+                ) {}
                 SpacerHeight(25)
-
-
-
             }
         }
     }

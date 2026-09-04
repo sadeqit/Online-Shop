@@ -82,31 +82,28 @@ fun MainScreen(
             CustomBottomBar(
                 selectedRoute = currentRoute,
                 onItemSelected = { route ->
-                    // اگر همون صفحه‌ای که هستیم رو زدیم، هیچ کاری نکن
-                    if (route == currentRoute) return@CustomBottomBar
 
                     if (route == Screens.Home.route) {
-                        navController.navigate(Screens.Home.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = false
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+                        navController.popBackStack(
+                            Screens.Home.route,
+                            inclusive = false
+                        )
+                        return@CustomBottomBar
+                    }
+
+                    if (route == currentRoute) return@CustomBottomBar
+
+                    navController.navigate(route) {
+                        popUpTo(Screens.Home.route) {
+                            saveState = true
                         }
-                    } else {
-                        navController.navigate(route) {
-                            popUpTo(Screens.Home.route) {
-                                inclusive = false
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
-
             )
         }
+
 
     ) { paddingValues ->
 

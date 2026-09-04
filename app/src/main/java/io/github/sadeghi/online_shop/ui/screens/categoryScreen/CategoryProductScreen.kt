@@ -94,7 +94,8 @@ fun CategoryProductScreen(
 
         // پرفروش‌ترین‌ها
         item {
-            Bestselling("پرفروش ترین های هفته گذشته")
+            Bestselling("پرفروش ترین های هفته گذشته",
+                navController = navController)
         }
         item {
             SpacerHeight(20)

@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.BannerScreen
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
@@ -18,7 +19,8 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 
 @Composable
 fun HomeScreen(
-    onCategoryClick: (Int) -> Unit
+    onCategoryClick: (Int) -> Unit,
+    navController: NavHostController
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -47,7 +49,12 @@ fun HomeScreen(
 
         item { SpacerHeight(30) }
 
-        item { Bestselling("پرفروش ترین ها") }
+        item {
+            Bestselling(
+                "پرفروش ترین ها",
+                navController = navController
+            )
+        }
 
         item { SpacerHeight(20) }
 

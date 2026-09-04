@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.card.menItems
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
@@ -19,7 +20,8 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 
 @Composable
 fun SubCategoryProductScreen(
-    subCategoryId: Int
+    subCategoryId: Int,
+    navController: NavHostController
 ) {
     val selectedItem =
         menItems.first { it.id == subCategoryId }
@@ -56,7 +58,9 @@ fun SubCategoryProductScreen(
         // پرفروش‌ترین‌ها
         item {
             Bestselling(selectedItem.title, grid = true,
-                showAllButton = false)
+                showAllButton = false,
+                navController = navController
+            )
         }
 
         item {

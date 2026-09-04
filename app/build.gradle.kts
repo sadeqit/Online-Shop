@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.benchmark.traceprocessor)
 
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)

@@ -2,6 +2,7 @@ package io.github.sadeghi.online_shop.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,16 +33,21 @@ fun GradientButton(
         enabled = enabled,
         modifier = Modifier
             .fillMaxWidth()
-            .background( brush = if (enabled) gradient else disabledGradient,
-                shape = RoundedCornerShape(16.dp)),
+
+            .background(
+                brush = if (enabled) gradient else disabledGradient,
+                shape = RoundedCornerShape(16.dp)
+            ),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
             contentColor = Color.White
         ),
 
-    ) {
-        Text(text, color = Color.White,
-            style = MaterialTheme.typography.titleMedium)
+        ) {
+        Text(
+            text, color = Color.White,
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }

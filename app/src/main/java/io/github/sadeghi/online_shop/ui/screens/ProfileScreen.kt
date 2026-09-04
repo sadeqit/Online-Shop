@@ -62,10 +62,14 @@ fun ProfileScreen(
                 SpacerHeight(25)
                 SubmitContent(viewModel, viewModel1)
                 SpacerHeight(15)
+                Box(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
                 GradientButton(
                     text = "ثبت تغییرات",
                     enabled = true
                 ) {}
+                }
                 SpacerHeight(25)
             }
         }

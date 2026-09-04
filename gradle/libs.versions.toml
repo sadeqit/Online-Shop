@@ -14,6 +14,7 @@ composeBom = "2026.02.00"
 dagger = "2.60.1"
 room = "2.8.4"
 uiText = "1.10.3"
+benchmarkTraceprocessor = "1.4.1"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
@@ -53,6 +54,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-work = { group = "androidx.work", name = "work-runtime-ktx", version = "2.11.2" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
+androidx-benchmark-traceprocessor = { group = "androidx.benchmark", name = "benchmark-traceprocessor", version.ref = "benchmarkTraceprocessor" }
 
 
 [plugins]

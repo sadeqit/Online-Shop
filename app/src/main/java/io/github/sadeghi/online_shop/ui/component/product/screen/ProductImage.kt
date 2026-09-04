@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product
+package io.github.sadeghi.online_shop.ui.component.product.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,12 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,15 +37,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
+import io.github.sadeghi.online_shop.ui.component.product.Product
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun ProductItem(
+fun ProductImage(
     product: Product,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    reviews: List<ProductReview>,
+    listState: LazyListState,
+    modifier: Modifier = Modifier
 ) {
+
 
     val constraints = ConstraintSet {
 
@@ -49,7 +59,7 @@ fun ProductItem(
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
+
         }
         val label = createRefFor("label")
         constrain(label) {
@@ -66,47 +76,59 @@ fun ProductItem(
             start.linkTo(box.start)
 
         }
-        val describe = createRefFor("describe")
-        constrain(describe) {
+        val iconBack = createRefFor("iconBack")
+        constrain(iconBack) {
             start.linkTo(box.start)
-            end.linkTo(box.end)
+
             top.linkTo(box.top)
             bottom.linkTo(box.bottom)
-            verticalBias = 0.9f
 
 
         }
-        val plus = createRefFor("plus")
-        constrain(plus) {
-            start.linkTo(describe.start)
-            end.linkTo(describe.start)
-            top.linkTo(describe.top)
-            bottom.linkTo(describe.bottom)
+        val iconNext = createRefFor("iconNext")
+        constrain(iconNext) {
+
+            end.linkTo(box.end)
+            top.linkTo(box.top)
+            bottom.linkTo(box.bottom)
 
 
+        }
+        val myBox = createRefFor("myBox")
+        constrain(myBox) {
+
+            start.linkTo(box.start)
+            top.linkTo(box.top)
+            bottom.linkTo(box.bottom)
+            verticalBias = 0.7f
+
+        }
+
+        val description = createRefFor("description")
+        constrain(description) {
+            start.linkTo(myBox.start)
+            end.linkTo(box.end)
+            top.linkTo(myBox.bottom)
         }
 
     }
 
     ConstraintLayout(
         constraintSet = constraints,
-        modifier = modifier.clickable { onClick() }
 
-    ) {
-
+        ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(Color(0xFFEBEBEB))
-                .size(width = 200.dp, height = 250.dp)
-
+                .size(500.dp)
                 .layoutId("box")
 
         )
 
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp))
+                .clip(RoundedCornerShape(topStart = 50.dp, bottomStart = 50.dp))
                 .layoutId("label")
                 .background(
                     brush = Brush.linearGradient(
@@ -121,7 +143,7 @@ fun ProductItem(
             Text(
                 text = "10%",
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                fontSize = 11.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center
@@ -133,91 +155,59 @@ fun ProductItem(
             painter = painterResource(product.image),
             contentDescription = product.title,
             modifier = Modifier
-                .size(135.dp)
+                .size(250.dp)
                 .layoutId("image")
-                .padding(top =10.dp),
+                .padding(top = 60.dp),
             contentScale = ContentScale.Crop
         )
 
-        Box(
+        IconButton(
+            onClick = {
+                // محصول قبلی
+            },
             modifier = Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(Color.White)
-                .size(width = 170.dp, height = 90.dp)
-                .layoutId("describe")
+
+                .layoutId("iconBack")
 
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,  // بالا و پایین
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = product.title,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    textAlign = TextAlign.Right,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
 
-
-                )
-                SpacerHeight(6)
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Text(
-                        text = "تومان ",
-                        fontSize = 12.sp,
-                        color = Color.Black
-                    )
-                    SpacerWidth(3)
-                    Text(
-                        text = product.price,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    SpacerWidth(3)
-                    Text(
-                        text = product.oldPrice,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Gray,
-                        textDecoration = TextDecoration.LineThrough
-
-
-                    )
-
-                }
-            }
+            Icon(
+                imageVector = Icons.Default.ChevronLeft,
+                contentDescription = "محصول قبلی"
+            )
         }
 
-        Box(
+        IconButton(
+            onClick = {
+                // محصول بعدی
+            },
             modifier = Modifier
-                .layoutId("plus")
-                .size(27.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFFD583D),
-                            Color(0xFFE32A0D)
-                        )
-                    )
-                )
-                .clickable {},
-            contentAlignment = Alignment.Center
+
+                .layoutId("iconNext")
+
         ) {
-            Icon(Icons.Default.Add, "", tint = Color.White)
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "محصول بعدی"
+            )
         }
+
+        ProductActionsOverlay(
+            modifier = Modifier
+                .layoutId("myBox"),
+            reviews = reviews,
+            listState = listState,
+
+            )
+
+        ProductDescription(
+            product = product,
+            listState = listState,
+            modifier = modifier.layoutId("description")
+        )
 
 
     }
 }
+

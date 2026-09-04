@@ -6,18 +6,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CartScreen
-import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
-import io.github.sadeghi.online_shop.ui.screens.homeScreen.HomeScreen
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.NotificationScreen
+import io.github.sadeghi.online_shop.ui.component.product.screen.ProductDetailScreen
 import io.github.sadeghi.online_shop.ui.screens.ProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryProductScreen
+import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.SubCategoryProductScreen
+import io.github.sadeghi.online_shop.ui.screens.homeScreen.HomeScreen
+import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CartScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.AboutUsScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactUsScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.RulesScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportScreen
+import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.NotificationScreen
 
 @Composable
 fun MainNavGraph(
@@ -30,8 +31,10 @@ fun MainNavGraph(
 
         composable(Screens.Home.route) {
             HomeScreen(
+                navController = navController,
                 onCategoryClick = { categoryId ->
-                    navController.navigate(Screens.CategoryProduct.createRoute(categoryId)){
+                    navController.navigate(
+                        Screens.CategoryProduct.createRoute(categoryId)) {
                         launchSingleTop = true
                     }
                 }
@@ -79,7 +82,8 @@ fun MainNavGraph(
             CategoryScreen(
                 onCategoryClick = { categoryId ->
                     navController.navigate(
-                        Screens.CategoryProduct.createRoute(categoryId)){
+                        Screens.CategoryProduct.createRoute(categoryId)
+                    ) {
                         launchSingleTop = true
                     }
                 }
@@ -115,7 +119,26 @@ fun MainNavGraph(
                 backStackEntry.arguments?.getInt("subCategoryId") ?: 0
 
             SubCategoryProductScreen(
-                subCategoryId = subCategoryId
+                subCategoryId = subCategoryId,
+                navController = navController
+            )
+        }
+
+        composable(
+            route = Screens.ProductDetail.route,
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val productId =
+                backStackEntry.arguments?.getInt("productId") ?: return@composable
+
+            ProductDetailScreen(
+                productId = productId,
+                navController = navController
             )
         }
     }

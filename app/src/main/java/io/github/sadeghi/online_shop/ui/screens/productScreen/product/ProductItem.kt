@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product
+package io.github.sadeghi.online_shop.ui.screens.productScreen.product
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

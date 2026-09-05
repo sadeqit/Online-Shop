@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import io.github.sadeghi.online_shop.ui.component.product.screen.ProductDetailScreen
+import io.github.sadeghi.online_shop.ui.screens.productScreen.screen.ProductDetailScreen
 import io.github.sadeghi.online_shop.ui.screens.ProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryProductScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
@@ -18,7 +18,13 @@ import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactU
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.RulesScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportScreen
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.NotificationScreen
+import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.NotificationsScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.AddressesScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.ChangePasswordScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationScreen
 
 @Composable
 fun MainNavGraph(
@@ -42,11 +48,13 @@ fun MainNavGraph(
         }
 
         composable(Screens.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+                navController = navController
+            )
         }
 
         composable(Screens.Notifications.route) {
-            NotificationScreen(
+            NotificationsScreen(
 
             )
         }
@@ -54,7 +62,6 @@ fun MainNavGraph(
         composable(Screens.Cart.route) {
             CartScreen()
         }
-
 
 
         composable(Screens.Orders.route) {
@@ -141,5 +148,31 @@ fun MainNavGraph(
                 navController = navController
             )
         }
+
+        composable(Screens.MyOrders.route) {
+            MyOrdersScreen()
+        }
+        composable(Screens.MyBuy.route) {
+            MyBuyScreen()
+        }
+
+        composable(Screens.ChangePassword.route) {
+            ChangePasswordScreen()
+        }
+
+        composable(Screens.Notification.route) {
+            NotificationScreen()
+        }
+
+        composable(Screens.Addresses.route) {
+            AddressesScreen()
+        }
+
+        composable(Screens.Favorites.route) {
+            FavoritesScreen()
+        }
+
+
+
     }
 }

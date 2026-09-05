@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.profilescreen
+package io.github.sadeghi.online_shop.ui.screens.profilescreen.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

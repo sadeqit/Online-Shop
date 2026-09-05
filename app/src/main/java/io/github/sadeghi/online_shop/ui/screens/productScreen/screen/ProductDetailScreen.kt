@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product.screen
+package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +19,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
-import io.github.sadeghi.online_shop.ui.component.product.bestsellingProducts
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
+import kotlin.collections.plus
 
 @Composable
 fun ProductDetailScreen(

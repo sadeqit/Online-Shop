@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product.screen
+package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size

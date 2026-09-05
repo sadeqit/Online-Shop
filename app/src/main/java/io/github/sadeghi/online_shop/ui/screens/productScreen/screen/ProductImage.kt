@@ -1,21 +1,13 @@
-package io.github.sadeghi.online_shop.ui.component.product.screen
+package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
@@ -32,16 +24,11 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import io.github.sadeghi.online_shop.R
-import io.github.sadeghi.online_shop.ui.component.SpacerHeight
-import io.github.sadeghi.online_shop.ui.component.SpacerWidth
-import io.github.sadeghi.online_shop.ui.component.product.Product
-import kotlinx.coroutines.CoroutineScope
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 
 @Composable
 fun ProductImage(

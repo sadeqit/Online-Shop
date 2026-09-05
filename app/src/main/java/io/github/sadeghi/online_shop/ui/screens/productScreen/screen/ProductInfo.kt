@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product.screen
+package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.sadeghi.online_shop.ui.component.product.Product
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 
 @Composable
 fun ProductInfo(

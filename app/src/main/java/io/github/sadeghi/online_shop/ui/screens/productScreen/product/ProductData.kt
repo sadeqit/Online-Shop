@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.component.product
+package io.github.sadeghi.online_shop.ui.screens.productScreen.product
 
 import io.github.sadeghi.online_shop.R
 

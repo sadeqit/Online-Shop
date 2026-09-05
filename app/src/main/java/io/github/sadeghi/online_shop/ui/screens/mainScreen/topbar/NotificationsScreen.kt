@@ -20,7 +20,7 @@ import io.github.sadeghi.online_shop.viewModel.HomeViewModel
 
 // NotificationScreen.kt
 @Composable
-fun NotificationScreen(
+fun NotificationsScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     DisposableEffect(Unit) {

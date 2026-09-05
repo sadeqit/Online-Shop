@@ -8,7 +8,7 @@ sealed class Screens(val route: String) {
     data object Main : Screens("main")
     data object Profile : Screens("profile")
 
-    data object Favorites : Screens("favorites")
+
     object Notifications : Screens("notifications")
 
 
@@ -33,4 +33,13 @@ sealed class Screens(val route: String) {
     data object ProductDetail : Screens("product_detail/{productId}") {
         fun createRoute(productId: Int) = "product_detail/$productId"
     }
+
+    data object MyOrders : Screens("myorders")
+    data object MyBuy : Screens("mybuy")
+    data object ChangePassword : Screens("changepassword")
+    data object Notification : Screens("notification")
+    data object Addresses : Screens("addresses")
+    data object Favorites : Screens("favorites")
+
+
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -33,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
-import io.github.sadeghi.online_shop.ui.component.product.ProductItem
-import io.github.sadeghi.online_shop.ui.component.product.bestsellingProducts
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductItem
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 
 
 @Composable

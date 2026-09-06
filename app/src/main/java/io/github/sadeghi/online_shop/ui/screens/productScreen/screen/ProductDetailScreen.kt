@@ -17,10 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
+import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 import kotlin.collections.plus
 
 @Composable
@@ -28,6 +30,7 @@ fun ProductDetailScreen(
     productId: Int,
     navController: NavHostController
 ) {
+    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
     val product = bestsellingProducts.find {
         it.id == productId
     } ?: return
@@ -59,7 +62,7 @@ fun ProductDetailScreen(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                focusManager.clearFocus() // اینجا استفاده کن
+                focusManager.clearFocus()
             }
     ) {
 
@@ -80,6 +83,7 @@ fun ProductDetailScreen(
                     product = product,
                     reviews = reviews,
                     listState = listState,
+                    favoritesViewModel = favoritesViewModel
                 )
             }
 

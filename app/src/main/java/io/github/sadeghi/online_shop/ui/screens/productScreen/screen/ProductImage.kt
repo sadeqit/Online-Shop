@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -29,12 +31,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
+import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 
 @Composable
 fun ProductImage(
     product: Product,
     reviews: List<ProductReview>,
     listState: LazyListState,
+    favoritesViewModel: FavoritesViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -136,8 +140,6 @@ fun ProductImage(
                 textAlign = TextAlign.Center
             )
         }
-
-
         Image(
             painter = painterResource(product.image),
             contentDescription = product.title,
@@ -185,14 +187,16 @@ fun ProductImage(
                 .layoutId("myBox"),
             reviews = reviews,
             listState = listState,
-
-            )
+            productId = product.id,
+            favoritesViewModel = favoritesViewModel
+        )
 
         ProductDescription(
             product = product,
             listState = listState,
             modifier = modifier.layoutId("description")
         )
+
 
 
     }

@@ -11,7 +11,6 @@ sealed class Screens(val route: String) {
 
     object Notifications : Screens("notifications")
 
-
     object Cart : Screens("cart")
     object Orders : Screens("orders")
     object Support : Screens("support")
@@ -37,7 +36,6 @@ sealed class Screens(val route: String) {
     data object MyOrders : Screens("myorders")
     data object MyBuy : Screens("mybuy")
     data object ChangePassword : Screens("changepassword")
-    data object Notification : Screens("notification")
     data object Addresses : Screens("addresses")
     data object Favorites : Screens("favorites")
 

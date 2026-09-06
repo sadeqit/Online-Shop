@@ -28,7 +28,7 @@ val profileCards = listOf(
     ProfileCard(
         image = R.drawable.notification,
         title = "اعلانات من",
-        route = Screens.Notification.route
+        route = Screens.Notifications.route
     ),
     ProfileCard(
         image = R.drawable.bookmark,

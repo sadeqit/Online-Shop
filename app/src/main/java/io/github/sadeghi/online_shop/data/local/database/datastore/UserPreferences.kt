@@ -12,7 +12,6 @@ private val Context.dataStore by preferencesDataStore("user_prefs")
 
 class UserPreferences(private val context: Context) {
 
-
     companion object {
         private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         private val USER_EMAIL = stringPreferencesKey("user_email")

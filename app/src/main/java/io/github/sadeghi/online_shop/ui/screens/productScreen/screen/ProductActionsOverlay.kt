@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,16 +34,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 import kotlinx.coroutines.launch
 
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun ProductActionsOverlay(
+    productId: Int,
     reviews: List<ProductReview>,
     listState: LazyListState,
+    favoritesViewModel: FavoritesViewModel,
     modifier: Modifier = Modifier
 ) {
+    val favoriteProductIds by favoritesViewModel.favoriteProductIds.collectAsStateWithLifecycle()
+
+    val isFavorite = productId in favoriteProductIds
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val reviewCount = reviews.size
@@ -104,11 +113,21 @@ fun ProductActionsOverlay(
 
             // 2 - ذخیره
             Icon(
-                imageVector = Icons.Outlined.BookmarkBorder,
-                contentDescription = "ذخیره",
+                imageVector = if (isFavorite) {
+                    Icons.Filled.Bookmark
+                } else {
+                    Icons.Outlined.BookmarkBorder
+                },
+                contentDescription = if (isFavorite) {
+                    "حذف از علاقه مندی ها"
+                } else {
+                    "افزودن به علاقه مندی ها"
+                },
                 modifier = Modifier
                     .size(26.dp)
-                    .clickable {}
+                    .clickable {
+                        favoritesViewModel.toggleFavorite(productId)
+                    }
             )
 
             // 3 - امتیاز

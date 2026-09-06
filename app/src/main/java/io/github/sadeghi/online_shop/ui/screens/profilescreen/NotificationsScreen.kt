@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar
+package io.github.sadeghi.online_shop.ui.screens.profilescreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.github.sadeghi.online_shop.viewModel.HomeViewModel
 
-// NotificationScreen.kt
 @Composable
 fun NotificationsScreen(
     viewModel: HomeViewModel = hiltViewModel()

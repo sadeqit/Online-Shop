@@ -18,13 +18,12 @@ import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactU
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.RulesScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportScreen
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.NotificationsScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.AddressesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.ChangePasswordScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationScreen
 
 @Composable
 fun MainNavGraph(
@@ -160,16 +159,16 @@ fun MainNavGraph(
             ChangePasswordScreen()
         }
 
-        composable(Screens.Notification.route) {
-            NotificationScreen()
-        }
 
         composable(Screens.Addresses.route) {
             AddressesScreen()
         }
 
         composable(Screens.Favorites.route) {
-            FavoritesScreen()
+            FavoritesScreen(
+                navController = navController
+
+            )
         }
 
 

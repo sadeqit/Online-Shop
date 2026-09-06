@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +40,8 @@ import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 fun ProductItem(
     product: Product,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    showBookmark: Boolean = false
 ) {
 
     val constraints = ConstraintSet {
@@ -83,7 +85,12 @@ fun ProductItem(
             top.linkTo(describe.top)
             bottom.linkTo(describe.bottom)
 
+        }
 
+        val bookmark = createRefFor("bookmark")
+        constrain(bookmark) {
+            start.linkTo(box.start, margin = 10.dp)
+            top.linkTo(box.top, margin = 10.dp)
         }
 
     }
@@ -128,7 +135,16 @@ fun ProductItem(
             )
         }
 
-
+        if (showBookmark) {
+            Icon(
+                imageVector = Icons.Outlined.Bookmark,
+                contentDescription = "بوکمارک",
+                tint = Color.Black,
+                modifier = Modifier
+                    .size(28.dp)
+                    .layoutId("bookmark")
+            )
+        }
         Image(
             painter = painterResource(product.image),
             contentDescription = product.title,
@@ -148,8 +164,8 @@ fun ProductItem(
 
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,  // بالا و پایین
+                modifier = Modifier.fillMaxSize().padding(vertical = 7.dp),
+                verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -160,11 +176,10 @@ fun ProductItem(
                     textAlign = TextAlign.Right,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-
+                        .padding(horizontal = 12.dp)
 
                 )
-                SpacerHeight(6)
+                SpacerHeight(30)
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

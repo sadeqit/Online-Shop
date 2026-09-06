@@ -77,8 +77,53 @@ fun MainScreen(
             )
 
         },
-
         bottomBar = {
+            CustomBottomBar(
+                selectedRoute = currentRoute,
+                onItemSelected = { route ->
+
+                    if (route == currentRoute) {
+                        return@CustomBottomBar
+                    }
+
+                    when (route) {
+
+                        Screens.Home.route -> {
+                            navController.popBackStack(
+                                Screens.Home.route,
+                                inclusive = false
+                            )
+                        }
+
+                        Screens.Profile.route -> {
+
+                            val popped = navController.popBackStack(
+                                Screens.Profile.route,
+                                inclusive = false
+                            )
+
+                            if (!popped) {
+                                navController.navigate(Screens.Profile.route) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
+
+                        else -> {
+                            navController.navigate(route) {
+                                popUpTo(Screens.Home.route) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
+                }
+            )
+        }
+
+        /*bottomBar = {
             CustomBottomBar(
                 selectedRoute = currentRoute,
                 onItemSelected = { route ->
@@ -102,7 +147,7 @@ fun MainScreen(
                     }
                 }
             )
-        }
+        }*/
 
 
     ) { paddingValues ->

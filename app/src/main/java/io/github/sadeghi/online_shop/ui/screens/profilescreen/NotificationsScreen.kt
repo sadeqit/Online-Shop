@@ -27,12 +27,9 @@ import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun NotificationsScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val profileImageUri by profileViewModel.profileImageUri.collectAsState(
-        initial = null
-    )
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.resetNotification()
@@ -44,8 +41,7 @@ fun NotificationsScreen(
     ) {
 
         HeaderProfile(
-            compact = true,
-            profileImageUri = profileImageUri
+            compact = true
         )
 
         SpacerHeight(50)

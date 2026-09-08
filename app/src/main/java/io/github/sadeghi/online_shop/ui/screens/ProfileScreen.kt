@@ -14,8 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +27,10 @@ import io.github.sadeghi.online_shop.ui.component.card.CardItem
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.profileCards
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
+import android.app.Activity
+import android.net.Uri
+import com.yalantis.ucrop.UCrop
+import java.io.File
 
 @Composable
 fun ProfileScreen(
@@ -37,14 +39,29 @@ fun ProfileScreen(
 ) {
 
     val context = LocalContext.current
-    val profileImageUri by viewModel.profileImageUri.collectAsState(
-        initial = null
-    )
+
+    val cropLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val resultUri = result.data?.let {
+                UCrop.getOutput(it)
+            }
+
+            resultUri?.let {
+                viewModel.saveProfileImage(it.toString())
+            }
+        }
+    }
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
 
         uri?.let {
+
             val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
 
             context.contentResolver.takePersistableUriPermission(
@@ -52,10 +69,30 @@ fun ProfileScreen(
                 takeFlags
             )
 
-            viewModel.saveProfileImage(it.toString())
+            val destinationUri = Uri.fromFile(
+                File(
+                    context.cacheDir,
+                    "cropped_${System.currentTimeMillis()}.jpg"
+                )
+            )
+
+            val options = UCrop.Options().apply {
+                setCircleDimmedLayer(true)
+                setShowCropGrid(false)
+            }
+
+            val cropIntent = UCrop.of(
+                it,
+                destinationUri
+            )
+                .withAspectRatio(1f, 1f)
+                .withMaxResultSize(1000, 1000)
+                .withOptions(options)
+                .getIntent(context)
+
+            cropLauncher.launch(cropIntent)
         }
     }
-
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -65,7 +102,6 @@ fun ProfileScreen(
                 .fillMaxSize()
         ) {
             HeaderProfile(
-                profileImageUri = profileImageUri,
                 onUploadClick = {
                     imagePickerLauncher.launch(
                         arrayOf("image/*")

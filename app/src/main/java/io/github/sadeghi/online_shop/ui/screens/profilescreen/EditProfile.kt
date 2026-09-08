@@ -1,5 +1,9 @@
 package io.github.sadeghi.online_shop.ui.screens.profilescreen
 
+import android.app.Activity
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -14,17 +18,20 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.yalantis.ucrop.UCrop
 import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.SubmitContent
 import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
+import java.io.File
 
 @Composable
 fun EditProfileScreen(
@@ -32,6 +39,54 @@ fun EditProfileScreen(
     viewModel1: ProfileViewModel = hiltViewModel(),
 ) {
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+
+    val cropLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val resultUri = result.data?.let {
+                UCrop.getOutput(it)
+            }
+
+            resultUri?.let {
+                viewModel1.saveProfileImage(it.toString())
+            }
+        }
+    }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+
+        uri?.let {
+
+            val destinationUri = Uri.fromFile(
+                File(
+                    context.cacheDir,
+                    "cropped_${System.currentTimeMillis()}.jpg"
+                )
+            )
+
+            val options = UCrop.Options().apply {
+                setCircleDimmedLayer(true)
+                setShowCropGrid(false)
+            }
+
+            val cropIntent = UCrop.of(
+                it,
+                destinationUri
+            )
+                .withAspectRatio(1f, 1f)
+                .withMaxResultSize(1000, 1000)
+                .withOptions(options)
+                .getIntent(context)
+
+            cropLauncher.launch(cropIntent)
+        }
+    }
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -41,15 +96,24 @@ fun EditProfileScreen(
                 .fillMaxSize()
                 .clickable(
                     indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { focusManager.clearFocus() }
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }
+                ) {
+                    focusManager.clearFocus()
+                }
         ) {
-            // ✅ هدر ثابت در بالا
+
             HeaderProfile(
-                iconEdit = false
+                showUserInfo = false,
+                iconEdit = false,
+                onUploadClick = {
+                    imagePickerLauncher.launch(
+                        arrayOf("image/*")
+                    )
+                }
             )
 
-            // ✅ بقیه محتوا با اسکرول
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -57,9 +121,13 @@ fun EditProfileScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
+
                 SpacerHeight(25)
+
                 SubmitContent(viewModel, viewModel1)
+
                 SpacerHeight(15)
+
                 Box(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
@@ -68,6 +136,7 @@ fun EditProfileScreen(
                         enabled = true
                     ) {}
                 }
+
                 SpacerHeight(25)
             }
         }

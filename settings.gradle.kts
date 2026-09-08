@@ -7,6 +7,7 @@ pluginManagement {
         maven { url = uri("https://gradle.jamko.ir") }
         maven { url = uri("https://en-mirror.ir") }
         maven { url = uri("https://google403.ir") }*/
+        maven("https://jitpack.io")
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -33,6 +34,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://google403.ir") }*/
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 

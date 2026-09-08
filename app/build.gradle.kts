@@ -84,6 +84,8 @@ dependencies {
     // To use constraintlayout in compose
     implementation(libs.androidx.constraintlayout.compose)
 
+    implementation("com.github.yalantis:ucrop:2.2.11")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,22 +30,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.R
-import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun HeaderProfile(
     compact: Boolean = false,
     iconEdit: Boolean = true,
-    profileImageUri: String? = null,
+    showUserInfo: Boolean = true,
     onUploadClick: () -> Unit = {},
     onEditClick: () -> Unit = {}
 ) {
+    val viewModel: ProfileViewModel = hiltViewModel()
+
+    val profileImageUri by viewModel.profileImageUri.collectAsState(
+        initial = null
+    )
 
     if (compact) {
 
@@ -66,7 +72,7 @@ fun HeaderProfile(
                         bottomStart = 30.dp
                     )
                 )
-               
+
         ) {
 
             Row(
@@ -78,27 +84,34 @@ fun HeaderProfile(
             ) {
 
                 SpacerWidth(10)
+
                 Column(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "بهرام افشاری",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    if (showUserInfo) {
+                        SpacerHeight(5)
 
-                    SpacerHeight(4)
+                        Text(
+                            text = "بهرام افشاری",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
 
-                    Text(
-                        text = "0912123456",
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+                        SpacerHeight(2)
+
+                        Text(
+                            text = "0912123456",
+                            fontSize = 14.sp,
+                            color = Color.White
+                        )
+                    }
                 }
 
                 SpacerWidth(9)
+
+
 
                 if (profileImageUri != null) {
                     Box(
@@ -127,24 +140,41 @@ fun HeaderProfile(
                         }
                     }
                 } else {
-                    Image(
-                        painter = painterResource(R.drawable.profile),
-                        contentDescription = "profile-pic",
+                    Box(
                         modifier = Modifier.size(90.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.profile),
+                            contentDescription = "profile-pic",
+                            modifier = Modifier
+                                .size(70.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
 
+                        Canvas(
+                            modifier = Modifier.size(80.dp)
+                        ) {
+                            drawArc(
+                                color = Color.White,
+                                startAngle = 270f,
+                                sweepAngle = 270f,
+                                useCenter = false,
+                                style = Stroke(width = 4.dp.toPx())
+                            )
+                        }
+                    }
+                }
             }
         }
 
     } else {
 
-        // هدر اصلی پروفایل
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
+                .height(245.dp)
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
@@ -253,20 +283,24 @@ fun HeaderProfile(
 
                 SpacerHeight(5)
 
-                Text(
-                    text = "بهرام افشاری",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                if (showUserInfo) {
+                    SpacerHeight(5)
 
-                SpacerHeight(2)
+                    Text(
+                        text = "بهرام افشاری",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
 
-                Text(
-                    text = "0912123456",
-                    fontSize = 14.sp,
-                    color = Color.White
-                )
+                    SpacerHeight(2)
+
+                    Text(
+                        text = "0912123456",
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
+                }
             }
         }
     }

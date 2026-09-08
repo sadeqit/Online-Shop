@@ -19,13 +19,18 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.R
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun CustomTopBar(
@@ -36,6 +41,12 @@ fun CustomTopBar(
     onBackClick: () -> Unit,
     hasNotification: Boolean
 ) {
+
+    val viewModel: ProfileViewModel = hiltViewModel()
+
+    val profileImageUri by viewModel.profileImageUri.collectAsState(
+        initial = null
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,8 +70,7 @@ fun CustomTopBar(
         }
 
 
-
-        // عکس دلخواه
+        // عکس لوگو
         Image(
             painter = painterResource(R.drawable.fulllogo),
             contentDescription = null,
@@ -72,14 +82,24 @@ fun CustomTopBar(
             modifier = Modifier.weight(1f)
         )
 
-        // سمت راست: پروفایل
-        Image(
-            painter = painterResource(R.drawable.profile),
-            contentDescription = "پروفایل",
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-        )
+        // پروفایل
+        if (profileImageUri != null) {
+            AsyncImage(
+                model = profileImageUri,
+                contentDescription = "پروفایل",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+        } else {
+            Image(
+                painter = painterResource(R.drawable.profile),
+                contentDescription = "پروفایل",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+        }
 
 
         // ناتیفیکیشن

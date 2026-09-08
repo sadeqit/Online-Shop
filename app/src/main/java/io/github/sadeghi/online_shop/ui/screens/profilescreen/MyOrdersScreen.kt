@@ -23,31 +23,37 @@ fun MyOrdersScreen() {
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        HeaderProfile(true)
-
-        SpacerHeight(50)
-
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
 
-            Text(
-                text = "سفارشات من",
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Ltr
+            ) {
+                HeaderProfile(true)
+            }
+
+            SpacerHeight(50)
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    ,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Right
-            )
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
 
-            SpacerHeight(20)
+                Text(
+                    text = "سفارشات من",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Right
+                )
 
-            OrderItem()
+                SpacerHeight(20)
+
+                OrderItem()
+            }
         }
     }
-}}
+}

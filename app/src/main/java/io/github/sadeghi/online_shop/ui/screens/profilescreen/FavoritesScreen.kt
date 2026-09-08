@@ -100,32 +100,5 @@ fun FavoritesScreen(
 /*@Composable
 fun FavoritesScreen() {
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
 
-        HeaderProfile(true)
-
-        SpacerHeight(50)
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-        ) {
-
-            Text(
-                text = "علاقه مندی های من",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Right
-            )
-
-            SpacerHeight(20)
-
-
-        }
-    }
 }*/

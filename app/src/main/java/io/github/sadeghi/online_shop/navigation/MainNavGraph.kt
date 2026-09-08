@@ -21,6 +21,7 @@ import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportS
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.AddressesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.ChangePasswordScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.EditProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
@@ -168,6 +169,11 @@ fun MainNavGraph(
             FavoritesScreen(
                 navController = navController
 
+            )
+        }
+
+        composable(Screens.EditProfile.route) {
+            EditProfileScreen(
             )
         }
 

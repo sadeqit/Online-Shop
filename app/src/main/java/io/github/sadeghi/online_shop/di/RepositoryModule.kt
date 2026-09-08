@@ -6,12 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
-import io.github.sadeghi.online_shop.data.local.database.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.repository.IProfileRepository
+import io.github.sadeghi.online_shop.data.repository.ProfileRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
@@ -19,5 +21,13 @@ object AuthModule {
         userPreferences: UserPreferences
     ): IAuthRepository {
         return AuthRepository(userPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(
+        profileRepository: ProfileRepository
+    ): IProfileRepository {
+        return profileRepository
     }
 }

@@ -46,7 +46,7 @@ fun EditProfileScreen(
         ) {
             // ✅ هدر ثابت در بالا
             HeaderProfile(
-
+                iconEdit = false
             )
 
             // ✅ بقیه محتوا با اسکرول

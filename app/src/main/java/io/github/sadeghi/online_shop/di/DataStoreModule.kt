@@ -9,7 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.github.sadeghi.online_shop.data.local.database.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
 import javax.inject.Singleton
 
 private val Context.appDataStore: DataStore<Preferences>
@@ -30,8 +30,8 @@ object DataStoreModule {
     @Provides
     @Singleton
     fun provideUserPreferences(
-        @ApplicationContext context: Context
+        dataStore: DataStore<Preferences>
     ): UserPreferences {
-        return UserPreferences(context)
+        return UserPreferences(dataStore)
     }
 }

@@ -45,39 +45,3 @@ class ProfileViewModel @Inject constructor(
     }
 }
 
-/*
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
-    private val userPreferences: UserPreferences
-
-) : ViewModel() {
-    var phoneNumber by mutableStateOf("")
-        private set
-
-    fun onPhoneNumberChange(value: String) {
-        phoneNumber = value.trim()
-
-    }
-
-    var data by mutableStateOf("")
-        private set
-
-    fun onDataChange(value: String) {
-        data = value.trim()
-
-    }
-
-    val profileImageUri: StateFlow<String?> =
-        userPreferences.profileImageUri
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = null
-            )
-
-    fun saveProfileImage(uri: String) {
-        viewModelScope.launch {
-            userPreferences.saveProfileImage(uri)
-        }
-    }
-}*/

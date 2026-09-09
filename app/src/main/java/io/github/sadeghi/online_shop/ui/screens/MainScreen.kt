@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.sadeghi.online_shop.navigation.MainNavGraph
@@ -19,13 +18,13 @@ import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CustomBottomBar
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawer.CustomNavigationDrawer
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.CustomTopBar
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
 import io.github.sadeghi.online_shop.viewModel.DrawerViewModel
-import io.github.sadeghi.online_shop.viewModel.HomeViewModel
 
 @Composable
 fun MainScreen(
     drawerViewModel: DrawerViewModel = hiltViewModel(),
-    homeViewModel: HomeViewModel = hiltViewModel()
+    notificationsViewModel: NotificationsViewModel = hiltViewModel()
 ) {
 
     val navController = rememberNavController()
@@ -36,8 +35,9 @@ fun MainScreen(
     val currentRoute =
         currentBackStackEntry?.destination?.route
 
-    val hasNotification by
-    homeViewModel.hasNotification.collectAsState()
+    val hasNotification = notificationsViewModel.hasNotification
+
+
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -57,13 +57,11 @@ fun MainScreen(
                 },
 
                 onNotificationClick = {
-                    homeViewModel.onNotificationClick {
-                        navController.navigate(Screens.Notifications.route) {
-                            popUpTo(Screens.Home.route) {
-                                inclusive = false
-                            }
-                            launchSingleTop = true
+                    navController.navigate(Screens.Notifications.route) {
+                        popUpTo(Screens.Home.route) {
+                            inclusive = false
                         }
+                        launchSingleTop = true
                     }
                 },
 
@@ -77,77 +75,28 @@ fun MainScreen(
             )
 
         },
+
         bottomBar = {
             CustomBottomBar(
                 selectedRoute = currentRoute,
                 onItemSelected = { route ->
-
-                    if (route == currentRoute) {
-                        return@CustomBottomBar
-                    }
-
-                    when (route) {
-
-                        Screens.Home.route -> {
-                            navController.popBackStack(
-                                Screens.Home.route,
-                                inclusive = false
-                            )
-                        }
-
-                        Screens.Profile.route -> {
-
-                            val popped = navController.popBackStack(
-                                Screens.Profile.route,
-                                inclusive = false
-                            )
-
-                            if (!popped) {
-                                navController.navigate(Screens.Profile.route) {
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
-
-                        else -> {
-                            navController.navigate(route) {
-                                popUpTo(Screens.Home.route) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
-                }
-            )
-        }
-
-        /*bottomBar = {
-            CustomBottomBar(
-                selectedRoute = currentRoute,
-                onItemSelected = { route ->
-
-                    if (route == Screens.Home.route) {
-                        navController.popBackStack(
-                            Screens.Home.route,
-                            inclusive = false
-                        )
-                        return@CustomBottomBar
-                    }
-
+                    // اگر روی صفحه فعلی کلیک شد، کاری نکن
                     if (route == currentRoute) return@CustomBottomBar
 
+                    // نویگیشن به صفحه جدید
                     navController.navigate(route) {
-                        popUpTo(Screens.Home.route) {
+                        // پاپ کردن تا ریشه (Home) برای جلوگیری از انباشته شدن
+                        popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
+                        // جلوگیری از ایجاد چندین instance
                         launchSingleTop = true
+                        // بازیابی state قبلی
                         restoreState = true
                     }
                 }
             )
-        }*/
+        }
 
 
     ) { paddingValues ->
@@ -159,7 +108,8 @@ fun MainScreen(
         ) {
 
             MainNavGraph(
-                navController = navController
+                navController = navController,
+                notificationsViewModel = notificationsViewModel
             )
 
             CustomNavigationDrawer(

@@ -132,7 +132,7 @@ fun ProfileScreen(
                             image = card.image,
                             title = card.title,
                             profileStyle = true,
-                            modifier = Modifier.size(150.dp, 140.dp),
+                            modifier = Modifier.size(150.dp),
                             onClick = {
                                 card.route.let { route ->
                                     navController.navigate(route)

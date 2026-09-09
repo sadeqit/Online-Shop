@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -57,6 +58,26 @@ fun HeaderProfile(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFFE32A0D),
+                            Color(0xFFFD937F)
+                        ),
+                        start = Offset(x = 0f, y = Float.POSITIVE_INFINITY),
+                        end = Offset(x = Float.POSITIVE_INFINITY, y = 0f)
+                    ),
+                    shape = RoundedCornerShape(
+                        bottomEnd = 30.dp,
+                        bottomStart = 30.dp
+                    )
+                )
+                .padding(vertical = 15.dp)
+        )
+        /*Box(
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(120.dp)
                 .background(
                     brush = Brush.linearGradient(
@@ -73,12 +94,11 @@ fun HeaderProfile(
                     )
                 )
 
-        ) {
+        )*/ {
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -170,11 +190,10 @@ fun HeaderProfile(
         }
 
     } else {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(245.dp)
+                .wrapContentHeight()
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
@@ -189,8 +208,29 @@ fun HeaderProfile(
                         bottomStart = 30.dp
                     )
                 )
+                .padding(bottom = 20.dp)
+        )
 
-        ) {
+        /* Box(
+             modifier = Modifier
+                 .fillMaxWidth()
+                 .height(245.dp)
+                 .background(
+                     brush = Brush.linearGradient(
+                         colors = listOf(
+                             Color(0xFFE32A0D),
+                             Color(0xFFFD937F)
+                         ),
+                         start = Offset(x = 0f, y = Float.POSITIVE_INFINITY),
+                         end = Offset(x = Float.POSITIVE_INFINITY, y = 0f)
+                     ),
+                     shape = RoundedCornerShape(
+                         bottomEnd = 30.dp,
+                         bottomStart = 30.dp
+                     )
+                 )
+
+         )*/ {
 
             Column(
                 modifier = Modifier.fillMaxWidth(),

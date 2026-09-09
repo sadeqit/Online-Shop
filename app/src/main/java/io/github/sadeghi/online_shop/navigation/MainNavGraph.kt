@@ -25,10 +25,12 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.EditProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
 
 @Composable
 fun MainNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    notificationsViewModel: NotificationsViewModel
 ) {
     NavHost(
         navController = navController,
@@ -55,7 +57,7 @@ fun MainNavGraph(
 
         composable(Screens.Notifications.route) {
             NotificationsScreen(
-
+                viewModel = notificationsViewModel
             )
         }
 

@@ -41,6 +41,7 @@ import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.BGShape
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.theme.greeny
+import io.github.sadeghi.online_shop.ui.theme.orange
 import io.github.sadeghi.online_shop.ui.ui_utils.SplashState
 import io.github.sadeghi.online_shop.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
@@ -128,7 +129,7 @@ fun SplashScreen(
             Text(
                 text = buildAnnotatedString {
                     append("فروشگاه اینترنتی ")
-                    withStyle(style = SpanStyle(color = Color(0xFFEF472C))) {
+                    withStyle(style = SpanStyle(color = orange)) {
                         append("آنلاین شاپ")
                     }
                 },

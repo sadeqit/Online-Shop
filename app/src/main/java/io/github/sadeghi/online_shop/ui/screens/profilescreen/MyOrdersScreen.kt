@@ -33,7 +33,7 @@ fun MyOrdersScreen() {
                 HeaderProfile(true)
             }
 
-            SpacerHeight(50)
+            SpacerHeight(40)
 
             Column(
                 modifier = Modifier

@@ -34,6 +34,7 @@ import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductItem
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
+import io.github.sadeghi.online_shop.ui.theme.orange
 
 
 @Composable
@@ -86,7 +87,7 @@ fun Bestselling(
                         else
                             Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "",
-                        tint = Color(0xFFEF472C),
+                        tint = orange,
                         modifier = Modifier.size(20.dp)
                     )
 

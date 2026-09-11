@@ -18,6 +18,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import io.github.sadeghi.online_shop.R
+import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun LogoHeader() {
@@ -37,7 +38,7 @@ fun LogoHeader() {
         Text(
             text = buildAnnotatedString {
                 append("فروشگاه اینترنتی ")
-                withStyle(style = SpanStyle(color = Color(0xFFEF472C))) {
+                withStyle(style = SpanStyle(color = orange)) {
                     append("آنلاین شاپ")
                 }
             },

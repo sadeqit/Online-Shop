@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
+import io.github.sadeghi.online_shop.ui.theme.orange
 import kotlinx.coroutines.launch
 
 @SuppressLint("FrequentlyChangingValue")
@@ -89,7 +90,7 @@ fun ProductDescription(
                     .border(
                         width = 1.dp,
                         color = if (selectedTab == "محصولات مشابه")
-                            Color(0xFFEF472C)
+                            orange
                         else
                             Color.Transparent,
                         shape = RoundedCornerShape(30.dp)
@@ -104,7 +105,7 @@ fun ProductDescription(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 fontSize = 12.sp,
                 color = if (selectedTab == "محصولات مشابه")
-                    Color(0xFFEF472C)
+                    orange
                 else
                     Color.Black,
                 textAlign = TextAlign.Center
@@ -118,7 +119,7 @@ fun ProductDescription(
                     .border(
                         width = 1.dp,
                         color = if (selectedTab == "نظرات")
-                            Color(0xFFEF472C)
+                            orange
                         else
                             Color.Transparent,
                         shape = RoundedCornerShape(30.dp)
@@ -133,7 +134,7 @@ fun ProductDescription(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 fontSize = 12.sp,
                 color = if (selectedTab == "نظرات")
-                    Color(0xFFEF472C)
+                    orange
                 else
                     Color.Black,
                 textAlign = TextAlign.Center
@@ -147,7 +148,7 @@ fun ProductDescription(
                     .border(
                         width = 1.dp,
                         color = if (selectedTab == "ویژگی ها")
-                            Color(0xFFEF472C)
+                            orange
                         else
                             Color.Transparent,
                         shape = RoundedCornerShape(30.dp)
@@ -162,7 +163,7 @@ fun ProductDescription(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 fontSize = 12.sp,
                 color = if (selectedTab == "ویژگی ها")
-                    Color(0xFFEF472C)
+                    orange
                 else
                     Color.Black,
                 textAlign = TextAlign.Center
@@ -176,7 +177,7 @@ fun ProductDescription(
                     .border(
                         width = 1.dp,
                         color = if (selectedTab == "توضیحات")
-                            Color(0xFFEF472C)
+                            orange
                         else
                             Color.Transparent,
                         shape = RoundedCornerShape(30.dp)
@@ -191,7 +192,7 @@ fun ProductDescription(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 fontSize = 12.sp,
                 color = if (selectedTab == "توضیحات")
-                    Color(0xFFEF472C)
+                    orange
                 else
                     Color.Black,
                 textAlign = TextAlign.Center

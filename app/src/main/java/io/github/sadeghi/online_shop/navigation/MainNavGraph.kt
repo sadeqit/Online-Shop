@@ -25,6 +25,7 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.EditProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressFormScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
 
 @Composable
@@ -164,7 +165,7 @@ fun MainNavGraph(
 
 
         composable(Screens.Addresses.route) {
-            AddressesScreen()
+            AddressesScreen(navController)
         }
 
         composable(Screens.Favorites.route) {
@@ -176,6 +177,26 @@ fun MainNavGraph(
 
         composable(Screens.EditProfile.route) {
             EditProfileScreen(
+            )
+        }
+        composable(Screens.AddressFormScreen.route) {
+            AddressFormScreen(
+                navController = navController,
+                addressId = null
+            )
+        }
+        composable(
+            route = "${Screens.AddressFormScreen.route}/{addressId}"
+        ) { backStackEntry ->
+
+            val addressId = backStackEntry
+                .arguments
+                ?.getString("addressId")
+                ?.toIntOrNull()
+
+            AddressFormScreen(
+                navController = navController,
+                addressId = addressId
             )
         }
 

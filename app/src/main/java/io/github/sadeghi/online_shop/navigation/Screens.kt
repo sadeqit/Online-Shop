@@ -40,5 +40,12 @@ sealed class Screens(val route: String) {
     data object Addresses : Screens("addresses")
     data object Favorites : Screens("favorites")
 
+    data object AddressFormScreen : Screens("addressformscreen") {
+
+        fun createRoute(addressId: Int): String {
+            return "$route/$addressId"
+        }
+    }
+
 
 }

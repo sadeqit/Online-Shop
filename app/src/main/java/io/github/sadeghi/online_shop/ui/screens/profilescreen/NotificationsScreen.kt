@@ -46,6 +46,7 @@ import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
+import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun NotificationsScreen(
@@ -70,7 +71,7 @@ fun NotificationsScreen(
                 HeaderProfile(true)
             }
 
-            SpacerHeight(50)
+            SpacerHeight(40)
 
             Column(
                 modifier = Modifier
@@ -282,7 +283,7 @@ private fun ExpandedCard(
                     if (!notification.isRead) {
                         Modifier.border(
                             width = 1.dp,
-                            color = Color(0xFFEF472C),
+                            color = orange,
                             shape = RoundedCornerShape(20.dp)
                         )
                     } else {

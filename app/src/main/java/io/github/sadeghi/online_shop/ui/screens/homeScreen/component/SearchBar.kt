@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.sadeghi.online_shop.ui.component.AppTextField
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
+import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun SearchBar(
@@ -67,7 +68,7 @@ fun SearchBar(
                 leadingIcon = {
                     Icon(
                         Icons.Default.Search, "",
-                        tint = Color(0xFFEF472C)
+                        tint = orange
                     )
                 },
                 keyboardType = KeyboardType.Text,

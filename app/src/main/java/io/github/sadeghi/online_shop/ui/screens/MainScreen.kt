@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.sadeghi.online_shop.navigation.MainNavGraph
@@ -75,28 +74,46 @@ fun MainScreen(
             )
 
         },
-
         bottomBar = {
             CustomBottomBar(
                 selectedRoute = currentRoute,
                 onItemSelected = { route ->
-                    // اگر روی صفحه فعلی کلیک شد، کاری نکن
-                    if (route == currentRoute) return@CustomBottomBar
 
-                    // نویگیشن به صفحه جدید
+                    if (route == currentRoute) {
+                        return@CustomBottomBar
+                    }
+
                     navController.navigate(route) {
-                        // پاپ کردن تا ریشه (Home) برای جلوگیری از انباشته شدن
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+
+                        popUpTo(
+                            navController.currentBackStackEntry?.destination?.id
+                                ?: return@navigate
+                        ) {
+                            inclusive = true
                         }
-                        // جلوگیری از ایجاد چندین instance
+
                         launchSingleTop = true
-                        // بازیابی state قبلی
-                        restoreState = true
                     }
                 }
             )
         }
+        /* bottomBar = {
+             CustomBottomBar(
+                 selectedRoute = currentRoute,
+                 onItemSelected = { route ->
+                     if (route == currentRoute) return@CustomBottomBar
+
+                     navController.navigate(route) {
+                         popUpTo(Screens.Home.route) {
+                             saveState = true
+                             inclusive = false
+                         }
+                         launchSingleTop = true
+                         restoreState = true
+                     }
+                 }
+             )
+         }*/
 
 
     ) { paddingValues ->

@@ -156,7 +156,7 @@ fun MainNavGraph(
             MyOrdersScreen()
         }
         composable(Screens.MyBuy.route) {
-            MyBuyScreen()
+            MyBuyScreen( navController = navController)
         }
 
         composable(Screens.ChangePassword.route) {

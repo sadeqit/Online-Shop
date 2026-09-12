@@ -48,8 +48,6 @@ fun CustomNavigationDrawer(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-
-            // 🔹 لایه تاریک روی محتوای پشت Drawer
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -62,7 +60,6 @@ fun CustomNavigationDrawer(
                     }
             )
 
-            // 🔹 خود Drawer
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

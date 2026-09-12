@@ -75,26 +75,7 @@ fun HeaderProfile(
                 )
                 .padding(vertical = 15.dp)
         )
-        /*Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFE32A0D),
-                            Color(0xFFFD937F)
-                        ),
-                        start = Offset(x = 0f, y = Float.POSITIVE_INFINITY),
-                        end = Offset(x = Float.POSITIVE_INFINITY, y = 0f)
-                    ),
-                    shape = RoundedCornerShape(
-                        bottomEnd = 30.dp,
-                        bottomStart = 30.dp
-                    )
-                )
-
-        )*/ {
+        {
 
             Row(
                 modifier = Modifier
@@ -129,7 +110,7 @@ fun HeaderProfile(
                     }
                 }
 
-                SpacerWidth(9)
+                SpacerWidth(12)
 
 
 
@@ -211,26 +192,7 @@ fun HeaderProfile(
                 .padding(bottom = 20.dp)
         )
 
-        /* Box(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .height(245.dp)
-                 .background(
-                     brush = Brush.linearGradient(
-                         colors = listOf(
-                             Color(0xFFE32A0D),
-                             Color(0xFFFD937F)
-                         ),
-                         start = Offset(x = 0f, y = Float.POSITIVE_INFINITY),
-                         end = Offset(x = Float.POSITIVE_INFINITY, y = 0f)
-                     ),
-                     shape = RoundedCornerShape(
-                         bottomEnd = 30.dp,
-                         bottomStart = 30.dp
-                     )
-                 )
-
-         )*/ {
+         {
 
             Column(
                 modifier = Modifier.fillMaxWidth(),

@@ -27,8 +27,16 @@ fun NavGraph(
         }
 
         composable(Screens.Main.route) {
-            MainScreen()
+            MainScreen(
+                onLogout = {
+                    navController.navigate(Screens.Splash.route) {
+                        popUpTo(Screens.Main.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
-
     }
 }

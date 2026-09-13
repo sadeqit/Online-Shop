@@ -31,7 +31,8 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
-    notificationsViewModel: NotificationsViewModel
+    notificationsViewModel: NotificationsViewModel,
+    onLogout: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -52,7 +53,8 @@ fun MainNavGraph(
 
         composable(Screens.Profile.route) {
             ProfileScreen(
-                navController = navController
+                navController = navController,
+                onLogout = onLogout
             )
         }
 
@@ -160,7 +162,11 @@ fun MainNavGraph(
         }
 
         composable(Screens.ChangePassword.route) {
-            ChangePasswordScreen()
+            ChangePasswordScreen(
+                onSuccess = {
+                    navController.popBackStack()
+                }
+            )
         }
 
 

@@ -47,12 +47,6 @@ fun LoginScreen(
                     focusManager.clearFocus()
                 }) {
 
-
-          /*  val navigateToHome: () -> Unit = {
-                navController.navigate(Screens.Home.route) {
-                    popUpTo(Screens.Login.route) { inclusive = true }
-                }
-            }*/
             val navigateToHome: () -> Unit = {
                 navController.navigate(Screens.Main.route) {
                     popUpTo(Screens.Login.route) {
@@ -71,8 +65,10 @@ fun LoginScreen(
                 LoginStep.SIGN_IN -> SignInContent(
                     email = viewModel.email,
                     password = viewModel.password,
-                    onEmailChange = { viewModel.onEmailChange(it) },
-                    onPasswordChange = { viewModel.onPasswordChange(it) },
+                    errorMessage = viewModel.errorMessage,
+                    isLoading = viewModel.isLoading,
+                    onEmailChange = viewModel::onEmailChange,
+                    onPasswordChange = viewModel::onPasswordChange,
                     onLoginClick = {
                         viewModel.signIn {
                             navController.navigate(Screens.Main.route) {

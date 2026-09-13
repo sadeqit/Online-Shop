@@ -154,8 +154,76 @@ fun ProductItem(
                 .padding(top =10.dp),
             contentScale = ContentScale.Crop
         )
-
         Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(15.dp))
+                .background(Color.White)
+                .size(width = 170.dp, height = 90.dp)
+                .layoutId("describe")
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 7.dp
+                    ),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                // اسم محصول - همیشه بالا
+                Text(
+                    text = product.title,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    textAlign = TextAlign.Right,
+                    maxLines = 2,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp)
+                )
+
+                // قیمت - همیشه پایین
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(
+                        text = "تومان",
+                        fontSize = 10.sp,
+                        color = Color.Black,
+                        maxLines = 1
+                    )
+
+                    SpacerWidth(5)
+
+                    Text(
+                        text = product.price,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        maxLines = 1
+                    )
+
+                    SpacerWidth(5)
+
+                    Text(
+                        text = product.oldPrice,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray,
+                        textDecoration = TextDecoration.LineThrough,
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+
+        /*Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15.dp))
                 .background(Color.White)
@@ -212,7 +280,7 @@ fun ProductItem(
 
                 }
             }
-        }
+        }*/
 
         Box(
             modifier = Modifier

@@ -42,6 +42,8 @@ import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 fun SignInContent(
     email: String,
     password: String,
+    errorMessage: String?,
+    isLoading: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -130,12 +132,26 @@ fun SignInContent(
                     }
                 }
             )
+            errorMessage?.let { error ->
+
+                SpacerHeight(8)
+
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Right,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
 
             SpacerHeight(24)
 
             GradientButton(
                 text = "ورود",
-                enabled = email.isNotBlank() && password.isNotBlank(),
+                enabled = email.isNotBlank() &&
+                        password.isNotBlank() &&
+                        !isLoading,
                 onClick = {
                     focusManager.clearFocus()
                     onLoginClick()

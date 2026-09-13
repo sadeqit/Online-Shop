@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -136,7 +137,10 @@ fun HeaderProfile(
                                 startAngle = 270f,
                                 sweepAngle = 270f,
                                 useCenter = false,
-                                style = Stroke(width = 4.dp.toPx())
+                                style = Stroke(
+                                    width = 4.dp.toPx(),
+                                    cap = StrokeCap.Round
+                                )
                             )
                         }
                     }
@@ -162,7 +166,10 @@ fun HeaderProfile(
                                 startAngle = 270f,
                                 sweepAngle = 270f,
                                 useCenter = false,
-                                style = Stroke(width = 4.dp.toPx())
+                                style = Stroke(
+                                    width = 4.dp.toPx(),
+                                    cap = StrokeCap.Round
+                                )
                             )
                         }
                     }
@@ -250,17 +257,43 @@ fun HeaderProfile(
                                     startAngle = 270f,
                                     sweepAngle = 270f,
                                     useCenter = false,
-                                    style = Stroke(width = 4.dp.toPx())
+                                    style = Stroke(
+                                        width = 4.dp.toPx(),
+                                        cap = StrokeCap.Round
+                                    )
                                 )
                             }
                         }
                     } else {
-                        Image(
-                            painter = painterResource(R.drawable.profile),
-                            contentDescription = "profile-pic",
-                            modifier = Modifier.size(100.dp),
-                            contentScale = ContentScale.Crop
-                        )
+                        Box(
+                            modifier = Modifier.size(120.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            Image(
+                                painter = painterResource(R.drawable.profile),
+                                contentDescription = "profile-pic",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+
+                            Canvas(
+                                modifier = Modifier.size(115.dp)
+                            ) {
+                                drawArc(
+                                    color = Color.White,
+                                    startAngle = 270f,
+                                    sweepAngle = 270f,
+                                    useCenter = false,
+                                    style = Stroke(
+                                        width = 4.dp.toPx(),
+                                        cap = StrokeCap.Round
+                                    )
+                                )
+                            }
+                        }
                     }
 
                     SpacerWidth(20)

@@ -196,7 +196,8 @@ fun SubmitContent(
         SpacerHeight(10)
         RadioButton(
             gender = viewModel.gender,
-            onGenderChange = viewModel::onGenderChange
+            onGenderChange = viewModel::onGenderChange,
+            hasError = viewModel.genderError != null
         )
 
         if (viewModel.genderError != null) {

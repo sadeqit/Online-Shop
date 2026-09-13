@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
 
     implementation("com.github.yalantis:ucrop:2.2.11")
+    implementation("androidx.transition:transition:1.6.0")
 
     implementation("io.github.alirezajavan:shamsi-picker:1.6.0")
 

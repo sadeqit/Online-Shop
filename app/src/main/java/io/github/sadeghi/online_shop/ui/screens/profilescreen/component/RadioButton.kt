@@ -20,6 +20,55 @@ import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 @Composable
 fun RadioButton(
     gender: String,
+    onGenderChange: (String) -> Unit,
+    hasError: Boolean = false
+) {
+
+    val radioColor = if (hasError) Color.Red else Color.Black
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+
+        Text(text = "مرد")
+
+        RadioButton(
+            selected = gender == "مرد",
+            onClick = {
+                onGenderChange("مرد")
+            },
+            modifier = Modifier.scale(0.85f),
+            colors = RadioButtonDefaults.colors(
+                selectedColor = radioColor,
+                unselectedColor = radioColor
+            )
+        )
+
+        SpacerWidth(12)
+
+        Text(text = "زن")
+
+        RadioButton(
+            selected = gender == "زن",
+            onClick = {
+                onGenderChange("زن")
+            },
+            modifier = Modifier.scale(0.85f),
+            colors = RadioButtonDefaults.colors(
+                selectedColor = radioColor,
+                unselectedColor = radioColor
+            )
+        )
+    }
+}
+/*
+@Composable
+fun RadioButton(
+    gender: String,
     onGenderChange: (String) -> Unit
 ) {
 
@@ -62,3 +111,4 @@ fun RadioButton(
     }
 
 }
+*/

@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class UserPreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>
-) {
+)
+{
 
     companion object {
         private val IS_LOGGED_IN =
@@ -40,6 +41,33 @@ class UserPreferences @Inject constructor(
 
         private val USER_FULL_NAME =
             stringPreferencesKey("user_full_name")
+
+        private val USER_PASSWORD =
+            stringPreferencesKey("user_password")
+    }
+
+    // برای تست بعدا پاک شود
+
+
+
+    // برای تست بعدا پاک شود
+    suspend fun savePassword(password: String) {
+        dataStore.edit {
+            it[USER_PASSWORD] = password
+            it[IS_PASSWORD_SET] = true
+        }
+    }
+
+    val userPassword: Flow<String?> =
+        dataStore.data.map {
+            it[USER_PASSWORD]
+        }
+
+    suspend fun updatePassword(password: String) {
+        dataStore.edit {
+            it[USER_PASSWORD] = password
+            it[IS_PASSWORD_SET] = true
+        }
     }
 
     // ---------------- SAVE ----------------
@@ -73,17 +101,24 @@ class UserPreferences @Inject constructor(
     suspend fun clearLogin() {
         dataStore.edit {
             it[IS_LOGGED_IN] = false
+        }
+    }
+
+ /*   suspend fun clearLogin() {
+        dataStore.edit {
+            it[IS_LOGGED_IN] = false
             it[IS_PASSWORD_SET] = false
             it[IS_FULLNAME_SET] = false
 
             it.remove(USER_EMAIL)
+            it.remove(USER_PASSWORD)
             it.remove(USER_FULL_NAME)
             it.remove(USER_PHONE)
             it.remove(USER_BIRTH_DATE)
             it.remove(USER_GENDER)
             it.remove(PROFILE_IMAGE_URI)
         }
-    }
+    }*/
 
     // ---------------- FLOWS ----------------
 

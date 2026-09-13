@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
@@ -46,6 +47,7 @@ fun SetPasswordContent(
 
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -79,10 +81,19 @@ fun SetPasswordContent(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next,
                 visualTransformation =
-                    if (passwordVisible) VisualTransformation.None
-                    else PasswordVisualTransformation(),
+                    if (passwordVisible)
+                        VisualTransformation.None
+                    else
+                        PasswordVisualTransformation(),
+                onImeAction = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                },
                 trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    IconButton(
+                        onClick = {
+                            passwordVisible = !passwordVisible
+                        }
+                    ) {
                         Icon(
                             imageVector =
                                 if (passwordVisible)
@@ -105,17 +116,24 @@ fun SetPasswordContent(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
                 visualTransformation =
-                    if (passwordVisible) VisualTransformation.None
-                    else PasswordVisualTransformation(),
+                    if (confirmPasswordVisible)
+                        VisualTransformation.None
+                    else
+                        PasswordVisualTransformation(),
                 onImeAction = {
                     focusManager.clearFocus()
                     onSubmitClick()
                 },
                 trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    IconButton(
+                        onClick = {
+                            confirmPasswordVisible =
+                                !confirmPasswordVisible
+                        }
+                    ) {
                         Icon(
                             imageVector =
-                                if (passwordVisible)
+                                if (confirmPasswordVisible)
                                     Icons.Outlined.Visibility
                                 else
                                     Icons.Outlined.VisibilityOff,

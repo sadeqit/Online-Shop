@@ -1,9 +1,12 @@
 package io.github.sadeghi.online_shop.ui.screens
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,20 +25,21 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.yalantis.ucrop.UCrop
 import io.github.sadeghi.online_shop.navigation.Screens
+import io.github.sadeghi.online_shop.ui.component.GradientButton
+import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.card.CardItem
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.profileCards
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
-import android.app.Activity
-import android.net.Uri
-import com.yalantis.ucrop.UCrop
 import java.io.File
 
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onLogout: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -141,6 +145,27 @@ fun ProfileScreen(
                         )
                     }
                 }
+
+                SpacerHeight(20)
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp),
+                ) {
+                    GradientButton(
+                        text = "خروج از حساب",
+
+                        onClick = {
+                            viewModel.logout {
+                                onLogout()
+                            }
+                        }
+                    )
+                }
+
+                SpacerHeight(20)
             }
         }
     }

@@ -23,7 +23,8 @@ import io.github.sadeghi.online_shop.viewModel.DrawerViewModel
 @Composable
 fun MainScreen(
     drawerViewModel: DrawerViewModel = hiltViewModel(),
-    notificationsViewModel: NotificationsViewModel = hiltViewModel()
+    notificationsViewModel: NotificationsViewModel = hiltViewModel(),
+    onLogout: () -> Unit
 ) {
 
     val navController = rememberNavController()
@@ -97,24 +98,6 @@ fun MainScreen(
                 }
             )
         }
-        /* bottomBar = {
-             CustomBottomBar(
-                 selectedRoute = currentRoute,
-                 onItemSelected = { route ->
-                     if (route == currentRoute) return@CustomBottomBar
-
-                     navController.navigate(route) {
-                         popUpTo(Screens.Home.route) {
-                             saveState = true
-                             inclusive = false
-                         }
-                         launchSingleTop = true
-                         restoreState = true
-                     }
-                 }
-             )
-         }*/
-
 
     ) { paddingValues ->
 
@@ -126,7 +109,8 @@ fun MainScreen(
 
             MainNavGraph(
                 navController = navController,
-                notificationsViewModel = notificationsViewModel
+                notificationsViewModel = notificationsViewModel,
+                onLogout = onLogout
             )
 
             CustomNavigationDrawer(

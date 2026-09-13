@@ -141,43 +141,6 @@ fun AddressesScreen(
                     }
                 }
 
-                /*Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                ) {
-
-                    addresses.forEach { address ->
-
-                        AddressCard(
-                            address = address,
-
-                            onEditClick = {
-
-                                navController.navigate(
-                                    Screens.AddressFormScreen.createRoute(
-                                        address.id
-                                    )
-                                )
-                            },
-
-                            onDeleteClick = {
-                                addressToDelete = address
-                            },
-
-                            onDefaultChange = {
-
-                                viewModel.setDefaultAddress(
-                                    address.id
-                                )
-                            }
-                        )
-
-                        SpacerHeight(20)
-                    }
-                }*/
-
                 GradientButton(
                     text = "+ ثبت آدرس جدید"
                 ) {

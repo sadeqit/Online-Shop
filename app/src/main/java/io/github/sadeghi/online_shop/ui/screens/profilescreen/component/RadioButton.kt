@@ -18,8 +18,11 @@ import androidx.compose.ui.unit.dp
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 
 @Composable
-fun RadioButton() {
-    val statType = remember { mutableStateListOf(false, false) }
+fun RadioButton(
+    gender: String,
+    onGenderChange: (String) -> Unit
+) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,29 +34,29 @@ fun RadioButton() {
 
         Text(text = "مرد")
         RadioButton(
-            selected = statType[0],
+            selected = gender == "مرد",
             onClick = {
-                statType[0] = true
-                statType[1] = false
+                onGenderChange("مرد")
             },
             modifier = Modifier.scale(0.85f),
             colors = RadioButtonDefaults.colors(
                 selectedColor = Color.Red,
-
-                )
+                unselectedColor = Color.Red
+            )
         )
         SpacerWidth(12)
         Text(text = "زن")
 
         RadioButton(
-            selected = statType[1],
+            selected = gender == "زن",
             onClick = {
-                statType[0] = false
-                statType[1] = true
+                onGenderChange("زن")
             },
             modifier = Modifier.scale(0.85f),
             colors = RadioButtonDefaults.colors(
-                selectedColor = Color.Red,)
+                selectedColor = Color.Red,
+                unselectedColor = Color.Red
+            )
         )
 
     }

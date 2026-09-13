@@ -17,31 +17,165 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: IProfileRepository,
-    private val userPreferences: UserPreferences
+    private val profileRepository: IProfileRepository
 ) : ViewModel() {
+
+    var fullName by mutableStateOf("")
+        private set
 
     var phoneNumber by mutableStateOf("")
         private set
 
-    fun onPhoneNumberChange(value: String) {
-        phoneNumber = value.trim()
-    }
-
-    var data by mutableStateOf("")
+    var email by mutableStateOf("")
         private set
 
-    fun onDataChange(value: String) {
-        data = value.trim()
-    }
+    var birthDate by mutableStateOf("")
+        private set
+
+    var gender by mutableStateOf("")
+        private set
+
+    var phoneNumberError by mutableStateOf<String?>(null)
+        private set
+
+    var birthDateError by mutableStateOf<String?>(null)
+        private set
+
+    var genderError by mutableStateOf<String?>(null)
+        private set
 
     val profileImageUri: Flow<String?> =
-        userPreferences.profileImageUri
+        profileRepository.getProfileImage()
+
+    var isSaving by mutableStateOf(false)
+        private set
+
+    init {
+        loadProfile()
+    }
+
+    private fun loadProfile() {
+
+        viewModelScope.launch {
+
+            launch {
+                profileRepository.getFullName()
+                    .collect { value ->
+                        fullName = value
+                    }
+            }
+
+            launch {
+                profileRepository.getPhoneNumber()
+                    .collect { value ->
+                        phoneNumber = value
+                    }
+            }
+
+            launch {
+                profileRepository.getEmail()
+                    .collect { value ->
+                        email = value ?: ""
+                    }
+            }
+
+            launch {
+                profileRepository.getBirthDate()
+                    .collect { value ->
+                        birthDate = value
+                    }
+            }
+
+            launch {
+                profileRepository.getGender()
+                    .collect { value ->
+                        gender = value
+                    }
+            }
+        }
+    }
+
+    fun onPhoneNumberChange(value: String) {
+        phoneNumber = value.trim()
+        phoneNumberError = null
+    }
+
+    fun onBirthDateChange(value: String) {
+        birthDate = value.trim()
+        birthDateError = null
+    }
+
+    fun onGenderChange(value: String) {
+        gender = value
+        genderError = null
+    }
+
+    fun onFullNameChange(value: String) {
+        fullName = value.trim()
+    }
+
+
+    fun saveProfile(
+        onSuccess: () -> Unit = {}
+    ) {
+
+        if (isSaving) return
+
+        viewModelScope.launch {
+
+            isSaving = true
+
+            try {
+
+                profileRepository.saveProfile(
+                    fullName = fullName,
+                    phoneNumber = phoneNumber,
+                    email = email,
+                    birthDate = birthDate,
+                    gender = gender
+                )
+
+                onSuccess()
+
+            } finally {
+
+                isSaving = false
+            }
+        }
+    }
 
     fun saveProfileImage(uri: String) {
+
         viewModelScope.launch {
             profileRepository.saveProfileImage(uri)
         }
     }
-}
 
+    fun validateProfile(): Boolean {
+
+        var isValid = true
+
+        if (phoneNumber.isBlank()) {
+            phoneNumberError = "شماره همراه را وارد کنید"
+            isValid = false
+        } else if (
+            !phoneNumber.startsWith("09") ||
+            phoneNumber.length != 11
+        ) {
+            phoneNumberError = "شماره همراه معتبر نیست"
+            isValid = false
+        }
+
+        if (birthDate.isBlank()) {
+            birthDateError = "تاریخ تولد را انتخاب کنید"
+            isValid = false
+        }
+
+        if (gender.isBlank()) {
+            genderError = "جنسیت را انتخاب کنید"
+            isValid = false
+        }
+
+        return isValid
+    }
+}

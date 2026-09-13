@@ -11,8 +11,6 @@ class AuthRepository @Inject constructor(
     override suspend fun verifyOtp(email: String, otp: String): Boolean {
         return  (otp == "123456")
 
-
-
     }
 
     override fun isUserLoggedIn(): Flow<Boolean> {
@@ -24,5 +22,8 @@ class AuthRepository @Inject constructor(
     }
     suspend fun saveLogin(email: String) {
         userPreferences.saveLogin(email)
+    }
+    override suspend fun saveFullName(fullName: String) {
+        userPreferences.saveFullName(fullName)
     }
 }

@@ -29,14 +29,13 @@ import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.SubmitContent
-import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 import java.io.File
 
 @Composable
 fun EditProfileScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
-    viewModel1: ProfileViewModel = hiltViewModel(),
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onSaveSuccess: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -52,7 +51,7 @@ fun EditProfileScreen(
             }
 
             resultUri?.let {
-                viewModel1.saveProfileImage(it.toString())
+                viewModel.saveProfileImage(it.toString())
             }
         }
     }
@@ -124,7 +123,7 @@ fun EditProfileScreen(
 
                 SpacerHeight(25)
 
-                SubmitContent(viewModel, viewModel1)
+                SubmitContent(viewModel)
 
                 SpacerHeight(15)
 
@@ -133,8 +132,14 @@ fun EditProfileScreen(
                 ) {
                     GradientButton(
                         text = "ثبت تغییرات",
-                        enabled = true
-                    ) {}
+                        enabled = !viewModel.isSaving
+                    ) {
+                        if (viewModel.validateProfile()) {
+                            viewModel.saveProfile {
+                                onSaveSuccess()
+                            }
+                        }
+                    }
                 }
 
                 SpacerHeight(25)

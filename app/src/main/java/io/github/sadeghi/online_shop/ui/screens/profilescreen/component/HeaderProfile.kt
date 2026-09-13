@@ -94,7 +94,7 @@ fun HeaderProfile(
                         SpacerHeight(5)
 
                         Text(
-                            text = "بهرام افشاری",
+                            text = viewModel.fullName,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -103,7 +103,7 @@ fun HeaderProfile(
                         SpacerHeight(2)
 
                         Text(
-                            text = "0912123456",
+                            text = viewModel.phoneNumber,
                             fontSize = 14.sp,
                             color = Color.White
                         )
@@ -289,7 +289,7 @@ fun HeaderProfile(
                     SpacerHeight(5)
 
                     Text(
-                        text = "بهرام افشاری",
+                        text = viewModel.fullName,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -298,7 +298,7 @@ fun HeaderProfile(
                     SpacerHeight(2)
 
                     Text(
-                        text = "0912123456",
+                        text = viewModel.phoneNumber,
                         fontSize = 14.sp,
                         color = Color.White
                     )

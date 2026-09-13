@@ -48,9 +48,16 @@ fun LoginScreen(
                 }) {
 
 
-            val navigateToHome: () -> Unit = {
+          /*  val navigateToHome: () -> Unit = {
                 navController.navigate(Screens.Home.route) {
                     popUpTo(Screens.Login.route) { inclusive = true }
+                }
+            }*/
+            val navigateToHome: () -> Unit = {
+                navController.navigate(Screens.Main.route) {
+                    popUpTo(Screens.Login.route) {
+                        inclusive = true
+                    }
                 }
             }
 
@@ -68,8 +75,10 @@ fun LoginScreen(
                     onPasswordChange = { viewModel.onPasswordChange(it) },
                     onLoginClick = {
                         viewModel.signIn {
-                            navController.navigate(Screens.Home.route) {
-                                popUpTo(Screens.Login.route) { inclusive = true }
+                            navController.navigate(Screens.Main.route) {
+                                popUpTo(Screens.Login.route) {
+                                    inclusive = true
+                                }
                             }
                         }
                     },

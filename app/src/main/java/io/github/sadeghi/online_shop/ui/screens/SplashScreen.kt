@@ -59,8 +59,10 @@ fun SplashScreen(
     LaunchedEffect(splashState) {
         when (splashState) {
             SplashState.NavigateToHome -> {
-                navController.navigate(Screens.Home.route) {
-                    popUpTo(Screens.Splash.route) { inclusive = true }
+                navController.navigate(Screens.Main.route) {
+                    popUpTo(Screens.Splash.route) {
+                        inclusive = true
+                    }
                 }
             }
 

@@ -35,6 +35,7 @@ import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun AddressFormScreen(
@@ -208,7 +209,7 @@ fun AddressFormScreen(
                             focusManager.clearFocus()
 
                             scope.launch {
-                                delay(100)
+                                delay(100.milliseconds)
 
                                 scrollState.animateScrollTo(
                                     scrollState.maxValue

@@ -6,7 +6,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import io.github.sadeghi.online_shop.ui.screens.productScreen.screen.ProductDetailScreen
 import io.github.sadeghi.online_shop.ui.screens.ProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryProductScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
@@ -18,13 +17,14 @@ import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactU
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.RulesScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportScreen
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
+import io.github.sadeghi.online_shop.ui.screens.productScreen.screen.ProductDetailScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.AddressesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.ChangePasswordScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.EditProfileScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.FavoritesScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressFormScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
 
@@ -177,6 +177,9 @@ fun MainNavGraph(
 
         composable(Screens.EditProfile.route) {
             EditProfileScreen(
+                onSaveSuccess = {
+                    navController.popBackStack()
+                }
             )
         }
         composable(Screens.AddressFormScreen.route) {

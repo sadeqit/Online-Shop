@@ -9,4 +9,6 @@ interface IAuthRepository {
     fun isUserLoggedIn(): Flow<Boolean>
 
     suspend fun logout()
+
+    suspend fun saveFullName(fullName: String)
 }

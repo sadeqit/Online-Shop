@@ -28,6 +28,18 @@ class UserPreferences @Inject constructor(
 
         private val PROFILE_IMAGE_URI =
             stringPreferencesKey("profile_image_uri")
+
+        private val USER_PHONE =
+            stringPreferencesKey("user_phone")
+
+        private val USER_BIRTH_DATE =
+            stringPreferencesKey("user_birth_date")
+
+        private val USER_GENDER =
+            stringPreferencesKey("user_gender")
+
+        private val USER_FULL_NAME =
+            stringPreferencesKey("user_full_name")
     }
 
     // ---------------- SAVE ----------------
@@ -45,9 +57,10 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun saveFullNameSet() {
+    suspend fun saveFullName(fullName: String) {
         dataStore.edit {
-            it[IS_FULLNAME_SET] = true
+            it[USER_FULL_NAME] = fullName
+            it[IS_FULLNAME_SET] = fullName.isNotBlank()
         }
     }
 
@@ -64,6 +77,10 @@ class UserPreferences @Inject constructor(
             it[IS_FULLNAME_SET] = false
 
             it.remove(USER_EMAIL)
+            it.remove(USER_FULL_NAME)
+            it.remove(USER_PHONE)
+            it.remove(USER_BIRTH_DATE)
+            it.remove(USER_GENDER)
             it.remove(PROFILE_IMAGE_URI)
         }
     }
@@ -93,5 +110,43 @@ class UserPreferences @Inject constructor(
     val profileImageUri: Flow<String?> =
         dataStore.data.map {
             it[PROFILE_IMAGE_URI]
+        }
+
+    suspend fun saveProfile(
+        fullName: String,
+        phoneNumber: String,
+        email: String,
+        birthDate: String,
+        gender: String
+    ) {
+        dataStore.edit {
+
+            it[USER_FULL_NAME] = fullName
+            it[USER_PHONE] = phoneNumber
+            it[USER_EMAIL] = email
+            it[USER_BIRTH_DATE] = birthDate
+            it[USER_GENDER] = gender
+
+            it[IS_FULLNAME_SET] = fullName.isNotBlank()
+        }
+    }
+    val userFullName: Flow<String> =
+        dataStore.data.map {
+            it[USER_FULL_NAME] ?: ""
+        }
+
+    val userPhone: Flow<String> =
+        dataStore.data.map {
+            it[USER_PHONE] ?: ""
+        }
+
+    val userBirthDate: Flow<String> =
+        dataStore.data.map {
+            it[USER_BIRTH_DATE] ?: ""
+        }
+
+    val userGender: Flow<String> =
+        dataStore.data.map {
+            it[USER_GENDER] ?: ""
         }
 }

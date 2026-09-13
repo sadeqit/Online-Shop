@@ -23,7 +23,8 @@ class LoginViewModel @Inject constructor(
     private val application: Application,
     private val repository: AuthRepository
 
-) : ViewModel() {
+) : ViewModel()
+{
 
     var errorMessage by mutableStateOf<String?>(null)
         private set
@@ -64,12 +65,6 @@ class LoginViewModel @Inject constructor(
 
     var passwordStrength by mutableStateOf(PasswordStrength.NONE)
         private set
-
-
-
-
-
-
 
 
     // ====================
@@ -268,6 +263,7 @@ class LoginViewModel @Inject constructor(
             errorMessage = "اینترنت متصل نیست"
             return
         }
+
         errorMessage = null
         isLoading = true
 
@@ -276,6 +272,7 @@ class LoginViewModel @Inject constructor(
             delay(1200)
 
             repository.saveLogin(email)
+            repository.saveFullName(fullName)
 
             isLoading = false
 

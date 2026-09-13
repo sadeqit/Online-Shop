@@ -47,5 +47,4 @@ sealed class Screens(val route: String) {
         }
     }
 
-
 }

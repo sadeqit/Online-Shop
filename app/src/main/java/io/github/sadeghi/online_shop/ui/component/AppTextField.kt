@@ -33,6 +33,7 @@ fun AppTextField(
     onImeAction: () -> Unit = {},
     isError: Boolean = false,
     supportingText: String? = null,
+    readOnly: Boolean = false,
 ) {
     val borderColor = if (isError) Color.Red else Color.Transparent
     val shape = RoundedCornerShape(12.dp)
@@ -55,6 +56,7 @@ fun AppTextField(
             trailingIcon = trailingIcon,
             leadingIcon = leadingIcon,
             visualTransformation = visualTransformation,
+            readOnly = readOnly,
             isError = isError,
             shape = shape,
             modifier = Modifier
@@ -102,60 +104,3 @@ fun AppTextField(
         }
     }
 }
-/*
-@Composable
-fun AppTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Done,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    onImeAction: () -> Unit = {},
-    isError: Boolean = false,
-    supportingText: String? = null,
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(text = placeholder) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = { onImeAction() },
-            onNext = { onImeAction() }
-        ),
-        trailingIcon = trailingIcon,
-        leadingIcon = leadingIcon,
-        visualTransformation = visualTransformation,
-        isError = isError,
-        supportingText = supportingText?.let {
-            {
-                Text(text = it)
-            }
-        },
-        shape = RoundedCornerShape(12.dp),
-        modifier = modifier.fillMaxWidth(),
-        colors = TextFieldDefaults.colors(
-            focusedTextColor = Color.Black,
-            unfocusedTextColor = Color.Black,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            focusedPlaceholderColor = Color(0XFFA1A0A0),
-            unfocusedPlaceholderColor = Color(0XFFA1A0A0),
-            disabledPlaceholderColor = Color(0XFFA1A0A0),
-            errorPlaceholderColor = Color(0XFFA1A0A0)
-        )
-    )
-}
-*/

@@ -8,14 +8,13 @@ plugins {
 android {
     namespace = "io.github.sadeghi.online_shop"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
     defaultConfig {
         applicationId = "io.github.sadeghi.online_shop"
         minSdk = 26
-        //noinspection OldTargetApi
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -86,11 +85,12 @@ dependencies {
 
     implementation("com.github.yalantis:ucrop:2.2.11")
 
+    implementation("io.github.alirezajavan:shamsi-picker:1.6.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)

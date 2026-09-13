@@ -85,14 +85,14 @@ fun DrawerHeader() {
                 SpacerWidth(12)
 
                 Text(
-                    text = "بهرام افشاری",
+                    text =  viewModel.fullName,
                     fontWeight = FontWeight.Bold
                 )
             }
 
             // سمت چپ: شماره
             Text(
-                text = "09123456789",
+                text = viewModel.phoneNumber,
                 fontSize = 12.sp
             )
         }

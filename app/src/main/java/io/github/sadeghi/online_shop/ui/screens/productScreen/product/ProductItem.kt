@@ -189,20 +189,20 @@ fun ProductItem(
 
                     Text(
                         text = "تومان ",
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         color = Color.Black
                     )
                     SpacerWidth(3)
                     Text(
                         text = product.price,
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-                    SpacerWidth(3)
+                    SpacerWidth(8)
                     Text(
                         text = product.oldPrice,
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray,
                         textDecoration = TextDecoration.LineThrough

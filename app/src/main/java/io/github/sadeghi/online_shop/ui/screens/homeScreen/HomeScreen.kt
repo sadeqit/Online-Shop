@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.navigation.NavHostController
+import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.BannerScreen
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
@@ -41,7 +42,16 @@ fun HomeScreen(
 
         item { BannerScreen() }
 
-        item { SearchBar("تنها با یک کلیک خرید کن!") }
+        item {
+            SearchBar(
+                text = "تنها با یک کلیک خرید کن!",
+                onSearch = { query ->
+                    navController.navigate(
+                        Screens.SearchResult.createRoute(query)
+                    )
+                }
+            )
+        }
 
         item {
             CategoryRow(onCategoryClick = onCategoryClick)

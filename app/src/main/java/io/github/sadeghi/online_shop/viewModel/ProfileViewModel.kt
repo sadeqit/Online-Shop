@@ -19,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: IProfileRepository,
-    private val authRepository: IAuthRepository
-) : ViewModel()
+    private val authRepository: IAuthRepository) : ViewModel()
 {
     fun logout(
         onSuccess: () -> Unit

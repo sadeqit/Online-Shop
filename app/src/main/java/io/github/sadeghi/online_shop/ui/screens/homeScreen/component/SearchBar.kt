@@ -16,6 +16,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +35,13 @@ import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun SearchBar(
-    text : String
+    text: String,
+    onSearch: (String) -> Unit
 ) {
+    var searchQuery by rememberSaveable {
+        mutableStateOf("")
+    }
 
-    var searchQuery by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     CompositionLocalProvider(
@@ -45,14 +49,13 @@ fun SearchBar(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-               ,
-            verticalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Text(
-                text = text ,
+                text = text,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Right,
@@ -63,26 +66,29 @@ fun SearchBar(
 
             AppTextField(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = "هرچی میخوای جستجوکن...",
+                onValueChange = {
+                    searchQuery = it
+                },
+                placeholder = "هرچی میخوای جستجو کن...",
                 leadingIcon = {
                     Icon(
-                        Icons.Default.Search, "",
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
                         tint = orange
                     )
                 },
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search,
                 onImeAction = {
-                    focusManager.clearFocus()
-                    performSearch(searchQuery)
+
+                    val query = searchQuery.trim()
+
+                    if (query.isNotEmpty()) {
+                        focusManager.clearFocus()
+                        onSearch(query)
+                    }
                 }
             )
         }
     }
-}
-
-fun performSearch(query: String) {
-    // اجرای جستجو
-    println("جستجو برای: $query")
 }

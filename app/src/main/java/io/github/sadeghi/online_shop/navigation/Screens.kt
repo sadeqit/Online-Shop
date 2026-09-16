@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.navigation
 
+import android.net.Uri
+
 sealed class Screens(val route: String) {
     data object Splash : Screens("splash")
     data object Login : Screens("login")
@@ -20,6 +22,13 @@ sealed class Screens(val route: String) {
     object ContactUs : Screens("contactus")
 
     object Category : Screens("category")
+
+    object SearchResult : Screens("search_result/{query}") {
+
+        fun createRoute(query: String): String {
+            return "search_result/${Uri.encode(query)}"
+        }
+    }
 
 
     object CategoryProduct : Screens("category_product/{categoryId}") {

@@ -13,4 +13,5 @@ interface IAuthRepository {
     suspend fun logout()
 
     suspend fun saveFullName(fullName: String)
+    suspend fun savePhoneNumber(phoneNumber: String)
 }

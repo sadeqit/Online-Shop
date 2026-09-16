@@ -14,12 +14,11 @@ fun CategoryRow(
     onCategoryClick: (Int) -> Unit
 ) {
 
-
     LazyRow(
 
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         reverseLayout = true,
-        contentPadding = PaddingValues(end = 20.dp)
+        contentPadding = PaddingValues(horizontal = 20.dp)
     ) {
         items(categories) { category ->
 

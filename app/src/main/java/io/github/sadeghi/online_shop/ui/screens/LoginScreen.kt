@@ -121,10 +121,12 @@ fun LoginScreen(
 
                 LoginStep.SUBMIT_INFO -> SubmitUserInfoContent(
                     fullName = viewModel.fullName,
+                    phoneNumber = viewModel.phoneNumber,
                     errorMessage = viewModel.errorMessage,
                     isLoading = viewModel.isLoading,
                     isInternetAvailable = viewModel.isInternetAvailable,
                     onFullNameChange = viewModel::onFullNameChange,
+                    onPhoneNumberChange = viewModel::onPhoneNumberChange,
                     onSubmit = {
                         viewModel.submitFullName {
                             navigateToHome()

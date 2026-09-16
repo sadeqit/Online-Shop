@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.card.menItems
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
@@ -52,7 +53,14 @@ fun SubCategoryProductScreen(
 
         // جستجو
         item {
-            SearchBar("پوشاک مردانه")
+            SearchBar(
+                text = "پوشاک مردانه",
+                onSearch = { query ->
+                    navController.navigate(
+                        Screens.SearchResult.createRoute(query)
+                    )
+                }
+            )
         }
 
         // پرفروش‌ترین‌ها

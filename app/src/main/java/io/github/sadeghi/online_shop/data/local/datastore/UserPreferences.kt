@@ -85,10 +85,16 @@ class UserPreferences @Inject constructor(
         }
     }
 
+
     suspend fun saveFullName(fullName: String) {
         dataStore.edit {
             it[USER_FULL_NAME] = fullName
             it[IS_FULLNAME_SET] = fullName.isNotBlank()
+        }
+    }
+    suspend fun savePhoneNumber(phoneNumber: String) {
+        dataStore.edit {
+            it[USER_PHONE] = phoneNumber
         }
     }
 

@@ -1,21 +1,22 @@
 package io.github.sadeghi.online_shop.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import io.github.sadeghi.online_shop.ui.screens.CartScreen
 import io.github.sadeghi.online_shop.ui.screens.ProfileScreen
+import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartStep
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryProductScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.SubCategoryProductScreen
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.HomeScreen
-import io.github.sadeghi.online_shop.ui.screens.CartScreen
-import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartStep
+import io.github.sadeghi.online_shop.ui.screens.homeScreen.SearchResultScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.AboutUsScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactUsScreen
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.RulesScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.SupportScreen
 import io.github.sadeghi.online_shop.ui.screens.productScreen.screen.ProductDetailScreen
@@ -47,10 +48,25 @@ fun MainNavGraph(
                 navController = navController,
                 onCategoryClick = { categoryId ->
                     navController.navigate(
-                        Screens.CategoryProduct.createRoute(categoryId)) {
+                        Screens.CategoryProduct.createRoute(categoryId)
+                    ) {
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        composable(
+            route = Screens.SearchResult.route
+        ) { backStackEntry ->
+
+            val query = backStackEntry.arguments
+                ?.getString("query")
+                ?.let { Uri.decode(it) }
+                ?: ""
+
+            SearchResultScreen(
+                query = query,
+                navController = navController
             )
         }
 
@@ -77,7 +93,7 @@ fun MainNavGraph(
 
 
         composable(Screens.Orders.route) {
-            OrdersScreen()
+            MyOrdersScreen()
         }
 
         composable(Screens.Support.route) {
@@ -165,7 +181,7 @@ fun MainNavGraph(
             MyOrdersScreen()
         }
         composable(Screens.MyBuy.route) {
-            MyBuyScreen( navController = navController)
+            MyBuyScreen(navController = navController)
         }
 
         composable(Screens.ChangePassword.route) {
@@ -215,7 +231,6 @@ fun MainNavGraph(
                 addressId = addressId
             )
         }
-
 
 
     }

@@ -22,9 +22,8 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val application: Application,
-    private val repository: AuthRepository
-
-) : ViewModel() {
+    private val repository: AuthRepository) : ViewModel()
+{
 
     var errorMessage by mutableStateOf<String?>(null)
         private set
@@ -37,6 +36,9 @@ class LoginViewModel @Inject constructor(
         private set
 
     var fullName by mutableStateOf("")
+        private set
+
+    var phoneNumber by mutableStateOf("")
         private set
 
     private val emailRegex = Regex(
@@ -65,6 +67,11 @@ class LoginViewModel @Inject constructor(
 
     var passwordStrength by mutableStateOf(PasswordStrength.NONE)
         private set
+
+    fun onPhoneNumberChange(value: String) {
+        phoneNumber = value
+        errorMessage = null
+    }
 
 
     // ====================
@@ -174,7 +181,7 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            delay(1200)
+            delay(1200.milliseconds)
             startTimer()
             isLoading = false
             step = LoginStep.CONFIRM_CODE
@@ -206,7 +213,7 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             val success = repository.verifyOtp(email, code)
-            delay(1200) // شبیه‌سازی API
+            delay(1200.milliseconds) // شبیه‌سازی API
 
             isLoading = false
 
@@ -232,7 +239,7 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            delay(1200)
+            delay(1200.milliseconds)
             startTimer()
             isLoading = false
 
@@ -245,7 +252,7 @@ class LoginViewModel @Inject constructor(
 
         timerJob = viewModelScope.launch {
             while (timer > 0) {
-                delay(1200)
+                delay(1200.milliseconds)
                 timer--
             }
         }
@@ -317,22 +324,31 @@ class LoginViewModel @Inject constructor(
             return
         }
 
+        if (fullName.isBlank()) {
+            errorMessage = "نام و نام خانوادگی را وارد کنید"
+            return
+        }
+
+        if (phoneNumber.length != 11 || !phoneNumber.startsWith("09")) {
+            errorMessage = "شماره همراه معتبر نیست"
+            return
+        }
+
         errorMessage = null
         isLoading = true
 
         viewModelScope.launch {
-
-            delay(1200)
+            delay(1200.milliseconds)
 
             repository.saveLogin(email)
             repository.saveFullName(fullName)
+            repository.savePhoneNumber(phoneNumber)
 
             isLoading = false
 
             onSuccess()
         }
     }
-
     fun onSubmitInfo() {
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
@@ -342,7 +358,7 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            delay(1200)
+            delay(1200.milliseconds)
             isLoading = false
 
         }

@@ -111,7 +111,6 @@ fun FavoritesScreen(
 
                                 ProductItem(
                                     product = product,
-
                                     onClick = {
                                         navController.navigate(
                                             Screens.ProductDetail.createRoute(
@@ -119,7 +118,7 @@ fun FavoritesScreen(
                                             )
                                         )
                                     },
-
+                                    showBookmark = true,
                                     onAddToCart = {
 
                                         cartViewModel.addToCart(product)
@@ -160,109 +159,3 @@ fun FavoritesScreen(
         }
     }
 }
-/*
-@Composable
-fun FavoritesScreen(
-    navController: NavHostController,
-    viewModel: FavoritesViewModel = hiltViewModel()
-) {
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val scope = rememberCoroutineScope()
-    val cartViewModel: CartViewModel = hiltViewModel()
-
-    val favoriteProductIds by viewModel.favoriteProductIds
-        .collectAsStateWithLifecycle()
-
-    val favoriteProducts = bestsellingProducts.filter {
-        it.id in favoriteProductIds
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        HeaderProfile(true)
-
-        SpacerHeight(40)
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-        ) {
-
-            Text(
-                text = "علاقه مندی های من",
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Right
-            )
-
-            SpacerHeight(20)
-
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Rtl
-            ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(
-                        items = favoriteProducts,
-                        key = { it.id }
-                    ) { product ->
-
-                        CompositionLocalProvider(
-                            LocalLayoutDirection provides LayoutDirection.Ltr
-                        ) {
-                            ProductItem(
-                                product = product,
-
-                                onClick = {
-                                    navController.navigate(
-                                        Screens.ProductDetail.createRoute(product.id)
-                                    )
-                                },
-
-                                onAddToCart = {
-                                    cartViewModel.addToCart(product)
-
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "محصول به سبد خرید اضافه شد",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) { snackbarData ->
-
-                Snackbar(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = snackbarData.visuals.message,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
-    }
-}*/

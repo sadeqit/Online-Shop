@@ -49,4 +49,7 @@ class AuthRepository @Inject constructor(
     override fun getUserEmail(): Flow<String?> {
         return userPreferences.userEmail
     }
+    override suspend fun savePhoneNumber(phoneNumber: String) {
+        userPreferences.savePhoneNumber(phoneNumber)
+    }
 }

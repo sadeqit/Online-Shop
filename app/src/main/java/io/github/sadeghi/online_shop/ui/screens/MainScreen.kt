@@ -3,6 +3,7 @@ package io.github.sadeghi.online_shop.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -100,27 +103,44 @@ fun MainScreen(
 
         },
         bottomBar = {
-            CustomBottomBar(
-                selectedRoute = currentRoute,
-                onItemSelected = { route ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .blur(
+                        if (drawerViewModel.isDrawerOpen) {
+                            12.dp
+                        } else {
+                            0.dp
+                        }
+                    )
+            ) {
+                CustomBottomBar(
+                    selectedRoute = currentRoute,
+                    onItemSelected = { route ->
 
-                    if (route == currentRoute) {
-                        return@CustomBottomBar
-                    }
-
-                    navController.navigate(route) {
-
-                        popUpTo(
-                            navController.currentBackStackEntry?.destination?.id
-                                ?: return@navigate
-                        ) {
-                            inclusive = true
+                        if (drawerViewModel.isDrawerOpen) {
+                            drawerViewModel.closeDrawer()
                         }
 
-                        launchSingleTop = true
+                        if (route == currentRoute) {
+                            return@CustomBottomBar
+                        }
+
+                        navController.navigate(route) {
+                            popUpTo(
+                                navController.currentBackStackEntry
+                                    ?.destination
+                                    ?.id
+                                    ?: return@navigate
+                            ) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
     ) { paddingValues ->
@@ -131,15 +151,27 @@ fun MainScreen(
                 .padding(paddingValues)
         ) {
 
-            MainNavGraph(
-                navController = navController,
-                notificationsViewModel = notificationsViewModel,
-                onLogout = onLogout,
-                cartStep = cartStep,
-                onCartStepChange = {
-                    cartStep = it
-                }
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(
+                        if (drawerViewModel.isDrawerOpen) {
+                            12.dp
+                        } else {
+                            0.dp
+                        }
+                    )
+            ) {
+                MainNavGraph(
+                    navController = navController,
+                    notificationsViewModel = notificationsViewModel,
+                    onLogout = onLogout,
+                    cartStep = cartStep,
+                    onCartStepChange = {
+                        cartStep = it
+                    }
+                )
+            }
 
             CustomNavigationDrawer(
                 isOpen = drawerViewModel.isDrawerOpen,

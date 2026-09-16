@@ -57,7 +57,14 @@ fun CategoryProductScreen(
 
         // جستجو
         item {
-            SearchBar("پوشاک مردانه")
+            SearchBar(
+                text = "پوشاک مردانه",
+                onSearch = { query ->
+                    navController.navigate(
+                        Screens.SearchResult.createRoute(query)
+                    )
+                }
+            )
         }
 
         items(menItems.chunked(3)) { rowItems ->

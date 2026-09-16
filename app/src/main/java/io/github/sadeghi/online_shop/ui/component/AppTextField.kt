@@ -51,7 +51,8 @@ fun AppTextField(
             ),
             keyboardActions = KeyboardActions(
                 onDone = { onImeAction() },
-                onNext = { onImeAction() }
+                onNext = { onImeAction() },
+                onSearch = { onImeAction() }
             ),
             trailingIcon = trailingIcon,
             leadingIcon = leadingIcon,

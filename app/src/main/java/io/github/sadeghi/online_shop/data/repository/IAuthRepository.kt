@@ -8,6 +8,8 @@ interface IAuthRepository {
 
     fun isUserLoggedIn(): Flow<Boolean>
 
+    fun getUserEmail(): Flow<String?>
+
     suspend fun logout()
 
     suspend fun saveFullName(fullName: String)

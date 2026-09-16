@@ -135,20 +135,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-    /*fun signIn(onSuccess: () -> Unit) {
-        if (email.isBlank() || password.isBlank()) {
-            errorMessage = "ایمیل و رمز عبور را وارد کنید"
-            return
-        }
-
-        isLoading = true
-
-        viewModelScope.launch {
-            delay(1200)
-            isLoading = false
-            onSuccess()
-        }
-    }*/
 
 
     // ====================
@@ -319,7 +305,7 @@ class LoginViewModel @Inject constructor(
     // صفحه Submit User Info
     // ====================
     fun onFullNameChange(value: String) {
-        fullName = value.trim()
+        fullName = value
         if (errorMessage != "اینترنت متصل نیست") {
             errorMessage = null
         }

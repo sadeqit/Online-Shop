@@ -9,6 +9,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -16,15 +20,138 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.orfer.OrderViewModel
+import io.github.sadeghi.online_shop.viewModel.ProductReviewViewModel
 
 @Composable
 fun MyBuyScreen(
-    navController: NavController
-){
+    navController: NavController,
+    orderViewModel: OrderViewModel = hiltViewModel(),
+    reviewViewModel: ProductReviewViewModel = hiltViewModel()
+) {
+
+    val orders by orderViewModel.orders.collectAsState()
+    val reviews by reviewViewModel.reviews.collectAsState()
+
+    val purchasedItems = remember(orders) {
+        orders
+            .flatMap { it.items }
+            .distinctBy { it.product.id }
+    }
+
+    LaunchedEffect(purchasedItems) {
+
+        if (purchasedItems.isNotEmpty()) {
+
+            reviewViewModel.loadReviewsForProducts(
+                purchasedItems.map { it.product.id }
+            )
+
+            reviewViewModel.loadCurrentUser()
+        }
+    }
+
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Ltr
+            ) {
+                HeaderProfile(true)
+            }
+
+            SpacerHeight(40)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
+
+                Text(
+                    text = "تجربه های خرید من",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Right
+                )
+
+                SpacerHeight(20)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = 20.dp)
+                ) {
+
+                    purchasedItems.forEachIndexed { index, item ->
+
+                        val productReview =
+                            reviews
+                                .filter {
+                                    it.productId == item.product.id
+                                }
+                                .maxByOrNull {
+                                    it.createdAt
+                                }
+
+                        MyPurchaseItem(
+                            product = item.product,
+                            hasReview = productReview != null,
+                            rating = productReview?.rating ?: 0,
+                            reviewText = productReview?.comment.orEmpty(),
+                            onReviewClick = {
+
+                                navController.navigate(
+                                    Screens.ProductDetail.createRoute(
+                                        item.product.id
+                                    )
+                                )
+                            }
+                        )
+
+                        if (index != purchasedItems.lastIndex) {
+                            SpacerHeight(15)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+@Composable
+fun MyBuyScreen(
+    navController: NavController,
+    orderViewModel: OrderViewModel = hiltViewModel(),
+    reviewViewModel: ProductReviewViewModel = hiltViewModel()
+) {
+    val orders by orderViewModel.orders.collectAsState()
+    val reviews by reviewViewModel.reviews.collectAsState()
+
+    LaunchedEffect(Unit) {
+        orders
+            .flatMap { it.items }
+            .distinctBy { it.product.id }
+            .forEach { item ->
+                reviewViewModel.loadReviews(item.product.id)
+            }
+
+        reviewViewModel.loadCurrentUser()
+    }
+
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
@@ -65,70 +192,71 @@ fun MyBuyScreen(
                         .padding(bottom = 20.dp)
                 ) {
 
-                // محصول اول - هنوز نظر ثبت نشده
-                MyPurchaseItem(
-                    productName = "ست سویشرت و شلوار مردانه",
-                    productPrice = "1,550,000",
-                    hasReview = false,
-                    onReviewClick = {
-                        navController.navigate(
-                            Screens.ProductDetail.createRoute(1)
-                        )
-                    }
-                )
+                    // محصول اول - هنوز نظر ثبت نشده
+                    MyPurchaseItem(
+                        productName = "ست سویشرت و شلوار مردانه",
+                        productPrice = "1,550,000",
+                        hasReview = false,
+                        onReviewClick = {
+                            navController.navigate(
+                                Screens.ProductDetail.createRoute(1)
+                            )
+                        }
+                    )
 
-                SpacerHeight(15)
+                    SpacerHeight(15)
 
-                // محصول دوم - نظر ثبت شده
-                MyPurchaseItem(
-                    productName = "ست سویشرت و شلوار مردانه",
-                    productPrice = "1,550,000",
-                    hasReview = true,
-                    rating = 4,
-                    reviewText = "کیفیت محصول خیلی خوب بود و از خریدم راضی هستم.",
-                    onReviewClick = {}
-                )
+                    // محصول دوم - نظر ثبت شده
+                    MyPurchaseItem(
+                        productName = "ست سویشرت و شلوار مردانه",
+                        productPrice = "1,550,000",
+                        hasReview = true,
+                        rating = 4,
+                        reviewText = "کیفیت محصول خیلی خوب بود و از خریدم راضی هستم.",
+                        onReviewClick = {}
+                    )
 
-                SpacerHeight(15)
+                    SpacerHeight(15)
 
-                // محصول سوم - هنوز نظر ثبت نشده
-                MyPurchaseItem(
-                    productName = "ست سویشرت و شلوار مردانه",
-                    productPrice = "1,550,000",
-                    hasReview = false,
-                    onReviewClick = {
-                        navController.navigate(
-                            Screens.ProductDetail.createRoute(1)
-                        )
-                    }
-                )
-                SpacerHeight(15)
+                    // محصول سوم - هنوز نظر ثبت نشده
+                    MyPurchaseItem(
+                        productName = "ست سویشرت و شلوار مردانه",
+                        productPrice = "1,550,000",
+                        hasReview = false,
+                        onReviewClick = {
+                            navController.navigate(
+                                Screens.ProductDetail.createRoute(1)
+                            )
+                        }
+                    )
+                    SpacerHeight(15)
 
-                // محصول سوم - هنوز نظر ثبت نشده
-                MyPurchaseItem(
-                    productName = "ست سویشرت و شلوار مردانه",
-                    productPrice = "1,550,000",
-                    hasReview = false,
-                    onReviewClick = {
-                        navController.navigate(
-                            Screens.ProductDetail.createRoute(1)
-                        )
-                    }
-                )
-                SpacerHeight(15)
+                    // محصول سوم - هنوز نظر ثبت نشده
+                    MyPurchaseItem(
+                        productName = "ست سویشرت و شلوار مردانه",
+                        productPrice = "1,550,000",
+                        hasReview = false,
+                        onReviewClick = {
+                            navController.navigate(
+                                Screens.ProductDetail.createRoute(1)
+                            )
+                        }
+                    )
+                    SpacerHeight(15)
 
-                // محصول سوم - هنوز نظر ثبت نشده
-                MyPurchaseItem(
-                    productName = "ست سویشرت و شلوار مردانه",
-                    productPrice = "1,550,000",
-                    hasReview = false,
-                    onReviewClick = {
-                        navController.navigate(
-                            Screens.ProductDetail.createRoute(1)
-                        )
-                    }
-                )
+                    // محصول سوم - هنوز نظر ثبت نشده
+                    MyPurchaseItem(
+                        productName = "ست سویشرت و شلوار مردانه",
+                        productPrice = "1,550,000",
+                        hasReview = false,
+                        onReviewClick = {
+                            navController.navigate(
+                                Screens.ProductDetail.createRoute(1)
+                            )
+                        }
+                    )
+                }
             }
         }
     }
-}}
+}*/

@@ -199,15 +199,6 @@ fun ProductDescription(
             )
 
 
-            /* Text(
-                 text = "توضیحات",
-                 modifier = Modifier
-                     .clip(RoundedCornerShape(30.dp))
-                     .background(Color(0xFFF8F7F7))
-                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                 fontSize = 12.sp,
-                 textAlign = TextAlign.Center
-             )*/
         }
 
         SpacerHeight(20)

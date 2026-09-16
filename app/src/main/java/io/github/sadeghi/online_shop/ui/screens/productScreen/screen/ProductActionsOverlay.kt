@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProductActionsOverlay(
     productId: Int,
-    reviews: List<ProductReview>,
+    reviews: List<ProductReviewUi>,
     listState: LazyListState,
     favoritesViewModel: FavoritesViewModel,
     modifier: Modifier = Modifier

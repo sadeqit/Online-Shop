@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
+import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartManager
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 
 
@@ -42,13 +43,17 @@ import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 fun CartButton(
     modifier: Modifier = Modifier,
     product: Product,
-) {
+    onAddToCart: (Product, Int) -> Unit,
+    onAddedToCart: () -> Unit
+){
 
     var quantity by remember { mutableIntStateOf(1) }
 
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .height(180.dp)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(180.dp)
+    ) {
 
         Column(
             modifier = modifier
@@ -96,12 +101,18 @@ fun CartButton(
             ) {
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        onAddToCart(product, quantity)
+                        onAddedToCart()
+                    },
                     modifier = Modifier
                         .background(
-                            brush =Brush.horizontalGradient(
-                                listOf(Color(0xFFFE593E), Color(0xFFE02508))
-                            ) ,
+                            brush = Brush.horizontalGradient(
+                                listOf(
+                                    Color(0xFFFE593E),
+                                    Color(0xFFE02508)
+                                )
+                            ),
                             shape = RoundedCornerShape(16.dp)
                         ),
                     colors = ButtonDefaults.buttonColors(
@@ -109,9 +120,10 @@ fun CartButton(
                         disabledContainerColor = Color.Transparent,
                         contentColor = Color.White
                     )
-                    ) {
+                ) {
                     Text(
-                        text="افزودن به سبد خرید", color = Color.White,
+                        text = "افزودن به سبد خرید",
+                        color = Color.White,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

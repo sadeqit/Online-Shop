@@ -2,6 +2,7 @@ package io.github.sadeghi.online_shop.ui.screens.profilescreen.address
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,20 +41,35 @@ fun AddressCard(
     address: Address,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    onDefaultChange: () -> Unit
+    onDefaultChange: () -> Unit,
+    selected: Boolean = false,
+    onSelect: (() -> Unit)? = null
 ) {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .border(
-                width = 1.dp,
-                color = if (address.isDefault) orange else Color.Transparent,
+                width = if (selected) 2.dp else 1.dp,
+                color = when {
+                    selected -> orange
+                    address.isDefault -> orange
+                    else -> Color.Transparent
+                },
                 shape = RoundedCornerShape(16.dp)
             )
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(16.dp)
+            )
+            .then(
+                if (onSelect != null) {
+                    Modifier.clickable {
+                        onSelect()
+                    }
+                } else {
+                    Modifier
+                }
             )
             .padding(16.dp)
     ) {
@@ -61,7 +77,9 @@ fun AddressCard(
         Text(
             text = buildAnnotatedString {
                 withStyle(
-                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold
+                    )
                 ) {
                     append("گیرنده : ")
                 }
@@ -74,10 +92,13 @@ fun AddressCard(
         )
 
         SpacerHeight(10)
+
         Text(
             text = buildAnnotatedString {
                 withStyle(
-                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold
+                    )
                 ) {
                     append("آدرس : ")
                 }
@@ -89,12 +110,14 @@ fun AddressCard(
             textAlign = TextAlign.Right
         )
 
-
         SpacerHeight(10)
+
         Text(
             text = buildAnnotatedString {
                 withStyle(
-                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold
+                    )
                 ) {
                     append("کد پستی : ")
                 }
@@ -106,12 +129,14 @@ fun AddressCard(
             textAlign = TextAlign.Right
         )
 
-
         SpacerHeight(10)
+
         Text(
             text = buildAnnotatedString {
                 withStyle(
-                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold
+                    )
                 ) {
                     append("شماره همراه : ")
                 }
@@ -122,7 +147,6 @@ fun AddressCard(
             fontSize = 14.sp,
             textAlign = TextAlign.Right
         )
-
 
         SpacerHeight(16)
 
@@ -135,24 +159,32 @@ fun AddressCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Row(verticalAlignment = Alignment.CenterVertically)
-            {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 RadioButton(
                     selected = address.isDefault,
                     onClick = onDefaultChange,
                     modifier = Modifier.size(20.dp)
                 )
+
                 SpacerWidth(10)
+
                 Text(
                     text = "آدرس پیش فرض",
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
-            {
+
+            Spacer(
+                modifier = Modifier.weight(1f)
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
                 Button(
                     onClick = onEditClick,
@@ -165,6 +197,7 @@ fun AddressCard(
                     ),
                     contentPadding = PaddingValues(0.dp)
                 ) {
+
                     Text(
                         text = "ویرایش",
                         fontWeight = FontWeight.Bold,
@@ -184,6 +217,7 @@ fun AddressCard(
                     ),
                     contentPadding = PaddingValues(0.dp)
                 ) {
+
                     Text(
                         text = "حذف",
                         fontWeight = FontWeight.Bold,
@@ -193,6 +227,5 @@ fun AddressCard(
                 }
             }
         }
-
     }
 }

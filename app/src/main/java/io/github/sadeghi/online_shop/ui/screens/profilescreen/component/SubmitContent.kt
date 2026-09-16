@@ -16,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -35,7 +37,8 @@ import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun SubmitContent(
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    focusManager: FocusManager
 ) {
 
     var showDatePicker by remember {
@@ -87,10 +90,11 @@ fun SubmitContent(
             value = viewModel.fullName,
             onValueChange = viewModel::onFullNameChange,
             placeholder = "نام و نام خانوادگی خود را وارد کنید",
-            imeAction = ImeAction.Done,
+            imeAction = ImeAction.Next,
             onImeAction = {
-
-            })
+                focusManager.moveFocus(FocusDirection.Down)
+            }
+        )
 
         SpacerHeight(25)
 
@@ -112,10 +116,12 @@ fun SubmitContent(
             },
             placeholder = "*********09",
             keyboardType = KeyboardType.Phone,
-            imeAction = ImeAction.Done,
+            imeAction = ImeAction.Next,
             isError = viewModel.phoneNumberError != null,
             supportingText = viewModel.phoneNumberError,
-            onImeAction = {}
+            onImeAction = {
+                focusManager.moveFocus(FocusDirection.Down)
+            }
         )
 
         SpacerHeight(25)

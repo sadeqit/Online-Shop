@@ -20,7 +20,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val profileRepository: IProfileRepository,
     private val authRepository: IAuthRepository
-) : ViewModel() {
+) : ViewModel()
+{
     fun logout(
         onSuccess: () -> Unit
     ) {
@@ -126,7 +127,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onFullNameChange(value: String) {
-        fullName = value.trim()
+        fullName = value
     }
 
 

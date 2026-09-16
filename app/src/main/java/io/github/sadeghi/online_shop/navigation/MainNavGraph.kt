@@ -11,7 +11,8 @@ import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryProductSc
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.CategoryScreen
 import io.github.sadeghi.online_shop.ui.screens.categoryScreen.SubCategoryProductScreen
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.HomeScreen
-import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CartScreen
+import io.github.sadeghi.online_shop.ui.screens.CartScreen
+import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartStep
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.AboutUsScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.ContactUsScreen
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawerScreen.OrdersScreen
@@ -32,7 +33,9 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
 fun MainNavGraph(
     navController: NavHostController,
     notificationsViewModel: NotificationsViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    cartStep: CartStep,
+    onCartStepChange: (CartStep) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -65,7 +68,11 @@ fun MainNavGraph(
         }
 
         composable(Screens.Cart.route) {
-            CartScreen()
+            CartScreen(
+                navController = navController,
+                currentStep = cartStep,
+                onStepChange = onCartStepChange
+            )
         }
 
 

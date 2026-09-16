@@ -31,15 +31,16 @@ import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 
 @Composable
 fun MyPurchaseItem(
-    productName: String,
-    productPrice: String,
+    product: Product,
     hasReview: Boolean,
     rating: Int = 0,
     reviewText: String = "",
     onReviewClick: () -> Unit = {}
+
 ) {
 
     Column(
@@ -49,6 +50,9 @@ fun MyPurchaseItem(
                 color = Color.White,
                 shape = RoundedCornerShape(12.dp)
             )
+            .clickable {
+                onReviewClick()
+            }
             .padding(16.dp)
     ) {
 
@@ -71,8 +75,8 @@ fun MyPurchaseItem(
             ) {
 
                 Image(
-                    painter = painterResource(R.drawable.lebas),
-                    contentDescription = productName,
+                    painter = painterResource(product.image),
+                    contentDescription = product.title,
                     modifier = Modifier.size(80.dp),
                     contentScale = ContentScale.Fit
                 )
@@ -90,7 +94,7 @@ fun MyPurchaseItem(
 
                 // نام محصول
                 Text(
-                    text = productName,
+                    text = product.title,
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -154,7 +158,7 @@ fun MyPurchaseItem(
 
                     // قیمت
                     Text(
-                        text = "$productPrice تومان",
+                        text = "${product.price} تومان",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -178,133 +182,3 @@ fun MyPurchaseItem(
         }
     }
 }
-/*
-@Composable
-fun MyPurchaseItem(
-    productName: String,
-    productPrice: String,
-    hasReview: Boolean,
-    rating: Int = 0,
-    reviewText: String = ""
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(16.dp)
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            // عکس محصول
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    */
-/*.width(90.dp)
-                    .height(110.dp)*//*
-
-                    .background(
-                        color = Color(0xFFEBEBEB),
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Image(
-                    painter = painterResource(R.drawable.lebas),
-                    contentDescription = productName,
-                    modifier = Modifier.size(80.dp),
-                    contentScale = ContentScale.Fit
-                )
-            }
-
-            SpacerWidth(12)
-
-            // اطلاعات محصول
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                // نام محصول
-                Text(
-                    text = productName,
-                    modifier = Modifier.fillMaxWidth(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Right,
-                    color = Color.Black
-                )
-
-                // قیمت + ثبت نظر / امتیاز
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    if (hasReview) {
-
-                        // امتیاز
-                        Text(
-                            text = "★ $rating",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-
-                    } else {
-
-                        // ثبت نظر
-                        Text(
-                            text = "ثبت نظر",
-                            modifier = Modifier
-                                .padding(
-                                    horizontal = 12.dp,
-                                    vertical = 6.dp
-                                ),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF7A00)
-                        )
-                    }
-                    SpacerWidth(5)
-
-                    // قیمت
-                    Text(
-                        text = "$productPrice تومان",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
-            }
-        }
-
-        // نظر کاربر
-        if (hasReview && reviewText.isNotBlank()) {
-
-            SpacerHeight(12)
-
-            Text(
-                text = reviewText,
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 14.sp,
-                color = Color.Black,
-                textAlign = TextAlign.Right
-            )
-        }
-    }
-}*/

@@ -41,6 +41,7 @@ fun ProductItem(
     product: Product,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    onAddToCart: () -> Unit,
     showBookmark: Boolean = false
 ) {
 
@@ -223,64 +224,6 @@ fun ProductItem(
             }
         }
 
-        /*Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(Color.White)
-                .size(width = 170.dp, height = 90.dp)
-                .layoutId("describe")
-
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(vertical = 7.dp),
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = product.title,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    textAlign = TextAlign.Right,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-
-                )
-                SpacerHeight(30)
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Text(
-                        text = "تومان ",
-                        fontSize = 13.sp,
-                        color = Color.Black
-                    )
-                    SpacerWidth(3)
-                    Text(
-                        text = product.price,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    SpacerWidth(8)
-                    Text(
-                        text = product.oldPrice,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Gray,
-                        textDecoration = TextDecoration.LineThrough
-
-
-                    )
-
-                }
-            }
-        }*/
 
         Box(
             modifier = Modifier
@@ -295,7 +238,9 @@ fun ProductItem(
                         )
                     )
                 )
-                .clickable {},
+                .clickable {
+                    onAddToCart()
+                },
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Default.Add, "", tint = Color.White)

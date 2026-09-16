@@ -123,7 +123,10 @@ fun EditProfileScreen(
 
                 SpacerHeight(25)
 
-                SubmitContent(viewModel)
+                SubmitContent(
+                    viewModel = viewModel,
+                    focusManager = focusManager
+                )
 
                 SpacerHeight(15)
 

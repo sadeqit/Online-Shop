@@ -1,6 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
+import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun CommentScreen(
@@ -59,16 +60,13 @@ fun CommentScreen(
 
             Text(
                 text = "ثبت نظر",
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Right
             )
 
             SpacerHeight(16)
-
-
 
             OutlinedTextField(
                 value = comment,
@@ -101,7 +99,6 @@ fun CommentScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // امتیاز و ستاره‌ها
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -112,7 +109,9 @@ fun CommentScreen(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
+
                     repeat(5) { index ->
+
                         Icon(
                             imageVector = if (index < rating) {
                                 Icons.Filled.Star
@@ -128,47 +127,57 @@ fun CommentScreen(
                             modifier = Modifier
                                 .size(22.dp)
                                 .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null // این خط افکت هاور و سایه را غیرفعال می‌کند
+                                    interactionSource = remember {
+                                        MutableInteractionSource()
+                                    },
+                                    indication = null
                                 ) {
                                     rating = index + 1
                                 }
                         )
                     }
-
                 }
 
                 Spacer(modifier = Modifier.weight(0.7f))
 
-                // ثبت نظر
                 Button(
                     onClick = {
-                        if (comment.isNotBlank()) {
+                        if (comment.isNotBlank() && rating in 1..5) {
                             onSubmit(comment.trim(), rating)
                             comment = ""
                             rating = 0
                         }
                     },
+                    enabled = comment.isNotBlank() && rating in 1..5,
                     modifier = Modifier
                         .height(45.dp)
+                        .border(
+                            width = 1.dp,
+                            color = if (comment.isNotBlank() && rating in 1..5) {
+                                orange
+                            } else {
+                                Color.LightGray
+                            },
+                            shape = RoundedCornerShape(16.dp)
+                        )
                         .background(
-                            brush = Brush.horizontalGradient(
-                                listOf(
-                                    Color(0xFFFE593E),
-                                    Color(0xFFE02508)
-                                )
-                            ),
+                            color = if (comment.isNotBlank() && rating in 1..5) {
+                                Color.Transparent
+                            } else {
+                                Color.LightGray
+                            },
                             shape = RoundedCornerShape(16.dp)
                         ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent,
-                        contentColor = Color.White
-                    )
+                        contentColor = orange,
+                        disabledContentColor = Color.Gray
+                    ),
+                    elevation = null
                 ) {
                     Text(
                         text = "ثبت نظر",
-                        color = Color.White,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -14,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.sadeghi.online_shop.navigation.MainNavGraph
 import io.github.sadeghi.online_shop.navigation.Screens
+import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartStep
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CustomBottomBar
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawer.CustomNavigationDrawer
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.CustomTopBar
@@ -26,7 +30,9 @@ fun MainScreen(
     notificationsViewModel: NotificationsViewModel = hiltViewModel(),
     onLogout: () -> Unit
 ) {
-
+    var cartStep by rememberSaveable {
+        mutableStateOf(CartStep.CART)
+    }
     val navController = rememberNavController()
 
     val currentBackStackEntry by
@@ -68,7 +74,25 @@ fun MainScreen(
                 showBackButton = currentRoute != Screens.Home.route,
 
                 onBackClick = {
-                    navController.popBackStack()
+                    if (currentRoute == Screens.Cart.route) {
+
+                        when (cartStep) {
+                            CartStep.PAYMENT -> {
+                                cartStep = CartStep.ADDRESS
+                            }
+
+                            CartStep.ADDRESS -> {
+                                cartStep = CartStep.CART
+                            }
+
+                            CartStep.CART -> {
+                                navController.popBackStack()
+                            }
+                        }
+
+                    } else {
+                        navController.popBackStack()
+                    }
                 },
 
                 hasNotification = hasNotification
@@ -110,7 +134,11 @@ fun MainScreen(
             MainNavGraph(
                 navController = navController,
                 notificationsViewModel = notificationsViewModel,
-                onLogout = onLogout
+                onLogout = onLogout,
+                cartStep = cartStep,
+                onCartStepChange = {
+                    cartStep = it
+                }
             )
 
             CustomNavigationDrawer(

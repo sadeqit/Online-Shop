@@ -46,4 +46,7 @@ class AuthRepository @Inject constructor(
     suspend fun updatePassword(newPassword: String) {
         userPreferences.updatePassword(newPassword)
     }
+    override fun getUserEmail(): Flow<String?> {
+        return userPreferences.userEmail
+    }
 }

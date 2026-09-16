@@ -45,20 +45,21 @@ import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable
 fun UserReviews(
-    reviews: List<ProductReview>
+    reviews: List<ProductReviewUi>
 ) {
 
     val focusManager = LocalFocusManager.current
 
+
     var replies by remember {
         mutableStateOf(
-            emptyMap<Int, String>()
+            emptyMap<Long, String>()
         )
     }
 
     var replyInputs by remember {
         mutableStateOf(
-            emptyMap<Int, String>()
+            emptyMap<Long, String>()
         )
     }
 
@@ -97,8 +98,8 @@ fun UserReviews(
 
                     reviews.forEachIndexed { index, review ->
 
-                        val reply = replies[index].orEmpty()
-                        val replyInput = replyInputs[index].orEmpty()
+                        val reply = replies[review.id].orEmpty()
+                        val replyInput = replyInputs[review.id].orEmpty()
 
                         Column(
                             modifier = Modifier
@@ -120,7 +121,8 @@ fun UserReviews(
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
 
                                 Text(
@@ -196,7 +198,7 @@ fun UserReviews(
                             value = replyInput,
                             onValueChange = {
                                 replyInputs = replyInputs + (
-                                        index to it
+                                        review.id to it
                                         )
                             },
                             modifier = Modifier
@@ -231,11 +233,11 @@ fun UserReviews(
                                     if (replyInput.isNotBlank()) {
 
                                         replies = replies + (
-                                                index to replyInput.trim()
+                                                review.id to replyInput.trim()
                                                 )
 
                                         replyInputs = replyInputs + (
-                                                index to ""
+                                                review.id to ""
                                                 )
 
                                         focusManager.clearFocus()
@@ -252,11 +254,11 @@ fun UserReviews(
                                 onClick = {
 
                                     replies = replies + (
-                                            index to replyInput.trim()
+                                            review.id to replyInput.trim()
                                             )
 
                                     replyInputs = replyInputs + (
-                                            index to ""
+                                            review.id to ""
                                             )
 
                                     focusManager.clearFocus()

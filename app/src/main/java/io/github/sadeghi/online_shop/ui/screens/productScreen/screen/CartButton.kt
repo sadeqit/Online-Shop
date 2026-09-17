@@ -35,7 +35,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
-import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartManager
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 
 

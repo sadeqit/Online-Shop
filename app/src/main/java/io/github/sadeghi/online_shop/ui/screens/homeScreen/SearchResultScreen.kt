@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.homeScreen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -37,7 +39,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchResultScreen(
     query: String,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val results = remember(query) {
@@ -109,6 +113,8 @@ fun SearchResultScreen(
                             ProductItem(
                                 product = product,
                                 modifier = Modifier.weight(1f),
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope,
                                 onClick = {
                                     navController.navigate(
                                         Screens.ProductDetail.createRoute(
@@ -117,7 +123,6 @@ fun SearchResultScreen(
                                     )
                                 },
                                 onAddToCart = {
-
                                     cartViewModel.addToCart(product)
 
                                     scope.launch {
@@ -167,133 +172,3 @@ fun SearchResultScreen(
         }
     }
 }
-/*
-@Composable
-fun SearchResultScreen(
-    query: String,
-    navController: NavHostController
-) {
-
-    val results = remember(query) {
-        bestsellingProducts.filter { product ->
-            product.title.contains(
-                query.trim(),
-                ignoreCase = true
-            )
-        }
-    }
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val scope = rememberCoroutineScope()
-
-    val cartViewModel: CartViewModel = hiltViewModel()
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-
-        item {
-            SpacerHeight(20)
-        }
-
-        item {
-            Text(
-                text = "نتایج جستجو برای \u200F«$query»\u200F",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                textAlign = TextAlign.Right,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-
-        if (results.isEmpty()) {
-
-            item {
-                Text(
-                    text = "محصولی با این نام پیدا نشد",
-                    modifier = Modifier.padding(top = 40.dp),
-                    fontSize = 16.sp
-                )
-            }
-
-        } else {
-
-            items(results.chunked(2)) { rowItems ->
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-
-                    rowItems.forEach { product ->
-
-                        ProductItem(
-                            product = product,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                navController.navigate(
-                                    Screens.ProductDetail.createRoute(
-                                        product.id
-                                    )
-                                )
-                            },
-                            onAddToCart = {
-
-                                cartViewModel.addToCart(product)
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "محصول به سبد خرید اضافه شد",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
-                            }
-                        )
-                    }
-
-
-                    repeat(2 - rowItems.size) {
-                        Spacer(
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-        }
-
-        item {
-            SpacerHeight(20)
-        }
-        item {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
-            ) { snackbarData ->
-
-                Snackbar(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-
-                    Text(
-                        text = snackbarData.visuals.message,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
-
-    }
-}*/

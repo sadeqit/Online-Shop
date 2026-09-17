@@ -1,15 +1,9 @@
 package io.github.sadeghi.online_shop.viewModel
 
 import android.app.Application
-import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
 import io.github.sadeghi.online_shop.ui.ui_utils.SplashState
 import io.github.sadeghi.online_shop.utils.isNetworkAvailable
@@ -19,8 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @HiltViewModel
@@ -45,7 +39,7 @@ class SplashViewModel @Inject constructor(
 
         splashJob = viewModelScope.launch {
 
-            delay(3000)
+            delay(3000.milliseconds)
 
             if (!isNetworkAvailable(context)) {
                 _splashState.value = SplashState.NoInternet
@@ -54,7 +48,7 @@ class SplashViewModel @Inject constructor(
 
             _splashState.value = SplashState.InternetConnected
 
-            delay(1200)
+            delay(1200.milliseconds)
 
             val isLoggedIn = authRepository.isUserLoggedIn().first()
 

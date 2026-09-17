@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.productScreen.product
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 
 @Composable
@@ -42,7 +43,9 @@ fun ProductItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onAddToCart: () -> Unit,
-    showBookmark: Boolean = false
+    showBookmark: Boolean = false,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null
 ) {
 
     val constraints = ConstraintSet {
@@ -107,9 +110,25 @@ fun ProductItem(
                 .clip(RoundedCornerShape(20.dp))
                 .background(Color(0xFFEBEBEB))
                 .size(width = 200.dp, height = 250.dp)
-
                 .layoutId("box")
+                .let { boxModifier ->
 
+                    if (
+                        sharedTransitionScope != null &&
+                        animatedVisibilityScope != null
+                    ) {
+                        with(sharedTransitionScope) {
+                            boxModifier.sharedElement(
+                                sharedContentState = rememberSharedContentState(
+                                    key = "product-box-${product.id}"
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        }
+                    } else {
+                        boxModifier
+                    }
+                }
         )
 
         Box(
@@ -146,15 +165,32 @@ fun ProductItem(
                     .layoutId("bookmark")
             )
         }
+        val imageModifier = Modifier
+            .size(135.dp)
+            .layoutId("image")
+            .padding(top = 10.dp)
+
         Image(
             painter = painterResource(product.image),
             contentDescription = product.title,
-            modifier = Modifier
-                .size(135.dp)
-                .layoutId("image")
-                .padding(top =10.dp),
+            modifier = if (
+                sharedTransitionScope != null &&
+                animatedVisibilityScope != null
+            ) {
+                with(sharedTransitionScope) {
+                    imageModifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(
+                            key = "product-image-${product.id}"
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                }
+            } else {
+                imageModifier
+            },
             contentScale = ContentScale.Crop
         )
+
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15.dp))

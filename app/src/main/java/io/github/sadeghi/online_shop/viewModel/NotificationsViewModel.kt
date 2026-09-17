@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.profilescreen.notif
+package io.github.sadeghi.online_shop.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.data.local.datastore.NotificationsDataStore
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

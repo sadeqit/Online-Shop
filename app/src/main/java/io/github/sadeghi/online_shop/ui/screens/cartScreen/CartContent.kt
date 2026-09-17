@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 
@@ -150,6 +149,7 @@ fun CartContent(
         }
     }
 }
+
 fun formatPrice(price: Long): String {
     return "%,d".format(price)
 }

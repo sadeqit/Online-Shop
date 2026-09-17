@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.homeScreen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +23,9 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 @Composable
 fun HomeScreen(
     onCategoryClick: (Int) -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -62,7 +66,9 @@ fun HomeScreen(
         item {
             Bestselling(
                 "پرفروش ترین ها",
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
             )
         }
 

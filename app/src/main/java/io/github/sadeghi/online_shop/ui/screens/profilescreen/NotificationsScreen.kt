@@ -45,7 +45,7 @@ import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
+import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.ui.theme.orange
 
 @Composable

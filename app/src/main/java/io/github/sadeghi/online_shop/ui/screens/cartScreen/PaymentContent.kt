@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressViewModel
+import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 import io.github.sadeghi.online_shop.ui.theme.orange
 @Composable
 fun PaymentContent(

@@ -1,5 +1,6 @@
 package io.github.sadeghi.online_shop.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -38,15 +39,16 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.navigation.Screens
-import io.github.sadeghi.online_shop.ui.component.BGShape
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.theme.greeny
 import io.github.sadeghi.online_shop.ui.theme.orange
 import io.github.sadeghi.online_shop.ui.ui_utils.SplashState
 import io.github.sadeghi.online_shop.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun SplashScreen(
     navController: NavController,
@@ -144,7 +146,7 @@ fun SplashScreen(
 
         LaunchedEffect(Unit) {
             startAnimation = true
-            delay(1200)
+            delay(1200.milliseconds)
             showStatus.value = true
         }
 

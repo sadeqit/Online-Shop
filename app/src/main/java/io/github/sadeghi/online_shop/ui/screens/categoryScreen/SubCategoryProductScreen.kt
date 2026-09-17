@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.categoryScreen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +24,9 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 @Composable
 fun SubCategoryProductScreen(
     subCategoryId: Int,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val selectedItem =
         menItems.first { it.id == subCategoryId }
@@ -63,11 +67,15 @@ fun SubCategoryProductScreen(
             )
         }
 
-        // پرفروش‌ترین‌ها
+
         item {
-            Bestselling(selectedItem.title, grid = true,
+            Bestselling(
+                selectedItem.title,
+                grid = true,
                 showAllButton = false,
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
             )
         }
 

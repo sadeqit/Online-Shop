@@ -135,7 +135,7 @@ class LoginViewModel @Inject constructor(
                         onSuccess()
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 errorMessage = "خطایی در ورود رخ داد"
             } finally {
                 isLoading = false

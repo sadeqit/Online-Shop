@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.categoryScreen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +29,9 @@ import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
 @Composable
 fun CategoryProductScreen(
     categoryId: Int,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 
 ) {
     var selectedCategoryId by rememberSaveable { mutableIntStateOf(categoryId) }
@@ -42,8 +46,6 @@ fun CategoryProductScreen(
         item {
             SpacerHeight(20)
         }
-
-        // دسته‌ها
 
         item {
             CategorySelector(
@@ -101,8 +103,12 @@ fun CategoryProductScreen(
 
         // پرفروش‌ترین‌ها
         item {
-            Bestselling("پرفروش ترین های هفته گذشته",
-                navController = navController)
+            Bestselling(
+                "پرفروش ترین های هفته گذشته",
+                navController = navController,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
         item {
             SpacerHeight(20)

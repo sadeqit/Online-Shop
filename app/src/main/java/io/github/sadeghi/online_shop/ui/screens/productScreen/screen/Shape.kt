@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 class LeftRoundedRightSlantedShape(
     private val leftRadius: Dp = 24.dp,
-    private val topEndRadius: Dp = 15.dp,     // شعاع گردی بالا-راست
+    private val topEndRadius: Dp = 15.dp,
     private val slantAmount: Dp = 18.dp
 ) : Shape {
 

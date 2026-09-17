@@ -6,21 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
 import io.github.sadeghi.online_shop.data.repository.IProfileRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: IProfileRepository,
-    private val authRepository: IAuthRepository) : ViewModel()
-{
+    private val authRepository: IAuthRepository
+) : ViewModel() {
     fun logout(
         onSuccess: () -> Unit
     ) {

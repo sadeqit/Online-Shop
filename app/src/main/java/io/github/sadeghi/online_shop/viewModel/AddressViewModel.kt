@@ -1,4 +1,4 @@
-package io.github.sadeghi.online_shop.ui.screens.profilescreen.address
+package io.github.sadeghi.online_shop.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
+import io.github.sadeghi.online_shop.data.repository.AddressRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -189,4 +191,3 @@ class AddressViewModel @Inject constructor(
         return isValid
     }
 }
-

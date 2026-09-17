@@ -154,7 +154,7 @@ class ChangePasswordViewModel @Inject constructor(
 
                 onSuccess()
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
                 isLoading = false
 

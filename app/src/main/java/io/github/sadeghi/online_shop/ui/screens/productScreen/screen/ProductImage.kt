@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -42,6 +44,8 @@ fun ProductImage(
     modifier: Modifier = Modifier,
     canGoPrevious: Boolean,
     canGoNext: Boolean,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null
 ) {
 
     val constraints = ConstraintSet {
@@ -113,6 +117,24 @@ fun ProductImage(
                 .background(Color(0xFFEBEBEB))
                 .size(500.dp)
                 .layoutId("box")
+                .let { boxModifier ->
+
+                    if (
+                        sharedTransitionScope != null &&
+                        animatedVisibilityScope != null
+                    ) {
+                        with(sharedTransitionScope) {
+                            boxModifier.sharedElement(
+                                sharedContentState = rememberSharedContentState(
+                                    key = "product-box-${product.id}"
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        }
+                    } else {
+                        boxModifier
+                    }
+                }
         )
 
         Box(
@@ -147,13 +169,29 @@ fun ProductImage(
             )
         }
 
+        val imageModifier = Modifier
+            .size(250.dp)
+            .layoutId("image")
+            .padding(top = 60.dp)
+
         Image(
             painter = painterResource(product.image),
             contentDescription = product.title,
-            modifier = Modifier
-                .size(250.dp)
-                .layoutId("image")
-                .padding(top = 60.dp),
+            modifier = if (
+                sharedTransitionScope != null &&
+                animatedVisibilityScope != null
+            ) {
+                with(sharedTransitionScope) {
+                    imageModifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(
+                            key = "product-image-${product.id}"
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                }
+            } else {
+                imageModifier
+            },
             contentScale = ContentScale.Crop
         )
 
@@ -202,174 +240,4 @@ fun ProductImage(
         )
     }
 }
-/*
-@Composable
-fun ProductImage(
-    product: Product,
-    reviews: List<ProductReview>,
-    listState: LazyListState,
-    favoritesViewModel: FavoritesViewModel,
-    modifier: Modifier = Modifier
-) {
-
-
-    val constraints = ConstraintSet {
-
-        val box = createRefFor("box")
-        constrain(box) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            top.linkTo(parent.top)
-
-        }
-        val label = createRefFor("label")
-        constrain(label) {
-
-            end.linkTo(box.end)
-            top.linkTo(box.top)
-            bottom.linkTo(box.bottom)
-            verticalBias = 0.1f
-        }
-        val image = createRefFor("image")
-        constrain(image) {
-            end.linkTo(box.end)
-            top.linkTo(box.top)
-            start.linkTo(box.start)
-
-        }
-        val iconBack = createRefFor("iconBack")
-        constrain(iconBack) {
-            start.linkTo(box.start)
-
-            top.linkTo(box.top)
-            bottom.linkTo(box.bottom)
-
-
-        }
-        val iconNext = createRefFor("iconNext")
-        constrain(iconNext) {
-
-            end.linkTo(box.end)
-            top.linkTo(box.top)
-            bottom.linkTo(box.bottom)
-
-
-        }
-        val myBox = createRefFor("myBox")
-        constrain(myBox) {
-
-            start.linkTo(box.start)
-            top.linkTo(box.top)
-            bottom.linkTo(box.bottom)
-            verticalBias = 0.7f
-
-        }
-
-        val description = createRefFor("description")
-        constrain(description) {
-            start.linkTo(myBox.start)
-            end.linkTo(box.end)
-            top.linkTo(myBox.bottom)
-        }
-
-    }
-
-    ConstraintLayout(
-        constraintSet = constraints,
-
-        ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(Color(0xFFEBEBEB))
-                .size(500.dp)
-                .layoutId("box")
-
-        )
-
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(topStart = 50.dp, bottomStart = 50.dp))
-                .layoutId("label")
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFE32A0D),
-                            Color(0xFFFD583D)
-                        )
-                    )
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "10%",
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
-        }
-        Image(
-            painter = painterResource(product.image),
-            contentDescription = product.title,
-            modifier = Modifier
-                .size(250.dp)
-                .layoutId("image")
-                .padding(top = 60.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        IconButton(
-            onClick = {
-                // محصول قبلی
-            },
-            modifier = Modifier
-
-                .layoutId("iconBack")
-
-        ) {
-
-            Icon(
-                imageVector = Icons.Default.ChevronLeft,
-                contentDescription = "محصول قبلی"
-            )
-        }
-
-        IconButton(
-            onClick = {
-                // محصول بعدی
-            },
-            modifier = Modifier
-
-                .layoutId("iconNext")
-
-        ) {
-
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = "محصول بعدی"
-            )
-        }
-
-        ProductActionsOverlay(
-            modifier = Modifier
-                .layoutId("myBox"),
-            reviews = reviews,
-            listState = listState,
-            productId = product.id,
-            favoritesViewModel = favoritesViewModel
-        )
-
-        ProductDescription(
-            product = product,
-            listState = listState,
-            modifier = modifier.layoutId("description")
-        )
-
-
-
-    }
-}
-*/
 

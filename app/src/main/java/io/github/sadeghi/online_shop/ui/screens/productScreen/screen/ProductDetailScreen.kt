@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.productScreen.screen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -19,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -32,17 +33,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartViewModel
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 import io.github.sadeghi.online_shop.viewModel.ProductReviewViewModel
 import kotlinx.coroutines.launch
-import kotlin.collections.plus
 
 @Composable
 fun ProductDetailScreen(
     productId: Int,
-    navController: NavHostController
+    navController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val reviewViewModel: ProductReviewViewModel = hiltViewModel()
     val reviews by reviewViewModel.reviews.collectAsState()
@@ -106,21 +108,16 @@ fun ProductDetailScreen(
                     reviews = reviews,
                     listState = listState,
                     favoritesViewModel = favoritesViewModel,
-
                     canGoPrevious = canGoPrevious,
                     canGoNext = canGoNext,
-
                     onPreviousProduct = {
-                        if (canGoPrevious) {
-                            currentProductIndex--
-                        }
+                        if (canGoPrevious) currentProductIndex--
                     },
-
                     onNextProduct = {
-                        if (canGoNext) {
-                            currentProductIndex++
-                        }
-                    }
+                        if (canGoNext) currentProductIndex++
+                    },
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
             }
 
@@ -163,7 +160,9 @@ fun ProductDetailScreen(
             item {
                 Bestselling(
                     text = "محصولات مشابه",
-                    navController = navController
+                    navController = navController,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
             }
 
@@ -216,163 +215,3 @@ fun ProductDetailScreen(
         }
     }
 }
-/*
-@Composable
-fun ProductDetailScreen(
-    productId: Int,
-    navController: NavHostController
-) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val scope = rememberCoroutineScope()
-    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
-    val cartViewModel: CartViewModel = hiltViewModel()
-    val product = bestsellingProducts.find {
-        it.id == productId
-    } ?: return
-
-    val focusManager = LocalFocusManager.current
-    val listState = rememberLazyListState()
-
-    var reviews by remember {
-        mutableStateOf(
-            listOf(
-                ProductReview(
-                    userName = "علی رضایی",
-                    rating = 4,
-                    comment = "محصول بسیار عالی بود و کیفیت اشفالی بود"
-                ),
-                ProductReview(
-                    userName = "رضا صادقی",
-                    rating = 4,
-                    comment = "محصول خیلی خوب بود و کیفیت مناسبی داشت."
-                )
-            )
-        )
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                focusManager.clearFocus()
-            }
-    ) {
-
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 120.dp)
-        ) {
-
-            item {
-                SpacerHeight(30)
-            }
-
-            item {
-                ProductImage(
-                    product = product,
-                    reviews = reviews,
-                    listState = listState,
-                    favoritesViewModel = favoritesViewModel
-                )
-            }
-
-            item {
-                SpacerHeight(20)
-            }
-            item {
-                FeatureScreen()
-            }
-            item {
-                SpacerHeight(20)
-            }
-
-            item {
-                CommentScreen(
-                    onSubmit = { comment, rating ->
-                        reviews = reviews + ProductReview(
-                            userName = "کاربر",
-                            rating = rating,
-                            comment = comment
-                        )
-                    }
-                )
-            }
-
-            item {
-                SpacerHeight(30)
-            }
-
-            item {
-                UserReviews(reviews = reviews)
-            }
-
-            item {
-                SpacerHeight(30)
-            }
-
-            item {
-                Bestselling(
-                    text = "محصولات مشابه",
-                    navController = navController
-                )
-            }
-
-            item {
-                SpacerHeight(30)
-            }
-        }
-
-        // همیشه ثابت و شناور
-        CartButton(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-
-            product = product,
-
-            onAddToCart = { selectedProduct, quantity ->
-
-                cartViewModel.addToCart(
-                    product = selectedProduct,
-                    quantity = quantity
-                )
-            },
-
-            onAddedToCart = {
-
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "محصول به سبد خرید اضافه شد",
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
-        )
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) { snackbarData ->
-
-            Snackbar(
-                modifier = Modifier.padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = snackbarData.visuals.message,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-}
-*/

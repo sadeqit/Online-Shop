@@ -1,6 +1,7 @@
 package io.github.sadeghi.online_shop.navigation
 
 import android.net.Uri
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -28,7 +29,7 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyBuyScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressFormScreen
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
+import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 
 @Composable
 fun MainNavGraph(
@@ -38,6 +39,7 @@ fun MainNavGraph(
     cartStep: CartStep,
     onCartStepChange: (CartStep) -> Unit
 ) {
+    SharedTransitionLayout {
     NavHost(
         navController = navController,
         startDestination = Screens.Home.route
@@ -46,6 +48,8 @@ fun MainNavGraph(
         composable(Screens.Home.route) {
             HomeScreen(
                 navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this,
                 onCategoryClick = { categoryId ->
                     navController.navigate(
                         Screens.CategoryProduct.createRoute(categoryId)
@@ -55,6 +59,7 @@ fun MainNavGraph(
                 }
             )
         }
+
         composable(
             route = Screens.SearchResult.route
         ) { backStackEntry ->
@@ -66,7 +71,9 @@ fun MainNavGraph(
 
             SearchResultScreen(
                 query = query,
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
             )
         }
 
@@ -133,11 +140,15 @@ fun MainNavGraph(
                 }
             )
         ) { backStackEntry ->
-            val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+
+            val categoryId =
+                backStackEntry.arguments?.getInt("categoryId") ?: 0
 
             CategoryProductScreen(
                 categoryId = categoryId,
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
             )
         }
 
@@ -155,7 +166,9 @@ fun MainNavGraph(
 
             SubCategoryProductScreen(
                 subCategoryId = subCategoryId,
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
             )
         }
 
@@ -169,11 +182,14 @@ fun MainNavGraph(
         ) { backStackEntry ->
 
             val productId =
-                backStackEntry.arguments?.getInt("productId") ?: return@composable
+                backStackEntry.arguments?.getInt("productId")
+                    ?: return@composable
 
             ProductDetailScreen(
                 productId = productId,
-                navController = navController
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
             )
         }
 
@@ -199,8 +215,9 @@ fun MainNavGraph(
 
         composable(Screens.Favorites.route) {
             FavoritesScreen(
-                navController = navController
-
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
             )
         }
 
@@ -235,3 +252,4 @@ fun MainNavGraph(
 
     }
 }
+    }

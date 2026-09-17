@@ -90,6 +90,8 @@ dependencies {
 
     implementation("io.github.alirezajavan:shamsi-picker:1.6.0")
 
+    implementation(libs.androidx.compose.animation)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

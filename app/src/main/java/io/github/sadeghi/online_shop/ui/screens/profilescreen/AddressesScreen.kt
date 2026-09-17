@@ -1,6 +1,5 @@
 package io.github.sadeghi.online_shop.ui.screens.profilescreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +33,7 @@ import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressCard
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressViewModel
+import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 
 @Composable

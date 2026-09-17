@@ -14,15 +14,14 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.navigation.Screens
-import io.github.sadeghi.online_shop.ui.component.BGShape
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.ConfirmCodeContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.EnterEmailContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoadingOverlay
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
+import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetPasswordContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetupContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SignInContent
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.SubmitUserInfoContent
-import io.github.sadeghi.online_shop.ui.screens.loginscreen.SetPasswordContent
 import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 
@@ -30,8 +29,7 @@ import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavController
-)
-{
+) {
     val focusManager = LocalFocusManager.current
 
     CompositionLocalProvider(

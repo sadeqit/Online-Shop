@@ -1,5 +1,7 @@
 package io.github.sadeghi.online_shop.ui.screens.profilescreen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +45,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun FavoritesScreen(
     navController: NavHostController,
-    viewModel: FavoritesViewModel = hiltViewModel()
+    viewModel: FavoritesViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val snackbarHostState = remember {
@@ -111,6 +115,8 @@ fun FavoritesScreen(
 
                                 ProductItem(
                                     product = product,
+                                    sharedTransitionScope = sharedTransitionScope,
+                                    animatedVisibilityScope = animatedVisibilityScope,
                                     onClick = {
                                         navController.navigate(
                                             Screens.ProductDetail.createRoute(
@@ -120,7 +126,6 @@ fun FavoritesScreen(
                                     },
                                     showBookmark = true,
                                     onAddToCart = {
-
                                         cartViewModel.addToCart(product)
 
                                         scope.launch {

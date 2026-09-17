@@ -1,10 +1,8 @@
-package io.github.sadeghi.online_shop.ui.screens.profilescreen.address
+package io.github.sadeghi.online_shop.data.repository
 
 import io.github.sadeghi.online_shop.data.local.datastore.AddressDataStore
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,8 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class AddressRepository @Inject constructor(
     private val addressDataStore: AddressDataStore
-)
-{
+) {
 
     val addresses: Flow<List<Address>> =
         addressDataStore.addresses

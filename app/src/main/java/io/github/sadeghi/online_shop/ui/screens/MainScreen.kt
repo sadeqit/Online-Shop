@@ -24,7 +24,7 @@ import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartStep
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.bottombar.CustomBottomBar
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawer.CustomNavigationDrawer
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.CustomTopBar
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsViewModel
+import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.viewModel.DrawerViewModel
 
 @Composable

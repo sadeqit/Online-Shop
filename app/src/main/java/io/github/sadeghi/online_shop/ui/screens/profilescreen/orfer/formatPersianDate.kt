@@ -53,8 +53,8 @@ private fun gregorianToPersian(
         30, 30, 30, 30, 30, 29
     )
 
-    var gyTemp = gy - 1600
-    var gmTemp = gm - 1
+    val gyTemp = gy - 1600
+    val gmTemp = gm - 1
     val gdTemp = gd - 1
 
     var gDayNo = 365 * gyTemp +

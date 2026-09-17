@@ -23,7 +23,6 @@ import io.github.sadeghi.online_shop.ui.component.AppTextField
 import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.theme.text
-import io.github.sadeghi.online_shop.viewModel.LoginViewModel
 
 @SuppressLint("DefaultLocale")
 @Composable

@@ -38,6 +38,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import io.github.sadeghi.online_shop.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun BannerScreen() {
@@ -59,7 +60,7 @@ fun BannerScreen() {
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(3000)
+            delay(3000.milliseconds)
             if (!pagerState.isScrollInProgress) {
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             }
@@ -109,7 +110,8 @@ fun BannerScreen() {
     }
     ConstraintLayout(
         constraintSet = constraints,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
 

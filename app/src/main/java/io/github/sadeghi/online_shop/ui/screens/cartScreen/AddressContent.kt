@@ -45,8 +45,8 @@ import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressCard
-import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 import io.github.sadeghi.online_shop.ui.theme.orange
+import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 
 @Composable
 fun AddressContent(

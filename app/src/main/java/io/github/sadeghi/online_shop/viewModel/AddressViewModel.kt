@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AddressViewModel @Inject constructor(
     private val repository: AddressRepository
-) : ViewModel()
-{
+) : ViewModel() {
 
     val addresses: StateFlow<List<Address>> =
         repository.addresses
@@ -27,6 +27,13 @@ class AddressViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
+
+    init {
+        viewModelScope.launch {
+            repository.loadAddresses()
+        }
+    }
+
 
     var fullName by mutableStateOf("")
         private set
@@ -98,8 +105,8 @@ class AddressViewModel @Inject constructor(
         phoneNumberError = null
     }
 
-    fun addAddress() {
 
+    fun addAddress(onSuccess: () -> Unit) {
         viewModelScope.launch {
             repository.addAddress(
                 receiver = fullName,
@@ -107,11 +114,15 @@ class AddressViewModel @Inject constructor(
                 postalCode = postalCode,
                 phoneNumber = phoneNumber
             )
+
+            onSuccess()
         }
     }
 
-    fun updateAddress(id: Int) {
-
+    fun updateAddress(
+        id: UUID,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             repository.updateAddress(
                 id = id,
@@ -120,17 +131,19 @@ class AddressViewModel @Inject constructor(
                 postalCode = postalCode,
                 phoneNumber = phoneNumber
             )
+
+            onSuccess()
         }
     }
 
-    fun deleteAddress(id: Int) {
+    fun deleteAddress(id: UUID) {
 
         viewModelScope.launch {
             repository.deleteAddress(id)
         }
     }
 
-    fun setDefaultAddress(id: Int) {
+    fun setDefaultAddress(id: UUID) {
 
         viewModelScope.launch {
             repository.setDefaultAddress(id)

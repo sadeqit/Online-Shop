@@ -37,6 +37,7 @@ import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -44,7 +45,7 @@ fun AddressFormScreen(
     navController: NavHostController,
     viewModel: AddressViewModel = hiltViewModel(),
     profileViewModel: ProfileViewModel,
-    addressId: Int? = null
+    addressId: UUID? = null
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
@@ -235,14 +236,15 @@ fun AddressFormScreen(
                     ) {
 
                         if (viewModel.validateForm()) {
-
                             if (addressId == null) {
-                                viewModel.addAddress()
+                                viewModel.addAddress {
+                                    navController.popBackStack()
+                                }
                             } else {
-                                viewModel.updateAddress(addressId)
+                                viewModel.updateAddress(addressId) {
+                                    navController.popBackStack()
+                                }
                             }
-
-                            navController.popBackStack()
                         }
                     }
 

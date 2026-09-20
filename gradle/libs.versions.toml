@@ -19,6 +19,7 @@ runtime = "1.12.1"
 supabase = "3.8.0"
 ktor = "3.6.0"
 kotlinxSerialization = "1.9.0"
+identity = "202411.1"
 
 [libraries]
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
@@ -72,6 +73,7 @@ ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 retrofit-kotlinx-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version = "1.0.0" }
+identity = { group = "com.android.identity", name = "identity", version.ref = "identity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,6 +1,7 @@
 package io.github.sadeghi.online_shop.navigation
 
 import android.net.Uri
+import java.util.UUID
 
 sealed class Screens(val route: String) {
     data object Splash : Screens("splash")
@@ -51,7 +52,7 @@ sealed class Screens(val route: String) {
 
     data object AddressFormScreen : Screens("addressformscreen") {
 
-        fun createRoute(addressId: Int): String {
+        fun createRoute(addressId: UUID): String {
             return "$route/$addressId"
         }
     }

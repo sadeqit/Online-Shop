@@ -31,6 +31,7 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScree
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressFormScreen
 import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
+import java.util.UUID
 
 @Composable
 fun MainNavGraph(
@@ -246,6 +247,7 @@ fun MainNavGraph(
                 profileViewModel = profileViewModel
             )
         }
+
         composable(
             route = "${Screens.AddressFormScreen.route}/{addressId}"
         ) { backStackEntry ->
@@ -253,7 +255,7 @@ fun MainNavGraph(
             val addressId = backStackEntry
                 .arguments
                 ?.getString("addressId")
-                ?.toIntOrNull()
+                ?.let { UUID.fromString(it) }
 
             AddressFormScreen(
                 navController = navController,

@@ -59,6 +59,7 @@ google-services.json
 supabase/
 .env
 .env.*
+!.env.example
 secrets.properties
 apikey.properties
 keys.properties

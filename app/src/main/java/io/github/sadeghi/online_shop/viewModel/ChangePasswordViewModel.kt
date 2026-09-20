@@ -7,15 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
+
 
     var currentPassword by mutableStateOf("")
         private set
@@ -58,108 +57,72 @@ class ChangePasswordViewModel @Inject constructor(
     fun changePassword(
         onSuccess: () -> Unit
     ) {
-
         var isValid = true
 
-        // رمز فعلی
         if (currentPassword.isBlank()) {
-
-            currentPasswordError =
-                "رمز عبور فعلی را وارد کنید"
-
+            currentPasswordError = "رمز عبور فعلی را وارد کنید"
             isValid = false
         }
 
-        // رمز جدید
         if (newPassword.isBlank()) {
-
-            newPasswordError =
-                "رمز عبور جدید را وارد کنید"
-
+            newPasswordError = "رمز عبور جدید را وارد کنید"
             isValid = false
-
         } else if (!isValidPassword(newPassword)) {
-
             newPasswordError =
                 "رمز عبور باید حداقل ۸ کاراکتر و شامل حروف بزرگ و کوچک، عدد و علامت باشد"
-
             isValid = false
         }
 
-        // تکرار رمز
         if (confirmPassword.isBlank()) {
-
             confirmPasswordError =
                 "تکرار رمز عبور جدید را وارد کنید"
-
             isValid = false
-
         } else if (newPassword != confirmPassword) {
-
             confirmPasswordError =
                 "رمز عبور جدید و تکرار آن یکسان نیست"
-
             isValid = false
         }
 
-        // اگر اطلاعات فرم کامل نیست
         if (!isValid) {
             return
         }
 
-        // رمز جدید نباید همان رمز قبلی باشد
         if (currentPassword == newPassword) {
-
             newPasswordError =
                 "رمز عبور جدید باید با رمز فعلی متفاوت باشد"
-
             return
         }
 
         isLoading = true
 
         viewModelScope.launch {
-
             try {
-
-                val savedPassword =
-                    repository.getCurrentPassword()
-
-                if (savedPassword == null) {
-
-                    currentPasswordError =
-                        "رمز عبور فعلی پیدا نشد"
-
-                    isLoading = false
-
-                    return@launch
-                }
-
-                // بررسی رمز فعلی
-                if (currentPassword != savedPassword) {
-
-                    currentPasswordError =
-                        "رمز عبور فعلی اشتباه است"
-
-                    isLoading = false
-
-                    return@launch
-                }
-
-                delay(1200.milliseconds)
-
-                repository.updatePassword(newPassword)
+                repository.changePassword(
+                    oldPassword = currentPassword,
+                    newPassword = newPassword
+                )
 
                 isLoading = false
 
                 onSuccess()
 
-            } catch (_: Exception) {
+            } catch (e: Exception) {
 
                 isLoading = false
 
-                newPasswordError =
-                    "خطایی رخ داد، دوباره تلاش کنید"
+                val message = e.message.orEmpty()
+
+                if (
+                    message.contains("current password", ignoreCase = true) ||
+                    message.contains("password", ignoreCase = true) &&
+                    message.contains("incorrect", ignoreCase = true)
+                ) {
+                    currentPasswordError =
+                        "رمز عبور فعلی اشتباه است"
+                } else {
+                    newPasswordError =
+                        "تغییر رمز انجام نشد، دوباره تلاش کنید"
+                }
             }
         }
     }

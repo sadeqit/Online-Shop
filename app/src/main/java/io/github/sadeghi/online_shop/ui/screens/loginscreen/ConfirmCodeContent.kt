@@ -44,6 +44,140 @@ fun ConfirmCodeContent(
     val timeText = String.format("%02d:%02d", minutes, seconds)
 
     Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LogoHeader()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 120.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "کد تائید:",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                textAlign = TextAlign.Right,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Text(
+                text = "کد ارسال شده به ایمیل $email را وارد کنید",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Right,
+                color = text,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            SpacerHeight(8)
+
+            Text(
+                text = "لطفا پوشه اسپم خود را چک کنید",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Right,
+                color = Color.Gray
+            )
+
+            SpacerHeight(12)
+
+            AppTextField(
+                value = code,
+                onValueChange = onCodeChange,
+                placeholder = "کد تایید را وارد کنید",
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+                trailingIcon = {
+                    Text(
+                        text = timeText,
+                        color = if (timer == 0) Color.Red else Color.Gray
+                    )
+                },
+                onImeAction = {
+                    focusManager.clearFocus()
+                    onVerifyCode()
+                }
+            )
+
+            SpacerHeight(12)
+
+            errorMessage?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Right,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+
+            SpacerHeight(12)
+
+            GradientButton(
+                text = "تایید کد و ادامه",
+                enabled = code.isNotBlank() && !isLoading,
+                onClick = {
+                    focusManager.clearFocus()
+                    onVerifyCode()
+                }
+            )
+
+            SpacerHeight(12)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "ویرایش ایمیل",
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .clickable {
+                            focusManager.clearFocus()
+                            onEditEmail()
+                        },
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                Text(
+                    text = "ارسال مجدد کد",
+                    color = if (timer == 0) Color.Black else Color.Gray,
+                    modifier = Modifier.clickable(
+                        enabled = timer == 0
+                    ) {
+                        onResendCode()
+                    },
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+        }
+    }
+}
+/*
+@SuppressLint("DefaultLocale")
+@Composable
+fun ConfirmCodeContent(
+    email: String,
+    code: String,
+    timer: Int,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onCodeChange: (String) -> Unit,
+    onVerifyCode: () -> Unit,
+    onEditEmail: () -> Unit,
+    onResendCode: () -> Unit,
+    focusManager: FocusManager
+) {
+
+    val minutes = timer / 60
+    val seconds = timer % 60
+    val timeText = String.format("%02d:%02d", minutes, seconds)
+
+    Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -150,4 +284,4 @@ fun ConfirmCodeContent(
 
         }
     }
-}
+}*/

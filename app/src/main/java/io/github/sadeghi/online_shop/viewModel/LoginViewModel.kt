@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
+import io.github.sadeghi.online_shop.data.repository.IProfileRepository
 import io.github.sadeghi.online_shop.ui.screens.loginscreen.LoginStep
 import io.github.sadeghi.online_shop.ui.ui_utils.PasswordStrength
 import io.github.sadeghi.online_shop.ui.ui_utils.calculatePasswordStrength
@@ -22,7 +23,9 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val application: Application,
-    private val repository: AuthRepository) : ViewModel()
+    private val repository: AuthRepository,
+    private val profileRepository: IProfileRepository
+) : ViewModel()
 {
 
     var errorMessage by mutableStateOf<String?>(null)
@@ -89,54 +92,45 @@ class LoginViewModel @Inject constructor(
     // صفحه Sign In
     // ====================
 
-    fun signIn(onSuccess: () -> Unit) {
+    fun signIn(
+        onSuccess: () -> Unit
+    ) {
         if (email.isBlank()) {
             errorMessage = "ایمیل را وارد کنید"
             return
         }
+
         if (!isEmailValid()) {
             errorMessage = "فرمت ایمیل صحیح نیست"
             return
         }
+
         if (password.isBlank()) {
             errorMessage = "رمز عبور را وارد کنید"
             return
         }
+
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
             return
         }
+
         errorMessage = null
         isLoading = true
+
         viewModelScope.launch {
             try {
-                val savedEmail = repository.getCurrentEmail()
-                val savedPassword = repository.getCurrentPassword()
-                delay(500.milliseconds)
-                when {
-                    savedEmail == null -> {
-                        errorMessage = "حسابی با این ایمیل پیدا نشد"
-                    }
+                repository.signIn(
+                    email = email,
+                    password = password
+                )
 
-                    savedEmail != email -> {
-                        errorMessage = "ایمیل یا رمز عبور اشتباه است"
-                    }
+                repository.saveLogin(email)
 
-                    savedPassword == null -> {
-                        errorMessage = "برای این حساب رمز عبوری ثبت نشده است"
-                    }
+                onSuccess()
 
-                    savedPassword != password -> {
-                        errorMessage = "ایمیل یا رمز عبور اشتباه است"
-                    }
-
-                    else -> {
-                        repository.saveLogin(savedEmail)
-                        onSuccess()
-                    }
-                }
-            } catch (_: Exception) {
-                errorMessage = "خطایی در ورود رخ داد"
+            } catch (e: Exception) {
+                errorMessage = "ایمیل یا رمز عبور اشتباه است"
             } finally {
                 isLoading = false
             }
@@ -181,10 +175,17 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            delay(1200.milliseconds)
-            startTimer()
-            isLoading = false
-            step = LoginStep.CONFIRM_CODE
+            try {
+                repository.sendOtp(email)
+
+                startTimer()
+                step = LoginStep.CONFIRM_CODE
+
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "ارسال کد تأیید ناموفق بود"
+            } finally {
+                isLoading = false
+            }
         }
     }
 
@@ -192,7 +193,7 @@ class LoginViewModel @Inject constructor(
     // صفحه Confirm Code
     // ====================
     fun onCodeChange(value: String) {
-        if (value.length <= 6)
+        if (value.length <= 9)
             code = value
         errorMessage = null
     }
@@ -213,8 +214,6 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             val success = repository.verifyOtp(email, code)
-            delay(1200.milliseconds) // شبیه‌سازی API
-
             isLoading = false
 
             if (success) {
@@ -278,24 +277,33 @@ class LoginViewModel @Inject constructor(
         passwordStrength = calculatePasswordStrength(value)
         validatePassword()
     }
-
     fun submitPassword() {
         validatePassword()
 
         if (passwordError != null) return
 
+        if (!hasInternet()) {
+            errorMessage = "اینترنت متصل نیست"
+            return
+        }
+
+        errorMessage = null
         isLoading = true
 
         viewModelScope.launch {
+            try {
+                repository.updatePassword(password)
 
-            delay(1200.milliseconds)
+                step = LoginStep.SUBMIT_INFO
 
-            repository.savePassword(password)
-
-            isLoading = false
-            step = LoginStep.SUBMIT_INFO
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "ثبت رمز عبور ناموفق بود"
+            } finally {
+                isLoading = false
+            }
         }
     }
+
 
     private fun validatePassword() {
         passwordError = when {
@@ -317,8 +325,8 @@ class LoginViewModel @Inject constructor(
             errorMessage = null
         }
     }
-
     fun submitFullName(onSuccess: () -> Unit) {
+
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
             return
@@ -338,17 +346,31 @@ class LoginViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            delay(1200.milliseconds)
+            try {
 
-            repository.saveLogin(email)
-            repository.saveFullName(fullName)
-            repository.savePhoneNumber(phoneNumber)
+                profileRepository.saveProfile(
+                    fullName = fullName,
+                    phoneNumber = phoneNumber,
+                    birthDate = "",
+                    gender = ""
+                )
 
-            isLoading = false
+                repository.saveLogin(email)
 
-            onSuccess()
+                isLoading = false
+
+                onSuccess()
+
+            } catch (e: Exception) {
+
+                errorMessage = e.message ?: "ثبت اطلاعات ناموفق بود"
+
+                isLoading = false
+            }
         }
     }
+
+
     fun onSubmitInfo() {
         if (!hasInternet()) {
             errorMessage = "اینترنت متصل نیست"
@@ -378,6 +400,8 @@ class LoginViewModel @Inject constructor(
     fun hasInternet(): Boolean {
         return isNetworkAvailable(application)
     }
+
+
 
 
 }

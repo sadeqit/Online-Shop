@@ -2,7 +2,6 @@ package io.github.sadeghi.online_shop.data.repository
 
 import kotlinx.coroutines.flow.Flow
 
-
 interface IProfileRepository {
 
     suspend fun saveProfileImage(uri: String)
@@ -10,7 +9,6 @@ interface IProfileRepository {
     suspend fun saveProfile(
         fullName: String,
         phoneNumber: String,
-        email: String,
         birthDate: String,
         gender: String
     )
@@ -27,3 +25,4 @@ interface IProfileRepository {
 
     fun getProfileImage(): Flow<String?>
 }
+

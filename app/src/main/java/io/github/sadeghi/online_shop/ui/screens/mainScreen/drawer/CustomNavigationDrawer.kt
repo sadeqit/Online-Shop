@@ -26,13 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 
 @Composable
 fun CustomNavigationDrawer(
     isOpen: Boolean,
     onClose: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    profileViewModel: ProfileViewModel
 ) {
     AnimatedVisibility(
         visible = isOpen,
@@ -79,7 +81,7 @@ fun CustomNavigationDrawer(
                         .padding(16.dp)
                 ) {
 
-                    DrawerHeader()
+                    DrawerHeader(profileViewModel)
 
                     SpacerHeight(16)
 

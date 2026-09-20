@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.jan.supabase.SupabaseClient
 import io.github.sadeghi.online_shop.data.local.datastore.ProductReviewDataStore
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
@@ -21,9 +22,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        userPreferences: UserPreferences
+        userPreferences: UserPreferences,
+        supabaseClient: SupabaseClient
     ): IAuthRepository {
-        return AuthRepository(userPreferences)
+        return AuthRepository(
+            userPreferences,
+            supabaseClient
+        )
     }
 
     @Provides

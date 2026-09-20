@@ -40,6 +40,7 @@ import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductIte
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,6 +48,7 @@ fun FavoritesScreen(
     navController: NavHostController,
     viewModel: FavoritesViewModel = hiltViewModel(),
     sharedTransitionScope: SharedTransitionScope,
+    profileViewModel: ProfileViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -73,7 +75,10 @@ fun FavoritesScreen(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            HeaderProfile(true)
+            HeaderProfile(
+                compact = true,
+                profileViewModel = profileViewModel
+            )
 
             SpacerHeight(40)
 

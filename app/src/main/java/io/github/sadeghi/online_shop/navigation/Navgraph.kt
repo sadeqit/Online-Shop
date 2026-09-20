@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.sadeghi.online_shop.ui.screens.LoginScreen
 import io.github.sadeghi.online_shop.ui.screens.SplashScreen
 import io.github.sadeghi.online_shop.ui.screens.MainScreen
+import io.github.sadeghi.online_shop.viewModel.ConnectionTestScreen
 
 
 @Composable
@@ -18,6 +19,10 @@ fun NavGraph(
         navController = navController,
         startDestination = Screens.Splash.route
     ) {
+
+        composable(Screens.ConnectionTestScreen.route) {
+            ConnectionTestScreen()
+        }
 
         composable(Screens.Splash.route) {
             SplashScreen(navController)

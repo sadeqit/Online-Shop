@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
 import io.github.sadeghi.online_shop.data.repository.IProfileRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val profileRepository: IProfileRepository,
     private val authRepository: IAuthRepository
-) : ViewModel() {
+) : ViewModel()
+{
     fun logout(
         onSuccess: () -> Unit
     ) {
@@ -55,8 +57,8 @@ class ProfileViewModel @Inject constructor(
     var genderError by mutableStateOf<String?>(null)
         private set
 
-    val profileImageUri: Flow<String?> =
-        profileRepository.getProfileImage()
+    var profileImageUri by mutableStateOf<String?>(null)
+        private set
 
     var isSaving by mutableStateOf(false)
         private set
@@ -66,45 +68,42 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadProfile() {
-
         viewModelScope.launch {
 
             launch {
                 profileRepository.getFullName()
-                    .collect { value ->
-                        fullName = value
-                    }
+                    .collect { value -> fullName = value }
             }
 
             launch {
                 profileRepository.getPhoneNumber()
-                    .collect { value ->
-                        phoneNumber = value
-                    }
+                    .collect { value -> phoneNumber = value }
             }
 
             launch {
                 profileRepository.getEmail()
-                    .collect { value ->
-                        email = value ?: ""
-                    }
+                    .collect { value -> email = value ?: "" }
             }
 
             launch {
                 profileRepository.getBirthDate()
-                    .collect { value ->
-                        birthDate = value
-                    }
+                    .collect { value -> birthDate = value }
             }
 
             launch {
                 profileRepository.getGender()
+                    .collect { value -> gender = value }
+            }
+
+            launch {
+                profileRepository.getProfileImage()
                     .collect { value ->
-                        gender = value
+                        profileImageUri = value
                     }
             }
         }
     }
+
 
     fun onPhoneNumberChange(value: String) {
         phoneNumber = value.trim()
@@ -141,7 +140,6 @@ class ProfileViewModel @Inject constructor(
                 profileRepository.saveProfile(
                     fullName = fullName,
                     phoneNumber = phoneNumber,
-                    email = email,
                     birthDate = birthDate,
                     gender = gender
                 )
@@ -154,13 +152,25 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
     fun saveProfileImage(uri: String) {
-
         viewModelScope.launch {
-            profileRepository.saveProfileImage(uri)
+            try {
+                profileRepository.saveProfileImage(uri)
+
+                profileImageUri =
+                    profileRepository.getProfileImage()
+                        .first()
+                        ?.let {
+                            "$it?v=${System.currentTimeMillis()}"
+                        }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
+
+
 
     fun validateProfile(): Boolean {
 

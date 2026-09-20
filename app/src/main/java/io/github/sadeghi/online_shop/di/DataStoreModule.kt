@@ -1,5 +1,6 @@
 package io.github.sadeghi.online_shop.di
 
+import android.content.ContentResolver
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -40,5 +41,13 @@ object DataStoreModule {
     @Singleton
     fun provideGson(): Gson {
         return Gson()
+    }
+
+    @Provides
+    @Singleton
+    fun provideContentResolver(
+        @ApplicationContext context: Context
+    ): ContentResolver {
+        return context.contentResolver
     }
 }

@@ -17,8 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.R
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
@@ -45,13 +42,12 @@ fun HeaderProfile(
     iconEdit: Boolean = true,
     showUserInfo: Boolean = true,
     onUploadClick: () -> Unit = {},
+    profileViewModel: ProfileViewModel,
     onEditClick: () -> Unit = {}
 ) {
-    val viewModel: ProfileViewModel = hiltViewModel()
 
-    val profileImageUri by viewModel.profileImageUri.collectAsState(
-        initial = null
-    )
+
+    val profileImageUri = profileViewModel.profileImageUri
 
     if (compact) {
 
@@ -95,7 +91,7 @@ fun HeaderProfile(
                         SpacerHeight(5)
 
                         Text(
-                            text = viewModel.fullName,
+                            text = profileViewModel.fullName,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -104,7 +100,7 @@ fun HeaderProfile(
                         SpacerHeight(2)
 
                         Text(
-                            text = viewModel.phoneNumber,
+                            text = profileViewModel.phoneNumber,
                             fontSize = 14.sp,
                             color = Color.White
                         )
@@ -199,7 +195,7 @@ fun HeaderProfile(
                 .padding(bottom = 20.dp)
         )
 
-         {
+        {
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -322,7 +318,7 @@ fun HeaderProfile(
                     SpacerHeight(5)
 
                     Text(
-                        text = viewModel.fullName,
+                        text = profileViewModel.fullName,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -331,7 +327,7 @@ fun HeaderProfile(
                     SpacerHeight(2)
 
                     Text(
-                        text = viewModel.phoneNumber,
+                        text = profileViewModel.phoneNumber,
                         fontSize = 14.sp,
                         color = Color.White
                     )

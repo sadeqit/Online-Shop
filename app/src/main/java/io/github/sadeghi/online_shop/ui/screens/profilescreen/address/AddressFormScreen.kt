@@ -34,6 +34,7 @@ import io.github.sadeghi.online_shop.ui.component.GradientButton
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.viewModel.AddressViewModel
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -42,6 +43,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun AddressFormScreen(
     navController: NavHostController,
     viewModel: AddressViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel,
     addressId: Int? = null
 ) {
     val focusManager = LocalFocusManager.current
@@ -85,7 +87,10 @@ fun AddressFormScreen(
             CompositionLocalProvider(
                 LocalLayoutDirection provides LayoutDirection.Ltr
             ) {
-                HeaderProfile(true)
+                HeaderProfile(
+                    compact = true,
+                    profileViewModel = profileViewModel
+                )
             }
 
             SpacerHeight(40)

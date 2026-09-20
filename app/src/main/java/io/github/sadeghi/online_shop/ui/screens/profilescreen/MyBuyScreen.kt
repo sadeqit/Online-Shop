@@ -27,10 +27,12 @@ import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.orfer.OrderViewModel
 import io.github.sadeghi.online_shop.viewModel.ProductReviewViewModel
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun MyBuyScreen(
     navController: NavController,
+    profileViewModel: ProfileViewModel,
     orderViewModel: OrderViewModel = hiltViewModel(),
     reviewViewModel: ProductReviewViewModel = hiltViewModel()
 ) {
@@ -67,7 +69,10 @@ fun MyBuyScreen(
             CompositionLocalProvider(
                 LocalLayoutDirection provides LayoutDirection.Ltr
             ) {
-                HeaderProfile(true)
+                HeaderProfile(
+                    compact = true,
+                    profileViewModel = profileViewModel
+                )
             }
 
             SpacerHeight(40)

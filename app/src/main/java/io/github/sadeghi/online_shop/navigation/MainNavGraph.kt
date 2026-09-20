@@ -30,12 +30,14 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.MyOrdersScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.NotificationsScreen
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressFormScreen
 import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
     notificationsViewModel: NotificationsViewModel,
     onLogout: () -> Unit,
+    profileViewModel: ProfileViewModel,
     cartStep: CartStep,
     onCartStepChange: (CartStep) -> Unit
 ) {
@@ -77,16 +79,19 @@ fun MainNavGraph(
             )
         }
 
+
         composable(Screens.Profile.route) {
             ProfileScreen(
                 navController = navController,
+                profileViewModel = profileViewModel,
                 onLogout = onLogout
             )
         }
 
         composable(Screens.Notifications.route) {
             NotificationsScreen(
-                viewModel = notificationsViewModel
+                viewModel = notificationsViewModel,
+                profileViewModel = profileViewModel
             )
         }
 
@@ -100,7 +105,8 @@ fun MainNavGraph(
 
 
         composable(Screens.Orders.route) {
-            MyOrdersScreen()
+            MyOrdersScreen(
+                profileViewModel = profileViewModel)
         }
 
         composable(Screens.Support.route) {
@@ -194,30 +200,34 @@ fun MainNavGraph(
         }
 
         composable(Screens.MyOrders.route) {
-            MyOrdersScreen()
+            MyOrdersScreen(
+                profileViewModel = profileViewModel)
         }
         composable(Screens.MyBuy.route) {
-            MyBuyScreen(navController = navController)
+            MyBuyScreen(navController = navController,
+                profileViewModel = profileViewModel)
         }
 
         composable(Screens.ChangePassword.route) {
             ChangePasswordScreen(
                 onSuccess = {
                     navController.popBackStack()
-                }
+                },
+                profileViewModel = profileViewModel
             )
         }
 
 
         composable(Screens.Addresses.route) {
-            AddressesScreen(navController)
+            AddressesScreen(navController,profileViewModel)
         }
 
         composable(Screens.Favorites.route) {
             FavoritesScreen(
                 navController = navController,
                 sharedTransitionScope = this@SharedTransitionLayout,
-                animatedVisibilityScope = this
+                animatedVisibilityScope = this,
+                profileViewModel = profileViewModel
             )
         }
 
@@ -225,13 +235,15 @@ fun MainNavGraph(
             EditProfileScreen(
                 onSaveSuccess = {
                     navController.popBackStack()
-                }
+                },
+                profileViewModel = profileViewModel
             )
         }
         composable(Screens.AddressFormScreen.route) {
             AddressFormScreen(
                 navController = navController,
-                addressId = null
+                addressId = null,
+                profileViewModel = profileViewModel
             )
         }
         composable(
@@ -245,7 +257,8 @@ fun MainNavGraph(
 
             AddressFormScreen(
                 navController = navController,
-                addressId = addressId
+                addressId = addressId,
+                profileViewModel = profileViewModel
             )
         }
 

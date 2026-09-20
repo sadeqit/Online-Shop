@@ -1,7 +1,10 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.dagger.plugin)
 }
 
@@ -19,6 +22,32 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use {
+                localProperties.load(it)
+            }
+        }
+
+        val supabaseUrl = localProperties.getProperty("supabase.url")
+            ?: error("supabase.url is missing in local.properties")
+
+        val supabaseKey = localProperties.getProperty("supabase.key")
+            ?: error("supabase.key is missing in local.properties")
+
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"$supabaseUrl\""
+        )
+
+        buildConfigField(
+            "String",
+            "SUPABASE_KEY",
+            "\"$supabaseKey\""
+        )
     }
 
     buildTypes {
@@ -41,9 +70,13 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
+
+
 }
+
 
 dependencies {
     implementation(libs.androidx.compose.runtime)
@@ -90,7 +123,28 @@ dependencies {
 
     implementation("io.github.alirezajavan:shamsi-picker:1.6.0")
 
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.browser:browser:1.9.0")
+        }
+    }
+
     implementation(libs.androidx.compose.animation)
+
+    implementation(platform(libs.supabase.bom))
+
+
+    // Supabase
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.postgrest)
+    implementation(libs.supabase.storage)
+    implementation(libs.supabase.realtime)
+
+    // Ktor
+    implementation(libs.ktor.client.android)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.kotlinx.serialization)
 
 
     testImplementation(libs.junit)

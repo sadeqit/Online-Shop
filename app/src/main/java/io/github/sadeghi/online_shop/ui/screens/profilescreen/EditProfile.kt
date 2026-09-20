@@ -34,7 +34,7 @@ import java.io.File
 
 @Composable
 fun EditProfileScreen(
-    viewModel: ProfileViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel,
     onSaveSuccess: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
@@ -51,7 +51,7 @@ fun EditProfileScreen(
             }
 
             resultUri?.let {
-                viewModel.saveProfileImage(it.toString())
+                profileViewModel.saveProfileImage(it.toString())
             }
         }
     }
@@ -110,7 +110,8 @@ fun EditProfileScreen(
                     imagePickerLauncher.launch(
                         arrayOf("image/*")
                     )
-                }
+                },
+                profileViewModel = profileViewModel
             )
 
             Column(
@@ -124,7 +125,7 @@ fun EditProfileScreen(
                 SpacerHeight(25)
 
                 SubmitContent(
-                    viewModel = viewModel,
+                    viewModel = profileViewModel,
                     focusManager = focusManager
                 )
 
@@ -135,10 +136,10 @@ fun EditProfileScreen(
                 ) {
                     GradientButton(
                         text = "ثبت تغییرات",
-                        enabled = !viewModel.isSaving
+                        enabled = !profileViewModel.isSaving
                     ) {
-                        if (viewModel.validateProfile()) {
-                            viewModel.saveProfile {
+                        if (profileViewModel.validateProfile()) {
+                            profileViewModel.saveProfile {
                                 onSaveSuccess()
                             }
                         }

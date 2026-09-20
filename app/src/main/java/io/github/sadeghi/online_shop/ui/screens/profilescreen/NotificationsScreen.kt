@@ -47,10 +47,13 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderPr
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
 import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.ui.theme.orange
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun NotificationsScreen(
+    profileViewModel: ProfileViewModel,
     viewModel: NotificationsViewModel
+
 ) {
 
 
@@ -68,7 +71,10 @@ fun NotificationsScreen(
             CompositionLocalProvider(
                 LocalLayoutDirection provides LayoutDirection.Ltr
             ) {
-                HeaderProfile(true)
+                HeaderProfile(
+                    compact = true,
+                    profileViewModel = profileViewModel
+                )
             }
 
             SpacerHeight(40)

@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yalantis.ucrop.UCrop
 import io.github.sadeghi.online_shop.navigation.Screens
@@ -38,7 +37,7 @@ import java.io.File
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel,
     onLogout: () -> Unit
 ) {
 
@@ -55,7 +54,7 @@ fun ProfileScreen(
             }
 
             resultUri?.let {
-                viewModel.saveProfileImage(it.toString())
+                profileViewModel.saveProfileImage(it.toString())
             }
         }
     }
@@ -106,6 +105,7 @@ fun ProfileScreen(
                 .fillMaxSize()
         ) {
             HeaderProfile(
+                profileViewModel = profileViewModel,
                 onUploadClick = {
                     imagePickerLauncher.launch(
                         arrayOf("image/*")
@@ -158,7 +158,7 @@ fun ProfileScreen(
                         text = "خروج از حساب",
 
                         onClick = {
-                            viewModel.logout {
+                            profileViewModel.logout {
                                 onLogout()
                             }
                         }

@@ -26,11 +26,13 @@ import io.github.sadeghi.online_shop.ui.screens.mainScreen.drawer.CustomNavigati
 import io.github.sadeghi.online_shop.ui.screens.mainScreen.topbar.CustomTopBar
 import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.viewModel.DrawerViewModel
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun MainScreen(
     drawerViewModel: DrawerViewModel = hiltViewModel(),
     notificationsViewModel: NotificationsViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     onLogout: () -> Unit
 ) {
     var cartStep by rememberSaveable {
@@ -55,6 +57,7 @@ fun MainScreen(
 
         topBar = {
             CustomTopBar(
+                profileViewModel = profileViewModel,
                 isDrawerOpen = drawerViewModel.isDrawerOpen,
 
                 onMenuClick = {
@@ -165,6 +168,7 @@ fun MainScreen(
                 MainNavGraph(
                     navController = navController,
                     notificationsViewModel = notificationsViewModel,
+                    profileViewModel = profileViewModel,
                     onLogout = onLogout,
                     cartStep = cartStep,
                     onCartStepChange = {
@@ -176,7 +180,8 @@ fun MainScreen(
             CustomNavigationDrawer(
                 isOpen = drawerViewModel.isDrawerOpen,
                 onClose = drawerViewModel::closeDrawer,
-                navController = navController
+                navController = navController,
+                profileViewModel = profileViewModel
             )
         }
     }

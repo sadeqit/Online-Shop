@@ -35,10 +35,12 @@ import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.AddressCard
 import io.github.sadeghi.online_shop.viewModel.AddressViewModel
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
+import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 
 @Composable
 fun AddressesScreen(
     navController: NavHostController,
+    profileViewModel: ProfileViewModel,
     viewModel: AddressViewModel = hiltViewModel()
 ) {
 
@@ -59,7 +61,10 @@ fun AddressesScreen(
             CompositionLocalProvider(
                 LocalLayoutDirection provides LayoutDirection.Ltr
             ) {
-                HeaderProfile(true)
+                HeaderProfile(
+                    compact = true,
+                    profileViewModel = profileViewModel
+                )
             }
 
             SpacerHeight(40)

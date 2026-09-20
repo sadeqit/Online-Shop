@@ -21,54 +21,17 @@ class UserPreferences @Inject constructor(
         private val USER_EMAIL =
             stringPreferencesKey("user_email")
 
-        private val IS_PASSWORD_SET =
-            booleanPreferencesKey("is_password_set")
-
         private val IS_FULLNAME_SET =
             booleanPreferencesKey("is_fullname_set")
-
-        private val PROFILE_IMAGE_URI =
-            stringPreferencesKey("profile_image_uri")
 
         private val USER_PHONE =
             stringPreferencesKey("user_phone")
 
-        private val USER_BIRTH_DATE =
-            stringPreferencesKey("user_birth_date")
-
-        private val USER_GENDER =
-            stringPreferencesKey("user_gender")
-
         private val USER_FULL_NAME =
             stringPreferencesKey("user_full_name")
 
-        private val USER_PASSWORD =
-            stringPreferencesKey("user_password")
     }
 
-    // برای تست بعدا پاک شود
-
-
-
-    // برای تست بعدا پاک شود
-    suspend fun savePassword(password: String) {
-        dataStore.edit {
-            it[USER_PASSWORD] = password
-            it[IS_PASSWORD_SET] = true
-        }
-    }
-
-    val userPassword: Flow<String?> =
-        dataStore.data.map {
-            it[USER_PASSWORD]
-        }
-
-    suspend fun updatePassword(password: String) {
-        dataStore.edit {
-            it[USER_PASSWORD] = password
-            it[IS_PASSWORD_SET] = true
-        }
-    }
 
     // ---------------- SAVE ----------------
 
@@ -79,11 +42,6 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun savePasswordSet() {
-        dataStore.edit {
-            it[IS_PASSWORD_SET] = true
-        }
-    }
 
 
     suspend fun saveFullName(fullName: String) {
@@ -98,11 +56,6 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun saveProfileImage(uri: String) {
-        dataStore.edit {
-            it[PROFILE_IMAGE_URI] = uri
-        }
-    }
 
     suspend fun clearLogin() {
         dataStore.edit {
@@ -110,21 +63,6 @@ class UserPreferences @Inject constructor(
         }
     }
 
- /*   suspend fun clearLogin() {
-        dataStore.edit {
-            it[IS_LOGGED_IN] = false
-            it[IS_PASSWORD_SET] = false
-            it[IS_FULLNAME_SET] = false
-
-            it.remove(USER_EMAIL)
-            it.remove(USER_PASSWORD)
-            it.remove(USER_FULL_NAME)
-            it.remove(USER_PHONE)
-            it.remove(USER_BIRTH_DATE)
-            it.remove(USER_GENDER)
-            it.remove(PROFILE_IMAGE_URI)
-        }
-    }*/
 
     // ---------------- FLOWS ----------------
 
@@ -133,61 +71,10 @@ class UserPreferences @Inject constructor(
             it[IS_LOGGED_IN] ?: false
         }
 
-    val isPasswordSet: Flow<Boolean> =
-        dataStore.data.map {
-            it[IS_PASSWORD_SET] ?: false
-        }
-
-    val isFullNameSet: Flow<Boolean> =
-        dataStore.data.map {
-            it[IS_FULLNAME_SET] ?: false
-        }
-
     val userEmail: Flow<String?> =
         dataStore.data.map {
             it[USER_EMAIL]
         }
 
-    val profileImageUri: Flow<String?> =
-        dataStore.data.map {
-            it[PROFILE_IMAGE_URI]
-        }
 
-    suspend fun saveProfile(
-        fullName: String,
-        phoneNumber: String,
-        email: String,
-        birthDate: String,
-        gender: String
-    ) {
-        dataStore.edit {
-
-            it[USER_FULL_NAME] = fullName
-            it[USER_PHONE] = phoneNumber
-            it[USER_EMAIL] = email
-            it[USER_BIRTH_DATE] = birthDate
-            it[USER_GENDER] = gender
-
-            it[IS_FULLNAME_SET] = fullName.isNotBlank()
-        }
-    }
-    val userFullName: Flow<String> =
-        dataStore.data.map {
-            it[USER_FULL_NAME] ?: ""
-        }
-
-    val userPhone: Flow<String> =
-        dataStore.data.map {
-            it[USER_PHONE] ?: ""
-        }
-
-    val userBirthDate: Flow<String> =
-        dataStore.data.map {
-            it[USER_BIRTH_DATE] ?: ""
-        }
-
-    val userGender: Flow<String> =
-        dataStore.data.map {
-            it[USER_GENDER] ?: ""
-        }
 }

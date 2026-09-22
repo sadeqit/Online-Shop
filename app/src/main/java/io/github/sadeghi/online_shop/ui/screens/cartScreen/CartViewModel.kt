@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.sadeghi.online_shop.data.repository.CartRepository
+import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +35,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun addToCart(
-        product: io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product,
+        product: Product,
         quantity: Int = 1
     ) {
         val currentItems = _cartItems.value.toMutableList()

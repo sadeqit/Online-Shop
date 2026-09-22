@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class ProductReviewRepository @Inject constructor(
     private val dataStore: ProductReviewDataStore
-) : IProductReviewRepository {
+) : IProductReviewRepository
+{
 
     override fun getReviews(
         productId: Int

@@ -216,7 +216,7 @@ fun ProductDescription(
 
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             Text(
-                text = "با توجه به تفاوت رنگ‌ها در صفحه نمایش دستگاه‌های مختلف، ممکن است رنگ محصولات در تصویر تا 20٪ با واقعیت متفاوت باشد. دارای 5 رنگ جذاب. تمام نخ پنبه. پارچه پیراهن کشمیر. دم‌دست و پایین بلوز کشباف. سایز بندی: M تا 4XL",
+                text = product.description,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),

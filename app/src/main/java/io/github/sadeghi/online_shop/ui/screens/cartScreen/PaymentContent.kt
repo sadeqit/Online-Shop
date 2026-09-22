@@ -48,15 +48,11 @@ fun PaymentContent(
     val selectedAddress = addresses.firstOrNull { it.isDefault }
 
     val totalPrice = cartItems.sumOf { cartItem ->
-        cartItem.product.oldPrice
-            .replace(",", "")
-            .toLong() * cartItem.quantity
+        (cartItem.product.oldPrice ?: cartItem.product.price) * cartItem.quantity
     }
 
     val finalPrice = cartItems.sumOf { cartItem ->
-        cartItem.product.price
-            .replace(",", "")
-            .toLong() * cartItem.quantity
+        cartItem.product.price * cartItem.quantity
     }
 
     val discount = totalPrice - finalPrice

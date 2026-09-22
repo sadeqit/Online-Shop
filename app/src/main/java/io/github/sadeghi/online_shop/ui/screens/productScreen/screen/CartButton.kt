@@ -45,6 +45,11 @@ fun CartButton(
     onAddToCart: (Product, Int) -> Unit,
     onAddedToCart: () -> Unit
 ){
+    val formattedPrice = "%,d".format(product.price)
+
+    val formattedOldPrice = product.oldPrice
+        ?.let { "%,d".format(it) }
+        ?: ""
 
     var quantity by remember { mutableIntStateOf(1) }
 
@@ -61,30 +66,33 @@ fun CartButton(
         ) {
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth() .padding(horizontal = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "تومان",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+
+                    SpacerWidth(5)
+
+                    Text(
+                        text = formattedPrice,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+
                 Text(
-                    text = "تومان",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-                SpacerWidth(3)
-
-                Text(
-                    text = product.price,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-                SpacerWidth(50)
-
-                Text(
-                    text = product.oldPrice,
+                    text = formattedOldPrice,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray,
@@ -96,8 +104,9 @@ fun CartButton(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            ){
 
                 Button(
                     onClick = {
@@ -105,6 +114,7 @@ fun CartButton(
                         onAddedToCart()
                     },
                     modifier = Modifier
+                        .weight(1f)
                         .background(
                             brush = Brush.horizontalGradient(
                                 listOf(

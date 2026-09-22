@@ -1,6 +1,5 @@
 package io.github.sadeghi.online_shop.ui.screens.profilescreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
@@ -70,8 +69,8 @@ fun MyPurchaseItem(
                 contentAlignment = Alignment.Center
             ) {
 
-                Image(
-                    painter = painterResource(product.image),
+                AsyncImage(
+                    model = product.imageUrl,
                     contentDescription = product.title,
                     modifier = Modifier.size(80.dp),
                     contentScale = ContentScale.Fit

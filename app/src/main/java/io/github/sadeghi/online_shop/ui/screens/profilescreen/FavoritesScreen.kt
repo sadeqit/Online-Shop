@@ -37,9 +37,9 @@ import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartViewModel
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductItem
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
+import io.github.sadeghi.online_shop.viewModel.ProductViewModel
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
 import kotlinx.coroutines.launch
 
@@ -52,20 +52,26 @@ fun FavoritesScreen(
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
+    val cartViewModel: CartViewModel = hiltViewModel()
+
+    val productViewModel: ProductViewModel = hiltViewModel()
+
+    val products by productViewModel.products.collectAsStateWithLifecycle()
+
+    val favoriteProductIds by viewModel.favoriteProductIds
+        .collectAsStateWithLifecycle()
+
+    val favoriteProducts = products.filter {
+        it.id in favoriteProductIds
+    }
+
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
     val scope = rememberCoroutineScope()
 
-    val cartViewModel: CartViewModel = hiltViewModel()
 
-    val favoriteProductIds by viewModel.favoriteProductIds
-        .collectAsStateWithLifecycle()
-
-    val favoriteProducts = bestsellingProducts.filter {
-        it.id in favoriteProductIds
-    }
 
     Box(
         modifier = Modifier.fillMaxSize()

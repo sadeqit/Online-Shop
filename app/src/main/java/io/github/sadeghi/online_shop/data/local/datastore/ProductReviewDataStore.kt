@@ -22,7 +22,8 @@ class ProductReviewDataStore @Inject constructor(
     @param:ApplicationContext
     private val context: Context,
     private val gson: Gson
-) {
+)
+{
 
     companion object {
 

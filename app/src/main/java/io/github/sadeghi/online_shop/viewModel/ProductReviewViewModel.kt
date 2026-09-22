@@ -20,7 +20,8 @@ class ProductReviewViewModel @Inject constructor(
     private val reviewRepository: IProductReviewRepository,
     private val profileRepository: IProfileRepository,
     private val authRepository: IAuthRepository
-) : ViewModel() {
+) : ViewModel()
+{
 
     private val _reviews =
         MutableStateFlow<List<ProductReviewUi>>(emptyList())

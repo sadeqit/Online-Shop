@@ -38,24 +38,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartViewModel
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductItem
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.ui.theme.orange
+import io.github.sadeghi.online_shop.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun Bestselling(
     text: String,
     grid: Boolean = false,
+    subCategoryId: Int? = null,
     showAllButton: Boolean = true,
     navController: NavHostController,
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null
 ) {
+    val productViewModel: ProductViewModel = hiltViewModel()
+    val products by productViewModel.products.collectAsStateWithLifecycle()
+
+    val filteredProducts = if (subCategoryId != null) {
+        products.filter { it.subCategoryId == subCategoryId }
+    } else {
+        products
+            .groupBy { it.subCategoryId }
+            .map { (_, products) -> products.first() }
+    }
 
     val cartViewModel: CartViewModel = hiltViewModel()
 
@@ -70,9 +82,9 @@ fun Bestselling(
     }
 
     val itemCount = if (showAllButton) {
-        if (showAll) bestsellingProducts.size else 3
+        if (showAll) filteredProducts.size else 3
     } else {
-        bestsellingProducts.size
+        filteredProducts.size
     }
 
     Box(
@@ -141,8 +153,7 @@ fun Bestselling(
                         .padding(horizontal = 20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-
-                    bestsellingProducts
+                    filteredProducts
                         .take(itemCount)
                         .chunked(2)
                         .forEach { rowItems ->
@@ -198,7 +209,7 @@ fun Bestselling(
                 ) {
 
                     items(
-                        bestsellingProducts.take(itemCount)
+                        filteredProducts.take(itemCount)
                     ) { product ->
 
                         ProductItem(

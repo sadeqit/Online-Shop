@@ -30,13 +30,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartViewModel
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
 import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 import io.github.sadeghi.online_shop.viewModel.ProductReviewViewModel
+import io.github.sadeghi.online_shop.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,9 +56,16 @@ fun ProductDetailScreen(
 
     val scope = rememberCoroutineScope()
     val favoritesViewModel: FavoritesViewModel = hiltViewModel()
+
     val cartViewModel: CartViewModel = hiltViewModel()
 
-    val products = bestsellingProducts
+    val productViewModel: ProductViewModel = hiltViewModel()
+
+    val products by productViewModel.products.collectAsStateWithLifecycle()
+
+    if (products.isEmpty()) {
+        return
+    }
 
     var currentProductIndex by remember {
         mutableIntStateOf(

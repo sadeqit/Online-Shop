@@ -113,9 +113,7 @@ fun CartScreen(
                         }
 
                         val totalPrice = cartItems.sumOf { cartItem ->
-                            cartItem.product.price
-                                .replace(",", "")
-                                .toLong() * cartItem.quantity
+                            cartItem.product.price * cartItem.quantity
                         }
 
                         val isOnline = isNetworkAvailable(context)

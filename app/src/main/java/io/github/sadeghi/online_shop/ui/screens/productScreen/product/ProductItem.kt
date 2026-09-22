@@ -2,7 +2,6 @@ package io.github.sadeghi.online_shop.ui.screens.productScreen.product
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -35,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 
 @Composable
@@ -47,6 +46,11 @@ fun ProductItem(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null
 ) {
+    val formattedPrice = "%,d".format(product.price)
+
+    val formattedOldPrice = product.oldPrice
+        ?.let { "%,d".format(it) }
+        ?: ""
 
     val constraints = ConstraintSet {
 
@@ -146,7 +150,7 @@ fun ProductItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "10%",
+                text = "${product.discountPercent}%",
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
@@ -170,8 +174,8 @@ fun ProductItem(
             .layoutId("image")
             .padding(top = 10.dp)
 
-        Image(
-            painter = painterResource(product.image),
+        AsyncImage(
+            model = product.imageUrl,
             contentDescription = product.title,
             modifier = if (
                 sharedTransitionScope != null &&
@@ -239,7 +243,7 @@ fun ProductItem(
                     SpacerWidth(5)
 
                     Text(
-                        text = product.price,
+                        text = formattedPrice,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -249,7 +253,7 @@ fun ProductItem(
                     SpacerWidth(5)
 
                     Text(
-                        text = product.oldPrice,
+                        text = formattedOldPrice,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray,

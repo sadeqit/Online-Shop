@@ -19,6 +19,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -28,12 +29,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartViewModel
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.ProductItem
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.bestsellingProducts
+import io.github.sadeghi.online_shop.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,8 +46,12 @@ fun SearchResultScreen(
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
-    val results = remember(query) {
-        bestsellingProducts.filter { product ->
+    val productViewModel: ProductViewModel = hiltViewModel()
+
+    val products by productViewModel.products.collectAsStateWithLifecycle()
+
+    val results = remember(query, products) {
+        products.filter { product ->
             product.title.contains(
                 query.trim(),
                 ignoreCase = true

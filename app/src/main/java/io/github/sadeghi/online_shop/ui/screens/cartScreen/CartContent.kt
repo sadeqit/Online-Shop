@@ -36,15 +36,11 @@ fun CartContent(
     val cartItems by viewModel.cartItems.collectAsState()
 
     val totalPrice = cartItems.sumOf { cartItem ->
-        cartItem.product.oldPrice
-            .replace(",", "")
-            .toLong() * cartItem.quantity
+        (cartItem.product.oldPrice ?: cartItem.product.price) * cartItem.quantity
     }
 
     val finalPrice = cartItems.sumOf { cartItem ->
-        cartItem.product.price
-            .replace(",", "")
-            .toLong() * cartItem.quantity
+        cartItem.product.price * cartItem.quantity
     }
 
     val discount = totalPrice - finalPrice
@@ -101,9 +97,11 @@ fun CartContent(
 
                         CartItem(
                             productName = cartItem.product.title,
-                            productImage = cartItem.product.image,
-                            discountedPrice = cartItem.product.price,
-                            originalPrice = cartItem.product.oldPrice,
+                            productImage = cartItem.product.imageUrl,
+                            discountedPrice = formatPrice(cartItem.product.price),
+                            originalPrice = formatPrice(
+                                cartItem.product.oldPrice ?: cartItem.product.price
+                            ),
                             quantity = cartItem.quantity,
 
                             onIncrease = {

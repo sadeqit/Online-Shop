@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.screens.cartScreen.formatPrice
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.orfer.Order
@@ -79,8 +80,8 @@ fun OrderItem(
             contentAlignment = Alignment.Center
         ) {
 
-            Image(
-                painter = painterResource(item.product.image),
+            AsyncImage(
+                model = item.product.imageUrl,
                 contentDescription = item.product.title,
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Fit

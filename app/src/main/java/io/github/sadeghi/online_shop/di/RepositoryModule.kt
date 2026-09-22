@@ -9,10 +9,17 @@ import io.github.sadeghi.online_shop.data.local.datastore.ProductReviewDataStore
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
 import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
+import io.github.sadeghi.online_shop.data.remote.supabaseClient
+import io.github.sadeghi.online_shop.data.repository.IProductRepository
 import io.github.sadeghi.online_shop.data.repository.IProductReviewRepository
 import io.github.sadeghi.online_shop.data.repository.IProfileRepository
+import io.github.sadeghi.online_shop.data.repository.ISubCategoryRepository
+import io.github.sadeghi.online_shop.data.repository.ProductRepository
 import io.github.sadeghi.online_shop.data.repository.ProductReviewRepository
 import io.github.sadeghi.online_shop.data.repository.ProfileRepository
+import io.github.sadeghi.online_shop.data.repository.SubCategoryRepository
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.FakeNotificationsRepository
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsRepository
 import javax.inject.Singleton
 
 @Module
@@ -45,4 +52,27 @@ object RepositoryModule {
     ): IProductReviewRepository {
         return ProductReviewRepository(dataStore)
     }
+
+    @Provides
+    @Singleton
+    fun provideNotificationsRepository(): NotificationsRepository {
+        return FakeNotificationsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(
+        productRepository: ProductRepository
+    ): IProductRepository {
+        return productRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubCategoryRepository(
+        subCategoryRepository: SubCategoryRepository
+    ): ISubCategoryRepository {
+        return subCategoryRepository
+    }
+
 }

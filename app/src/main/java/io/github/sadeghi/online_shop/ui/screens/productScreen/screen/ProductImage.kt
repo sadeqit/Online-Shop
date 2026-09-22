@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
 import io.github.sadeghi.online_shop.viewModel.FavoritesViewModel
 
@@ -157,7 +158,7 @@ fun ProductImage(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "10%",
+                text = "${product.discountPercent}%",
                 modifier = Modifier.padding(
                     horizontal = 10.dp,
                     vertical = 4.dp
@@ -174,8 +175,8 @@ fun ProductImage(
             .layoutId("image")
             .padding(top = 60.dp)
 
-        Image(
-            painter = painterResource(product.image),
+        AsyncImage(
+            model = product.imageUrl,
             contentDescription = product.title,
             modifier = if (
                 sharedTransitionScope != null &&
@@ -192,7 +193,7 @@ fun ProductImage(
             } else {
                 imageModifier
             },
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit
         )
 
         IconButton(

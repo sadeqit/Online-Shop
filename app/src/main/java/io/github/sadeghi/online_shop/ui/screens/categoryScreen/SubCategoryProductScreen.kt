@@ -13,12 +13,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import io.github.sadeghi.online_shop.navigation.Screens
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
-import io.github.sadeghi.online_shop.ui.component.card.menItems
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.Bestselling
 import io.github.sadeghi.online_shop.ui.screens.homeScreen.component.SearchBar
+import io.github.sadeghi.online_shop.viewModel.SubCategoryViewModel
 
 
 @Composable
@@ -28,12 +30,22 @@ fun SubCategoryProductScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val selectedItem =
-        menItems.first { it.id == subCategoryId }
+
+    val subCategoryViewModel: SubCategoryViewModel = hiltViewModel()
+
+    val subCategories by subCategoryViewModel.subCategories
+        .collectAsStateWithLifecycle()
 
     var selectedSubCategoryId by rememberSaveable {
         mutableIntStateOf(subCategoryId)
     }
+    val selectedItem = subCategories
+        .firstOrNull { it.id == selectedSubCategoryId }
+    val categorySubCategories = selectedItem?.let { selected ->
+        subCategories.filter {
+            it.categoryId == selected.categoryId
+        }
+    } ?: emptyList()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -48,6 +60,7 @@ fun SubCategoryProductScreen(
         // زیر‌دسته‌ها
         item {
             SubCategorySelector(
+                subCategories = categorySubCategories,
                 selectedSubCategoryId = selectedSubCategoryId,
                 onSubCategoryClick = { newId ->
                     selectedSubCategoryId = newId
@@ -69,14 +82,18 @@ fun SubCategoryProductScreen(
 
 
         item {
-            Bestselling(
-                selectedItem.title,
-                grid = true,
-                showAllButton = false,
-                navController = navController,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
-            )
+            selectedItem?.let { item ->
+
+                Bestselling(
+                    text = item.title,
+                    subCategoryId = item.id,
+                    grid = true,
+                    showAllButton = false,
+                    navController = navController,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+            }
         }
 
         item {

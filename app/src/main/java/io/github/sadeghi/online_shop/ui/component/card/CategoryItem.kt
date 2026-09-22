@@ -1,3 +1,4 @@
+/*
 package io.github.sadeghi.online_shop.ui.component.card
 
 import io.github.sadeghi.online_shop.R
@@ -9,10 +10,10 @@ data class CategoryItem(
 )
 
 val menItems = listOf(
-    CategoryItem(3, "راحتی",R.drawable.tshirt),
-    CategoryItem(2,"تیشرت و پولیور",R.drawable.pants ),
-    CategoryItem(1, "پیراهن و بلوز",R.drawable.shirt),
-    CategoryItem(6, "کیف",R.drawable.accessory),
-    CategoryItem(5 ,"جوراب",R.drawable.sweatshirt),
-    CategoryItem(4, "شلوار و شلوارک",R.drawable.jacket)
-)
+    CategoryItem(9, "راحتی", R.drawable.man_homewear),
+    CategoryItem(8, "تیشرت و پولیور", R.drawable.man_tshirt),
+    CategoryItem(7, "پیراهن و بلوز", R.drawable.man_blouse),
+    CategoryItem(12, "کیف", R.drawable.man_bag),
+    CategoryItem(11, "جوراب", R.drawable.man_socks),
+    CategoryItem(10, "شلوار و شلوارک", R.drawable.man_pants)
+)*/

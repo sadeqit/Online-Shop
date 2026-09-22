@@ -24,12 +24,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 
 @Composable
 fun CartItem(
     productName: String,
-    productImage: Int,
+    productImage: String?,
     discountedPrice: String,
     originalPrice: String,
     quantity: Int,
@@ -122,8 +123,8 @@ fun CartItem(
             contentAlignment = Alignment.Center
         ) {
 
-            Image(
-                painter = painterResource(productImage),
+            AsyncImage(
+                model = productImage,
                 contentDescription = productName,
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Fit

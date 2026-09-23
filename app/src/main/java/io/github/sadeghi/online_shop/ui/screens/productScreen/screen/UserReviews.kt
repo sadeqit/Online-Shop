@@ -16,16 +16,20 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,28 +45,42 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.sadeghi.online_shop.ui.component.SpacerHeight
+import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 import io.github.sadeghi.online_shop.ui.theme.orange
+import io.github.sadeghi.online_shop.viewModel.ProductReviewViewModel
 
 @Composable
 fun UserReviews(
-    reviews: List<ProductReviewUi>
+    reviews: List<ProductReviewUi>,
+    productId: Int,
+    viewModel: ProductReviewViewModel,
+    currentUserId: String?,
+    isAdmin: Boolean
 ) {
 
+
     val focusManager = LocalFocusManager.current
-
-
-    var replies by remember {
-        mutableStateOf(
-            emptyMap<Long, String>()
-        )
-    }
 
     var replyInputs by remember {
         mutableStateOf(
             emptyMap<Long, String>()
         )
     }
+    var editingReviewId by remember {
+        mutableStateOf<Long?>(null)
+    }
 
+    var editingComment by remember {
+        mutableStateOf("")
+    }
+
+    var editingRating by remember {
+        mutableIntStateOf(0)
+    }
+
+    var deletingReviewId by remember {
+        mutableStateOf<Long?>(null)
+    }
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
@@ -70,7 +88,8 @@ fun UserReviews(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
-        ) {
+        )
+        {
 
             Text(
                 text = "نظرات کاربران",
@@ -85,11 +104,6 @@ fun UserReviews(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Color.White,
-                        RoundedCornerShape(16.dp)
-                    )
-                    .padding(16.dp)
             ) {
 
                 Column(
@@ -98,26 +112,28 @@ fun UserReviews(
 
                     reviews.forEachIndexed { index, review ->
 
-                        val reply = replies[review.id].orEmpty()
+                        val reply = review.adminReply.orEmpty()
                         val replyInput = replyInputs[review.id].orEmpty()
+                        val isMyReview =
+                            review.userId == currentUserId
+
+                        val isEditing =
+                            editingReviewId == review.id
 
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .then(
-                                    if (reply.isNotBlank()) {
-                                        Modifier
-                                            .border(
-                                                width = 1.dp,
-                                                color = Color(0xFF666666),
-                                                shape = RoundedCornerShape(12.dp)
-                                            )
-                                            .padding(12.dp)
-                                    } else {
-                                        Modifier
-                                    }
+                                .background(
+                                    Color.White,
+                                    RoundedCornerShape(12.dp)
                                 )
-                        ) {
+                                .border(
+                                    width = 1.dp,
+                                    color = Color(0xFFE0E0E0),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .padding(12.dp)
+                        ){
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -157,12 +173,97 @@ fun UserReviews(
 
                             SpacerHeight(10)
 
-                            Text(
-                                text = review.comment,
-                                modifier = Modifier.fillMaxWidth(),
-                                fontSize = 13.sp,
-                                textAlign = TextAlign.Right
-                            )
+                            if (isEditing) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+
+                                    (1..5).forEach { rating ->
+
+                                        IconButton(
+                                            onClick = {
+                                                editingRating = rating
+                                            }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Star,
+                                                contentDescription = rating.toString(),
+                                                tint =
+                                                    if (rating <= editingRating) {
+                                                        Color(0xFFFFC107)
+                                                    } else {
+                                                        Color.LightGray
+                                                    }
+                                            )
+                                        }
+                                    }
+                                }
+
+                                OutlinedTextField(
+                                    value = editingComment,
+                                    onValueChange = {
+                                        editingComment = it
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textStyle = LocalTextStyle.current.copy(
+                                        textAlign = TextAlign.Right,
+                                        color = Color.Black,
+                                        fontSize = 13.sp
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+
+                                SpacerHeight(10)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    TextButton(
+                                        onClick = {
+                                            editingReviewId = null
+                                            editingComment = ""
+                                            editingRating = 0
+                                        }
+                                    ) {
+                                        Text("لغو")
+                                    }
+
+                                    SpacerWidth(8)
+
+                                    Button(
+                                        onClick = {
+
+                                            viewModel.updateReview(
+                                                reviewId = review.id,
+                                                productId = productId,
+                                                rating = editingRating,
+                                                comment = editingComment
+                                            )
+
+                                            editingReviewId = null
+                                            editingComment = ""
+                                            editingRating = 0
+                                        },
+                                        enabled = editingComment.isNotBlank() &&
+                                                editingRating in 1..5
+                                    ) {
+                                        Text("ذخیره")
+                                    }
+                                }
+
+                            } else {
+
+                                Text(
+                                    text = review.comment,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    fontSize = 13.sp,
+                                    textAlign = TextAlign.Right
+                                )
+                            }
 
                             if (reply.isNotBlank()) {
 
@@ -173,7 +274,7 @@ fun UserReviews(
                                 ) {
 
                                     Text(
-                                        text = "مدیر",
+                                        text = "غرفه دار",
                                         modifier = Modifier.fillMaxWidth(),
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.Bold,
@@ -190,98 +291,139 @@ fun UserReviews(
                                     )
                                 }
                             }
+                            if (isMyReview && !isEditing) {
+
+                                SpacerHeight(10)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+
+                                    TextButton(
+                                        onClick = {
+                                            editingReviewId = review.id
+                                            editingComment = review.comment
+                                            editingRating = review.rating
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "ویرایش",
+                                            color = Color.Black,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+
+                                    TextButton(
+                                        onClick = {
+                                            deletingReviewId = review.id
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "حذف",
+                                            color = Color.Red,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
                         }
 
                         SpacerHeight(14)
 
-                        OutlinedTextField(
-                            value = replyInput,
-                            onValueChange = {
-                                replyInputs = replyInputs + (
-                                        review.id to it
-                                        )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(55.dp)
-                                .background(
-                                    Color(0xFFF2F2F2),
-                                    RoundedCornerShape(12.dp)
-                                ),
-                            placeholder = {
-                                Text(
-                                    text = "پاسخ خود را وارد کنید",
-                                    modifier = Modifier.fillMaxWidth(),
-                                    fontSize = 12.sp,
-                                    textAlign = TextAlign.Right,
-                                    color = Color.DarkGray
-                                )
-                            },
-                            textStyle = LocalTextStyle.current.copy(
-                                textAlign = TextAlign.Right,
-                                color = Color.Black,
-                                fontSize = 13.sp
-                            ),
-                            shape = RoundedCornerShape(12.dp),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
+                        if (isAdmin) {
 
-                                    if (replyInput.isNotBlank()) {
-
-                                        replies = replies + (
-                                                review.id to replyInput.trim()
-                                                )
-
-                                        replyInputs = replyInputs + (
-                                                review.id to ""
-                                                )
-
-                                        focusManager.clearFocus()
-                                    }
-                                }
-                            )
-                        )
-
-                        SpacerHeight(10)
-
-                        if (replyInput.isNotBlank()) {
-
-                            Button(
-                                onClick = {
-
-                                    replies = replies + (
-                                            review.id to replyInput.trim()
-                                            )
-
+                            OutlinedTextField(
+                                value = replyInput,
+                                onValueChange = {
                                     replyInputs = replyInputs + (
-                                            review.id to ""
+                                            review.id to it
                                             )
-
-                                    focusManager.clearFocus()
                                 },
                                 modifier = Modifier
-                                    .align(Alignment.End)
-                                    .height(45.dp)
-                                    .border(
-                                        width = 1.dp,
-                                        color = orange,
-                                        shape = RoundedCornerShape(16.dp)
+                                    .fillMaxWidth()
+                                    .height(55.dp)
+                                    .background(
+                                        Color(0xFFF2F2F2),
+                                        RoundedCornerShape(12.dp)
                                     ),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color.Transparent,
-                                    disabledContainerColor = Color.Transparent,
-                                    contentColor = orange
+                                placeholder = {
+                                    Text(
+                                        text = "پاسخ خود را وارد کنید",
+                                        modifier = Modifier.fillMaxWidth(),
+                                        fontSize = 12.sp,
+                                        textAlign = TextAlign.Right,
+                                        color = Color.DarkGray
+                                    )
+                                },
+                                textStyle = LocalTextStyle.current.copy(
+                                    textAlign = TextAlign.Right,
+                                    color = Color.Black,
+                                    fontSize = 13.sp
+                                ),
+                                shape = RoundedCornerShape(12.dp),
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+
+                                        if (replyInput.isNotBlank()) {
+
+                                            viewModel.replyToReview(
+                                                reviewId = review.id,
+                                                productId = productId,
+                                                reply = replyInput.trim()
+                                            )
+
+                                            replyInputs = replyInputs - review.id
+
+                                            focusManager.clearFocus()
+                                        }
+                                    }
                                 )
-                            ) {
-                                Text(
-                                    text = "ارسال پاسخ",
-                                    color = orange,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
+                            )
+
+                            SpacerHeight(10)
+
+                            if (replyInput.isNotBlank()) {
+
+                                Button(
+                                    onClick = {
+
+                                        viewModel.replyToReview(
+                                            reviewId = review.id,
+                                            productId = productId,
+                                            reply = replyInput.trim()
+                                        )
+
+                                        replyInputs = replyInputs - review.id
+
+                                        focusManager.clearFocus()
+                                    },
+                                    modifier = Modifier
+                                        .align(Alignment.End)
+                                        .height(45.dp)
+                                        .border(
+                                            width = 1.dp,
+                                            color = orange,
+                                            shape = RoundedCornerShape(16.dp)
+                                        ),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color.Transparent,
+                                        disabledContainerColor = Color.Transparent,
+                                        contentColor = orange
+                                    )
+                                ) {
+                                    Text(
+                                        text = "ارسال پاسخ",
+                                        color = orange,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                }
                             }
                         }
 
@@ -291,6 +433,71 @@ fun UserReviews(
                     }
                 }
             }
+        }
+
+        if (deletingReviewId != null) {
+
+            AlertDialog(
+                containerColor = Color(0xFFFCF3EC),
+                onDismissRequest = {
+                    deletingReviewId = null
+                },
+                title = {
+                    Text(
+                        text = "حذف نظر",
+                        textAlign = TextAlign.Right,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                },
+                text = {
+                    Text(
+                        text = "آیا از حذف این نظر مطمئن هستید؟",
+                        textAlign = TextAlign.Right,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+
+                    TextButton(
+                        onClick = {
+
+                            val reviewId =
+                                deletingReviewId ?: return@TextButton
+
+                            viewModel.deleteReview(
+                                reviewId = reviewId,
+                                productId = productId
+                            )
+
+                            deletingReviewId = null
+                        }
+                    ) {
+                        Text(
+                            text = "حذف",
+                            color = Color.Red,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                dismissButton = {
+
+                    TextButton(
+                        onClick = {
+                            deletingReviewId = null
+                        }
+                    ) {
+                        Text(
+                            text = "انصراف",
+                            color = Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            )
         }
     }
 }

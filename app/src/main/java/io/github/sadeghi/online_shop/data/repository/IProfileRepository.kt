@@ -14,6 +14,7 @@ interface IProfileRepository {
     )
 
     fun getFullName(): Flow<String>
+    suspend fun getFullNameByUserId(userId: String): String
 
     fun getPhoneNumber(): Flow<String>
 
@@ -24,5 +25,7 @@ interface IProfileRepository {
     fun getGender(): Flow<String>
 
     fun getProfileImage(): Flow<String?>
+
+
 }
 

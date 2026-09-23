@@ -13,4 +13,19 @@ interface IProductReviewRepository {
         productId: Int,
         userId: String
     ): List<ProductReview>
+
+    suspend fun updateReview(
+        reviewId: Long,
+        rating: Int,
+        comment: String
+    )
+
+    suspend fun deleteReview(
+        reviewId: Long
+    )
+
+    suspend fun replyToReview(
+        reviewId: Long,
+        reply: String
+    )
 }

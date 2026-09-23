@@ -6,5 +6,7 @@ data class ProductReview(
     val userId: String,
     val rating: Int,
     val comment: String,
-    val createdAt: Long
+    val createdAt: Long,
+    val adminReply: String? = null,
+    val adminReplyAt: Long? = null
 )

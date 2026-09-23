@@ -47,12 +47,15 @@ fun ProductDetailScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+
     val reviewViewModel: ProductReviewViewModel = hiltViewModel()
     val reviews by reviewViewModel.reviews.collectAsState()
 
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+    val currentUserId by reviewViewModel.currentUserId.collectAsState()
+    val isAdmin by reviewViewModel.isAdmin.collectAsState()
 
     val scope = rememberCoroutineScope()
     val favoritesViewModel: FavoritesViewModel = hiltViewModel()
@@ -158,7 +161,13 @@ fun ProductDetailScreen(
             }
 
             item {
-                UserReviews(reviews = reviews)
+                UserReviews(
+                    reviews = reviews,
+                    productId = product.id,
+                    viewModel = reviewViewModel,
+                    currentUserId = currentUserId,
+                    isAdmin = isAdmin
+                )
             }
 
             item {

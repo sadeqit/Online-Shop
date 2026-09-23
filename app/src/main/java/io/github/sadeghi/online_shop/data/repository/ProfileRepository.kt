@@ -17,7 +17,8 @@ class ProfileRepository @Inject constructor(
     private val userPreferences: UserPreferences,
     private val supabaseClient: SupabaseClient,
     private val contentResolver: ContentResolver
-) : IProfileRepository {
+) : IProfileRepository
+{
 
     override suspend fun saveProfileImage(uri: String) {
 
@@ -101,6 +102,22 @@ class ProfileRepository @Inject constructor(
             .decodeSingleOrNull<ProfileDto>()
 
         emit(profile?.fullName.orEmpty())
+    }
+    override suspend fun getFullNameByUserId(
+        userId: String
+    ): String {
+
+        val profile =
+            supabaseClient
+                .from("profiles")
+                .select {
+                    filter {
+                        eq("id", userId)
+                    }
+                }
+                .decodeSingleOrNull<ProfileDto>()
+
+        return profile?.fullName.orEmpty()
     }
 
     override fun getPhoneNumber(): Flow<String> = flow {

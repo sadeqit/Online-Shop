@@ -45,13 +45,7 @@ object RepositoryModule {
     ): IProfileRepository {
         return profileRepository
     }
-    @Provides
-    @Singleton
-    fun provideProductReviewRepository(
-        dataStore: ProductReviewDataStore
-    ): IProductReviewRepository {
-        return ProductReviewRepository(dataStore)
-    }
+
 
     @Provides
     @Singleton
@@ -74,5 +68,11 @@ object RepositoryModule {
     ): ISubCategoryRepository {
         return subCategoryRepository
     }
-
+    @Provides
+    @Singleton
+    fun provideProductReviewRepository(
+        productReviewRepository: ProductReviewRepository
+    ): IProductReviewRepository {
+        return productReviewRepository
+    }
 }

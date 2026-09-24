@@ -100,7 +100,8 @@ fun MainNavGraph(
             CartScreen(
                 navController = navController,
                 currentStep = cartStep,
-                onStepChange = onCartStepChange
+                onStepChange = onCartStepChange,
+                notificationsViewModel = notificationsViewModel
             )
         }
 

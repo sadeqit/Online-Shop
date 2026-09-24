@@ -14,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val repository: CartRepository
-) : ViewModel() {
+) : ViewModel()
+{
 
     private val _cartItems =
         MutableStateFlow<List<CartItems>>(emptyList())
@@ -113,8 +114,19 @@ class CartViewModel @Inject constructor(
     }
 
     fun clearCart() {
+
+        _cartItems.value = emptyList()
+
         viewModelScope.launch {
-            repository.clearCart()
+
+            try {
+
+                repository.clearCart()
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+            }
         }
     }
 

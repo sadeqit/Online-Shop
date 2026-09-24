@@ -36,7 +36,8 @@ import io.github.sadeghi.online_shop.ui.theme.orange
 @Composable
 fun PaymentContent(
     onBack: () -> Unit,
-    onContinue: () -> Unit
+    onContinue: () -> Unit,
+    isSubmitting: Boolean
 ) {
 
     val addressViewModel: AddressViewModel = hiltViewModel()

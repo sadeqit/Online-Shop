@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -32,25 +31,28 @@ import io.github.sadeghi.online_shop.ui.screens.cartScreen.PaymentContent
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.orfer.Order
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.orfer.OrderViewModel
 import io.github.sadeghi.online_shop.utils.isNetworkAvailable
+import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun CartScreen(
     navController: NavHostController,
     currentStep: CartStep,
-    onStepChange: (CartStep) -> Unit
+    onStepChange: (CartStep) -> Unit,
+    notificationsViewModel: NotificationsViewModel
 ) {
 
     val context = LocalContext.current
 
     val cartViewModel: CartViewModel = hiltViewModel()
     val orderViewModel: OrderViewModel = hiltViewModel()
-
     val cartItems by cartViewModel.cartItems.collectAsState()
+    val isSubmitting by orderViewModel.isSubmitting.collectAsState()
 
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+
 
     val scope = rememberCoroutineScope()
 
@@ -106,9 +108,25 @@ fun CartScreen(
                     onBack = {
                         onStepChange(CartStep.ADDRESS)
                     },
+                    isSubmitting = isSubmitting,
                     onContinue = {
 
+                        if (isSubmitting) {
+                            return@PaymentContent
+                        }
+
                         if (cartItems.isEmpty()) {
+                            return@PaymentContent
+                        }
+
+                        val isOnline = isNetworkAvailable(context)
+
+                        if (!isOnline) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    "اتصال به اینترنت برقرار نیست"
+                                )
+                            }
                             return@PaymentContent
                         }
 
@@ -116,59 +134,46 @@ fun CartScreen(
                             cartItem.product.price * cartItem.quantity
                         }
 
-                        val isOnline = isNetworkAvailable(context)
-
-                        val orderStatus =
-                            if (isOnline) {
-                                "پرداخت موفق"
-                            } else {
-                                "پرداخت ناموفق"
-                            }
-
                         val order = Order(
                             id = (1000..99999).random().toLong(),
                             date = System.currentTimeMillis(),
                             items = cartItems,
                             totalPrice = totalPrice,
-                            status = orderStatus
+                            status = "پرداخت موفق"
                         )
 
                         orderViewModel.addOrder(
-                            order = order
-                        ) {
+                            order = order,
 
-                            scope.launch {
+                            onSuccess = {
 
-                                if (isOnline) {
+                                cartViewModel.clearCart()
 
-                                    cartViewModel.clearCart()
+                                onStepChange(CartStep.CART)
 
-                                    onStepChange(CartStep.CART)
+                                notificationsViewModel.loadNotifications()
 
-                                    snackbarHostState.showSnackbar(
-                                        message = "پرداخت با موفقیت انجام شد",
-                                        duration = SnackbarDuration.Short
-                                    )
-
-                                    navController.navigate(
-                                        Screens.MyOrders.route
-                                    )
-
-                                } else {
+                                scope.launch {
 
                                     snackbarHostState.showSnackbar(
-                                        message = "پرداخت ناموفق بود؛ اتصال اینترنت را بررسی کنید",
-                                        duration = SnackbarDuration.Short
+                                        "خرید شما با موفقیت انجام شد"
                                     )
-
-                                    onStepChange(CartStep.CART)
 
                                     navController.navigate(
                                         Screens.MyOrders.route
                                     )
                                 }
+                            },
+
+                            onError = { exception ->
+
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        "خطا: ${exception.message}"
+                                    )
+                                }
                             }
-                        }
+                        )
                     }
                 )
             }
@@ -176,7 +181,9 @@ fun CartScreen(
 
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 24.dp)
         ) { snackbarData ->
 
             Snackbar(
@@ -190,6 +197,7 @@ fun CartScreen(
                 )
             }
         }
+
     }
 }
 

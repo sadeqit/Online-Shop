@@ -19,11 +19,8 @@ class NotificationsViewModel @Inject constructor(
     var notifications by mutableStateOf<List<Notification>>(emptyList())
         private set
 
-    init {
-        loadNotifications()
-    }
 
-    private fun loadNotifications() {
+    fun loadNotifications() {
 
         viewModelScope.launch {
 

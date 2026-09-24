@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +56,9 @@ fun NotificationsScreen(
     profileViewModel: ProfileViewModel,
     viewModel: NotificationsViewModel
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadNotifications()
+    }
     val hasReadNotifications = viewModel.notifications.any { it.isRead }
     val hasUnreadNotifications = viewModel.notifications.any { !it.isRead }
 
@@ -83,6 +87,7 @@ fun NotificationsScreen(
             viewModel.notifications
         }
     }
+
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -192,123 +197,6 @@ fun NotificationsScreen(
         }
     }
 }
-/*@Composable
-fun NotificationsScreen(
-    profileViewModel: ProfileViewModel,
-    viewModel: NotificationsViewModel)
-{
-    val hasReadNotifications = viewModel.notifications.any { it.isRead }
-
-    val hasUnreadNotifications = viewModel.notifications.any { !it.isRead }
-
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
-                HeaderProfile(
-                    compact = true,
-                    profileViewModel = profileViewModel
-                )
-            }
-
-            SpacerHeight(40)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-            ) {
-
-                Text(
-                    text = "اعلانات من",
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Right
-                )
-
-                SpacerHeight(20)
-
-                Row(
-
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SquareRadioButton(
-                            selected = hasUnreadNotifications,
-                            onClick = {
-
-                            }
-                        )
-                        SpacerWidth(3)
-
-                        Text(
-                            text = "خوانده نشده",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-
-                    }
-
-                    SpacerWidth(24)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SquareRadioButton(
-                            selected = hasReadNotifications,
-                            onClick = {
-
-                            }
-                        )
-                        SpacerWidth(3)
-                        Text(
-                            text = "خوانده شده",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-
-                    }
-
-
-                }
-
-
-                SpacerHeight(10)
-
-                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState())
-                ) {
-
-                    viewModel.notifications.forEach { notification ->
-
-                        NotifMessage(
-                            notification = notification,
-                            onRead = {
-                                viewModel.markAsRead(notification.id)
-                            }
-                        )
-
-                        SpacerHeight(12)
-                    }
-                }
-
-
-            }
-        }
-    }
-}*/
 
 @Composable
 private fun NotifMessage(

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -16,6 +18,9 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.sadeghi.online_shop.navigation.MainNavGraph
@@ -35,6 +40,26 @@ fun MainScreen(
     profileViewModel: ProfileViewModel = hiltViewModel(),
     onLogout: () -> Unit
 ) {
+    val hasNotification = notificationsViewModel.hasNotification
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+
+        val observer = LifecycleEventObserver { _, event ->
+
+            if (event == Lifecycle.Event.ON_RESUME) {
+                notificationsViewModel.loadNotifications()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
     var cartStep by rememberSaveable {
         mutableStateOf(CartStep.CART)
     }
@@ -45,10 +70,6 @@ fun MainScreen(
 
     val currentRoute =
         currentBackStackEntry?.destination?.route
-
-    val hasNotification = notificationsViewModel.hasNotification
-
-
 
     Scaffold(
         containerColor = Color.Transparent,

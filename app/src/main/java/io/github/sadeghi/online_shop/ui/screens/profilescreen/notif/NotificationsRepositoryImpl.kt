@@ -5,7 +5,9 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.sadeghi.online_shop.data.remote.model.NotificationDto
 import io.github.sadeghi.online_shop.data.remote.model.NotificationReadDto
+import java.util.Objects.isNull
 import javax.inject.Inject
+
 
 class NotificationsRepositoryImpl @Inject constructor(
     private val supabaseClient: SupabaseClient
@@ -13,28 +15,33 @@ class NotificationsRepositoryImpl @Inject constructor(
 
     override suspend fun getNotifications(): List<Notification> {
 
-        val userId = supabaseClient.auth.currentUserOrNull()?.id
-            ?: throw IllegalStateException("کاربر وارد نشده است")
+        val userId =
+            supabaseClient.auth.currentUserOrNull()?.id
+                ?: throw IllegalStateException("کاربر وارد نشده است")
 
-        // اعلان‌ها
-        val notifications = supabaseClient
-            .from("notifications")
-            .select()
-            .decodeList<NotificationDto>()
-
-        // اعلان‌هایی که این کاربر قبلاً خوانده
-        val readNotifications = supabaseClient
-            .from("notification_reads")
-            .select {
-                filter {
-                    eq("user_id", userId)
+        val notifications =
+            supabaseClient
+                .from("notifications")
+                .select()
+                .decodeList<NotificationDto>()
+                .filter {
+                    it.userId == null || it.userId == userId
                 }
-            }
-            .decodeList<NotificationReadDto>()
 
-        val readNotificationIds = readNotifications
-            .map { it.notificationId }
-            .toSet()
+        val readNotifications =
+            supabaseClient
+                .from("notification_reads")
+                .select {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                }
+                .decodeList<NotificationReadDto>()
+
+        val readNotificationIds =
+            readNotifications
+                .map { it.notificationId }
+                .toSet()
 
         return notifications
             .sortedByDescending { it.createdAt }
@@ -49,7 +56,6 @@ class NotificationsRepositoryImpl @Inject constructor(
                 )
             }
     }
-
     override suspend fun markAsRead(notificationId: Long) {
 
         val userId = supabaseClient.auth.currentUserOrNull()?.id

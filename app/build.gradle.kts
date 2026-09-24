@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "io.github.sadeghi.online_shop"
-        minSdk = 26
+        minSdk = 27
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"

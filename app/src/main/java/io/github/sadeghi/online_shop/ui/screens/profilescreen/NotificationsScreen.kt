@@ -27,6 +27,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,18 +46,157 @@ import io.github.sadeghi.online_shop.ui.component.SpacerHeight
 import io.github.sadeghi.online_shop.ui.component.SpacerWidth
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.component.HeaderProfile
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.formatNotificationDate
 import io.github.sadeghi.online_shop.viewModel.NotificationsViewModel
 import io.github.sadeghi.online_shop.ui.theme.orange
 import io.github.sadeghi.online_shop.viewModel.ProfileViewModel
-
 @Composable
 fun NotificationsScreen(
     profileViewModel: ProfileViewModel,
     viewModel: NotificationsViewModel
-
 ) {
+    val hasReadNotifications = viewModel.notifications.any { it.isRead }
+    val hasUnreadNotifications = viewModel.notifications.any { !it.isRead }
 
+    var showReadNotifications by rememberSaveable {
+        mutableStateOf(false)
+    }
 
+    var showUnreadNotifications by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val filteredNotifications = when {
+        showReadNotifications && showUnreadNotifications -> {
+            viewModel.notifications
+        }
+
+        showReadNotifications -> {
+            viewModel.notifications.filter { it.isRead }
+        }
+
+        showUnreadNotifications -> {
+            viewModel.notifications.filter { !it.isRead }
+        }
+
+        else -> {
+            viewModel.notifications
+        }
+    }
+
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Ltr
+            ) {
+                HeaderProfile(
+                    compact = true,
+                    profileViewModel = profileViewModel
+                )
+            }
+
+            SpacerHeight(40)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
+
+                Text(
+                    text = "اعلانات من",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Right
+                )
+
+                SpacerHeight(20)
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SquareRadioButton(
+                            selected = hasUnreadNotifications,
+                            onClick = {
+                                showUnreadNotifications =
+                                    !showUnreadNotifications
+                            }
+                        )
+
+                        SpacerWidth(3)
+
+                        Text(
+                            text = "خوانده نشده",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
+
+                    SpacerWidth(24)
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SquareRadioButton(
+                            selected = hasReadNotifications,
+                            onClick = {
+                                showReadNotifications =
+                                    !showReadNotifications
+                            }
+                        )
+
+                        SpacerWidth(3)
+
+                        Text(
+                            text = "خوانده شده",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
+                }
+
+                SpacerHeight(10)
+
+                Column(
+                    modifier = Modifier.verticalScroll(
+                        rememberScrollState()
+                    )
+                ) {
+
+                    filteredNotifications.forEach { notification ->
+
+                        NotifMessage(
+                            notification = notification,
+                            onRead = {
+                                viewModel.markAsRead(notification.id)
+                            }
+                        )
+
+                        SpacerHeight(12)
+                    }
+                }
+            }
+        }
+    }
+}
+/*@Composable
+fun NotificationsScreen(
+    profileViewModel: ProfileViewModel,
+    viewModel: NotificationsViewModel)
+{
     val hasReadNotifications = viewModel.notifications.any { it.isRead }
 
     val hasUnreadNotifications = viewModel.notifications.any { !it.isRead }
@@ -168,7 +308,7 @@ fun NotificationsScreen(
             }
         }
     }
-}
+}*/
 
 @Composable
 private fun NotifMessage(
@@ -240,7 +380,7 @@ private fun NotifMessage(
                         )
 
                         Text(
-                            text = notification.date,
+                            text = formatNotificationDate(notification.date),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )

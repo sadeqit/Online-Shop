@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.sadeghi.online_shop.data.local.datastore.NotificationsDataStore
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.Notification
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsRepository
 import kotlinx.coroutines.launch
@@ -14,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
-    private val repository: NotificationsRepository,
-    private val notificationsDataStore: NotificationsDataStore
+    private val repository: NotificationsRepository
 ) : ViewModel() {
 
     var notifications by mutableStateOf<List<Notification>>(emptyList())
@@ -29,22 +27,32 @@ class NotificationsViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            notificationsDataStore.readNotificationIds.collect { readIds ->
+            try {
 
-                notifications = repository.getNotifications().map { notification ->
+                val result = repository.getNotifications()
 
-                    notification.copy(
-                        isRead = notification.id in readIds
-                    )
-                }
+                println("NOTIFICATIONS RESULT = $result")
+
+                notifications = result
+
+            } catch (e: Exception) {
+
+                println("NOTIFICATIONS ERROR = ${e.message}")
+                e.printStackTrace()
             }
         }
     }
 
-    fun markAsRead(notificationId: Int) {
-
+    fun markAsRead(notificationId: Long) {
         viewModelScope.launch {
-            notificationsDataStore.markAsRead(notificationId)
+            try {
+                repository.markAsRead(notificationId)
+
+                notifications = repository.getNotifications()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

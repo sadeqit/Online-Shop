@@ -5,11 +5,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
-import io.github.sadeghi.online_shop.data.local.datastore.ProductReviewDataStore
+import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
 import io.github.sadeghi.online_shop.data.repository.AuthRepository
 import io.github.sadeghi.online_shop.data.repository.IAuthRepository
-import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
-import io.github.sadeghi.online_shop.data.remote.supabaseClient
 import io.github.sadeghi.online_shop.data.repository.IProductRepository
 import io.github.sadeghi.online_shop.data.repository.IProductReviewRepository
 import io.github.sadeghi.online_shop.data.repository.IProfileRepository
@@ -18,8 +16,8 @@ import io.github.sadeghi.online_shop.data.repository.ProductRepository
 import io.github.sadeghi.online_shop.data.repository.ProductReviewRepository
 import io.github.sadeghi.online_shop.data.repository.ProfileRepository
 import io.github.sadeghi.online_shop.data.repository.SubCategoryRepository
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.FakeNotificationsRepository
 import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsRepository
+import io.github.sadeghi.online_shop.ui.screens.profilescreen.notif.NotificationsRepositoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -46,11 +44,12 @@ object RepositoryModule {
         return profileRepository
     }
 
-
     @Provides
     @Singleton
-    fun provideNotificationsRepository(): NotificationsRepository {
-        return FakeNotificationsRepository()
+    fun provideNotificationsRepository(
+        supabaseClient: SupabaseClient
+    ): NotificationsRepository {
+        return NotificationsRepositoryImpl(supabaseClient)
     }
 
     @Provides
@@ -68,6 +67,7 @@ object RepositoryModule {
     ): ISubCategoryRepository {
         return subCategoryRepository
     }
+
     @Provides
     @Singleton
     fun provideProductReviewRepository(

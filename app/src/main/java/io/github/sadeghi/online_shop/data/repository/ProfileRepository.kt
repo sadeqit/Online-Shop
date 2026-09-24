@@ -14,7 +14,6 @@ import javax.inject.Inject
 import io.ktor.http.ContentType
 
 class ProfileRepository @Inject constructor(
-    private val userPreferences: UserPreferences,
     private val supabaseClient: SupabaseClient,
     private val contentResolver: ContentResolver
 ) : IProfileRepository

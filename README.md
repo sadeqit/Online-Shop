@@ -6,7 +6,7 @@
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-2026.08-4285F4?logo=jetpackcompose\&logoColor=white)](https://developer.android.com/compose)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase\&logoColor=white)](https://supabase.com/)
 [![Hilt](https://img.shields.io/badge/Hilt-DI-34A853)](https://developer.android.com/training/dependency-injection/hilt-android)
-[![Material 3](https://img.shields.io/badge/Material%203-UI-6750A4)](https://m3.material.io/)
+[![Material%203](https://img.shields.io/badge/Material%203-UI-6750A4)](https://m3.material.io/)
 
 ---
 
@@ -14,7 +14,7 @@
 
 **Online Shop** یک اپلیکیشن فروشگاه آنلاین برای سیستم‌عامل Android است که با زبان **Kotlin** و رابط کاربری **Jetpack Compose** توسعه داده شده است.
 
-این پروژه با هدف پیاده‌سازی یک ساختار قابل توسعه و تفکیک‌شده طراحی شده و شامل Backend واقعی مبتنی بر **Supabase**، احراز هویت کاربران، پایگاه داده PostgreSQL، ذخیره‌سازی تصاویر، مدیریت سفارش‌ها، سبد خرید، علاقه‌مندی‌ها، نظرات، اعلان‌ها و مدیریت اطلاعات کاربران است.
+این پروژه با هدف پیاده‌سازی یک ساختار قابل توسعه و تفکیک‌شده طراحی شده و شامل Backend مبتنی بر **Supabase**، احراز هویت کاربران، پایگاه داده PostgreSQL، ذخیره‌سازی تصاویر، مدیریت سفارش‌ها، سبد خرید، علاقه‌مندی‌ها، نظرات، اعلان‌ها و مدیریت اطلاعات کاربران است.
 
 ساختار پروژه بر پایه جداسازی مسئولیت‌ها طراحی شده و لایه‌های UI، Domain و Data از یکدیگر تفکیک شده‌اند.
 
@@ -122,12 +122,11 @@ Category
 
 ## 🔔 اعلان‌ها
 
-* دریافت اعلان‌های کاربر
+* دریافت اعلان‌ها از Backend
 * نمایش لیست اعلان‌ها
 * نمایش وضعیت خوانده‌شدن
 * علامت‌گذاری اعلان به‌عنوان خوانده‌شده
-* دریافت اطلاعات اعلان از Backend
-* پشتیبانی دیتابیس از اعلان‌های عمومی و اختصاصی
+* پشتیبانی Database از اعلان‌های عمومی و دارای User ID
 
 ---
 
@@ -354,6 +353,8 @@ data/repository/
 
 Repository Pattern باعث می‌شود ViewModelها مستقیماً به منبع داده وابسته نباشند.
 
+> نام‌گذاری Repositoryها مطابق ساختار فعلی پروژه مستند شده است و `NotificationsRepositoryImpl.kt` به‌عنوان پیاده‌سازی مشخص Repository اعلان‌ها نگهداری می‌شود.
+
 ---
 
 # 🧠 Domain Layer
@@ -552,7 +553,7 @@ Hilt برای مدیریت وابستگی‌هایی مانند:
 │                                          │
 │ ┌──────────────┐  ┌───────────────────┐ │
 │ │ Supabase Auth│  │ PostgreSQL        │ │
-│ │              │  │ + RLS             │ │
+│ │              │  │ + RLS Policies    │ │
 │ └──────────────┘  └───────────────────┘ │
 │                                          │
 │ ┌──────────────────────────────────────┐ │
@@ -590,8 +591,10 @@ Supabase Auth
       ├── cart_items
       ├── orders
       ├── notifications
-      └── user_roles
+      └── notification_reads
 ```
+
+> `user_roles.user_id` نیز شناسه کاربر را نگهداری می‌کند، اما در Foreign Keyهای فعلی Database رابطه مستقیمی بین `user_roles` و `profiles` تعریف نشده است.
 
 ---
 
@@ -618,7 +621,7 @@ Database پروژه شامل **۱۲ جدول اصلی** در Schema عمومی `
 
 # 🧩 Database Relationships
 
-روابط Foreign Key واقعی دیتابیس:
+روابط **Foreign Key واقعی** دیتابیس:
 
 ```text
 profiles
@@ -627,8 +630,7 @@ profiles
 ├── cart_items
 ├── orders
 ├── notifications
-├── notification_reads
-└── user_roles
+└── notification_reads
 
 categories
 └── sub_categories
@@ -682,6 +684,8 @@ sub_categories.category_id
 ```
 
 > `product_reviews.user_id` در جدول وجود دارد، اما در ساختار فعلی Database برای آن Foreign Key به `profiles` تعریف نشده است.
+
+> `user_roles.user_id` نیز در Schema وجود دارد، اما Foreign Key آن به `profiles` در ساختار فعلی تعریف نشده است.
 
 ---
 
@@ -801,7 +805,6 @@ erDiagram
     PROFILES ||--o{ ORDERS : places
     PROFILES ||--o{ NOTIFICATIONS : receives
     PROFILES ||--o{ NOTIFICATION_READS : marks
-    PROFILES ||--o| USER_ROLES : has
 
     CATEGORIES ||--o{ SUB_CATEGORIES : contains
     SUB_CATEGORIES ||--o{ PRODUCTS : contains
@@ -849,7 +852,9 @@ bigint
 
 این Function ورودی‌های مربوط به سفارش، آیتم‌های سفارش و اطلاعات اعلان مرتبط را دریافت می‌کند و شناسه سفارش را به‌صورت `bigint` برمی‌گرداند.
 
-استفاده از Database Function برای عملیات ثبت سفارش، منطق حساس این فرآیند را در PostgreSQL متمرکز می‌کند.
+> پیاده‌سازی داخلی Function در این مستندات تشریح نشده است، زیرا اطلاعات مستندشده فعلی شامل Signature آن است و نه بدنه Function.
+
+جریان ارتباطی:
 
 ```text
 Android
@@ -869,7 +874,7 @@ create_order_atomic()
 
 # 🔒 Row Level Security (RLS)
 
-برای جداول مختلف پروژه **Row Level Security** فعال شده و Policyهای اختصاصی تعریف شده‌اند.
+برای جداول مختلف پروژه **Policyهای Row Level Security** تعریف شده‌اند.
 
 الگوی اصلی بسیاری از Policyها بر اساس:
 
@@ -881,24 +886,26 @@ auth.uid()
 
 برای مثال، Policyهای `addresses`، `cart_items` و `orders` مالکیت داده را نسبت به کاربر جاری بررسی می‌کنند.
 
+> توضیحات زیر بر اساس Policyهای فعلی Database هستند و ممکن است با تغییر Policyها نیاز به بروزرسانی داشته باشند.
+
 ---
 
 ## 🛡️ RLS Policy Overview
 
-| Table                | Policy Behavior                                             |
-| -------------------- | ----------------------------------------------------------- |
-| `addresses`          | مشاهده، ایجاد، ویرایش و حذف داده‌های متعلق به کاربر جاری    |
-| `cart_items`         | مشاهده، ایجاد، ویرایش و حذف اقلام متعلق به کاربر جاری       |
-| `categories`         | خواندن توسط کاربران احراز هویت‌شده                          |
-| `notification_reads` | مشاهده و مدیریت وضعیت خواندن مربوط به کاربر جاری            |
-| `notifications`      | Policyهای خواندن عمومی/اختصاصی و ایجاد اعلان متعلق به کاربر |
-| `order_items`        | دسترسی بر اساس مالکیت Order مربوطه                          |
-| `orders`             | ایجاد و مشاهده سفارش‌های کاربر                              |
-| `product_reviews`    | مشاهده نظرات + ایجاد و حذف نظر توسط کاربر                   |
-| `products`           | خواندن توسط کاربران احراز هویت‌شده                          |
-| `profiles`           | مشاهده + ایجاد + ویرایش پروفایل                             |
-| `sub_categories`     | خواندن توسط کاربران احراز هویت‌شده                          |
-| `user_roles`         | مشاهده Role مربوط به کاربر جاری                             |
+| Table                | Policy Behavior                                                  |
+| -------------------- | ---------------------------------------------------------------- |
+| `addresses`          | مشاهده، ایجاد، ویرایش و حذف داده‌های متعلق به کاربر جاری         |
+| `cart_items`         | مشاهده، ایجاد، ویرایش و حذف اقلام متعلق به کاربر جاری            |
+| `categories`         | خواندن برای کاربران authenticated                                |
+| `notification_reads` | مشاهده و مدیریت وضعیت خواندن مربوط به کاربر جاری                 |
+| `notifications`      | ایجاد اعلان با `user_id` متعلق به کاربر و چند Policy برای SELECT |
+| `order_items`        | دسترسی بر اساس مالکیت Order مربوطه                               |
+| `orders`             | ایجاد و مشاهده سفارش‌های کاربر                                   |
+| `product_reviews`    | مشاهده نظرات + ایجاد و حذف نظر توسط کاربر                        |
+| `products`           | خواندن برای کاربران authenticated                                |
+| `profiles`           | Policyهای SELECT، INSERT و UPDATE                                |
+| `sub_categories`     | خواندن برای کاربران authenticated                                |
+| `user_roles`         | مشاهده Role مربوط به کاربر جاری                                  |
 
 ### Order Item Security
 
@@ -917,13 +924,25 @@ orders.id
 order_items.order_id
 ```
 
-یعنی Policy ابتدا بررسی می‌کند Order متعلق به کاربر جاری باشد و سپس دسترسی به `order_items` همان سفارش را کنترل می‌کند.
+Policy ابتدا بررسی می‌کند Order متعلق به کاربر جاری باشد و سپس دسترسی به `order_items` همان سفارش را کنترل می‌کند.
 
 ### Notification Security
 
-در ساختار فعلی Policyهای `notifications` شامل Policyهای permissive برای کاربران authenticated است؛ بنابراین دسترسی به اعلان‌ها باید با توجه به Policyهای فعال در Database در نظر گرفته شود.
+در وضعیت فعلی Database، جدول `notifications` دارای یک Policy `SELECT` با شرط `true` برای کاربران authenticated است.
 
-همچنین `notifications.user_id` می‌تواند `NULL` باشد که برای اعلان‌های عمومی استفاده می‌شود.
+از آنجا که Policyهای `SELECT` به‌صورت **PERMISSIVE** تعریف شده‌اند، این Policy باعث می‌شود کاربران authenticated بتوانند اعلان‌های موجود در جدول را بخوانند.
+
+بنابراین README این پروژه عمداً ادعا نمی‌کند که دسترسی فعلی Notifications فقط به اعلان عمومی و اعلان متعلق به همان کاربر محدود شده است.
+
+---
+
+### Profile Security
+
+در جدول `profiles` نیز یک Policy `SELECT` با شرط `true` وجود دارد.
+
+بنابراین در وضعیت فعلی، کاربران authenticated می‌توانند رکوردهای جدول `profiles` را بخوانند.
+
+Policy دیگری برای مشاهده پروفایل خود کاربر نیز وجود دارد، اما به دلیل **PERMISSIVE** بودن Policyها، شرط `true` محدودیت مشاهده را به «فقط پروفایل خود کاربر» محدود نمی‌کند.
 
 ---
 
@@ -933,7 +952,7 @@ Backend شامل Functions زیر است:
 
 ### `create_order_atomic`
 
-ثبت عملیات مرتبط با سفارش.
+برای عملیات مرتبط با ثبت سفارش:
 
 ```text
 create_order_atomic(
@@ -989,7 +1008,7 @@ set_default_address(
 
 ### `rls_auto_enable`
 
-یک PostgreSQL **Event Trigger Function** است که در Schema `public` تعریف شده است.
+یک PostgreSQL **Event Trigger Function** در Schema `public` است.
 
 ---
 
@@ -1040,7 +1059,7 @@ product_reviews
 
 است.
 
-ارتباط مستقیم Database:
+ارتباط Foreign Key مستقیم:
 
 ```text
 products
@@ -1066,7 +1085,9 @@ Bucketهای فعلی:
 | `product-images`     | تصاویر محصولات         |
 | `subcategory-images` | تصاویر زیردسته‌ها      |
 
-طبق وضعیت فعلی Supabase، این پنج Bucket به‌صورت `public` تعریف شده‌اند.
+طبق وضعیت فعلی Supabase، هر پنج Bucket به‌صورت `public` تعریف شده‌اند.
+
+Public بودن Bucket به این معناست که فایل‌های موجود در آن می‌توانند از طریق URL عمومی قابل دسترسی باشند؛ این موضوع به‌تنهایی به معنی عمومی بودن مجوز **Upload** نیست.
 
 در Database، URL تصاویر در فیلدهایی مانند:
 
@@ -1109,7 +1130,7 @@ image_url
 ┌─────────────────────────────┐
 │       PostgreSQL            │
 │                             │
-│ RLS → Policies → Data       │
+│ RLS Policies → Data         │
 └─────────────────────────────┘
 ```
 
@@ -1117,14 +1138,14 @@ image_url
 
 # 🔐 Security Principles
 
-اصول امنیتی Backend شامل موارد زیر است:
+اصول امنیتی پروژه شامل موارد زیر است:
 
 * استفاده از Supabase Authentication
-* استفاده از `auth.uid()` در RLS
-* محدود کردن دسترسی داده‌های شخصی بر اساس کاربر جاری
-* کنترل دسترسی Order Items از طریق مالکیت Order
+* استفاده از `auth.uid()` در Policyهای RLS
+* کنترل مالکیت داده‌ها در جداول مرتبط با کاربران
+* کنترل دسترسی `order_items` از طریق مالکیت Order
 * استفاده از جدول `user_roles` برای نگهداری Role
-* متمرکز کردن منطق ثبت سفارش در Database Function
+* متمرکز کردن عملیات ثبت سفارش در Database Function
 * عدم قرار دادن Service Role Key در اپلیکیشن Android
 
 > **هشدار امنیتی:** Secretها، Service Role Key و سایر اطلاعات حساس نباید در Repository عمومی GitHub یا README قرار گیرند.
@@ -1145,7 +1166,7 @@ User Profile
       ├── Cart
       ├── Orders
       ├── Notifications
-      └── Role
+      └── Notification Reads
 
 Catalog
    │
@@ -1167,7 +1188,7 @@ Notification
    └── Notification Reads
 ```
 
-روابط بین موجودیت‌ها در PostgreSQL با Foreign Keyهای مشخص پیاده‌سازی شده‌اند.
+روابط Database در این نمودار بر اساس Foreign Keyهای فعلی هستند؛ روابطی مانند Authentication → Profile یا User ID موجود در `product_reviews` الزاماً به معنی Foreign Key PostgreSQL نیستند.
 
 ---
 
@@ -1327,7 +1348,20 @@ gradle/libs.versions.toml
 
 مرجع مرکزی نسخه‌های Libraryها و Pluginهای پروژه است.
 
-این روش باعث متمرکز شدن مدیریت نسخه‌ها و ساده‌تر شدن نگهداری Dependencyها می‌شود.
+نسخه‌های اصلی فعلی پروژه شامل:
+
+| Dependency            | Version      |
+| --------------------- | ------------ |
+| Kotlin                | `2.3.10`     |
+| Android Gradle Plugin | `9.4.0`      |
+| Jetpack Compose BOM   | `2026.08.00` |
+| Hilt                  | `2.60.1`     |
+| Supabase BOM          | `3.8.0`      |
+| Coil                  | `3.3.0`      |
+| Navigation Compose    | `2.9.8`      |
+| DataStore             | `1.2.1`      |
+
+> Version Catalog شامل Dependencyهای بیشتری نیز هست؛ جدول بالا فقط نسخه‌های اصلی مورد استفاده در مستندات پروژه را نشان می‌دهد.
 
 ---
 
@@ -1341,6 +1375,8 @@ gradle/libs.versions.toml
 * استفاده از Release Build
 * فعال بودن R8 / ProGuard در Release
 * استفاده از Signed APK برای نسخه Release
+
+اطلاعات حساس Backend باید خارج از Repository عمومی نگهداری شوند و نباید در Source Code یا README قرار گیرند.
 
 ---
 
@@ -1364,11 +1400,11 @@ buildTypes {
 
 ---
 
-# 🧪 Release Testing
+# 🧪 Testing
 
 نسخه Release پروژه با Minification فعال ساخته و روی دستگاه واقعی بررسی شده است.
 
-موارد اصلی بررسی‌شده شامل:
+بررسی‌های انجام‌شده شامل بخش‌های اصلی برنامه مانند:
 
 * Authentication
 * ارتباط با Supabase
@@ -1381,6 +1417,10 @@ buildTypes {
 * Notifications
 * Reviews
 * DataStore
+
+در وضعیت فعلی، این README ادعایی درباره وجود Unit Test یا UI Test خودکار ندارد.
+
+توسعه تست‌های خودکار می‌تواند در مراحل بعدی پروژه انجام شود.
 
 ---
 
@@ -1402,9 +1442,15 @@ git clone <REPOSITORY_URL>
 
 ### 4. تنظیم Backend
 
-اطلاعات مورد نیاز Supabase را طبق Configuration پروژه تنظیم کنید.
+Configuration مربوط به Supabase را مطابق تنظیمات پروژه در محیط توسعه قرار دهید.
 
-> اطلاعات حساس مانند Service Role Key نباید در GitHub Commit شوند.
+اطلاعات حساس مانند:
+
+* Service Role Key
+* Secret Keys
+* سایر Credentialهای خصوصی
+
+نباید در Git Commit شوند یا در Repository عمومی قرار بگیرند.
 
 ### 5. اجرای پروژه
 
@@ -1476,40 +1522,8 @@ git clone <REPOSITORY_URL>
 * [ ] سیستم پیشرفته مدیریت سفارش
 * [ ] گزارش‌گیری و Analytics
 * [ ] Push Notification پیشرفته
-
----
-
-# 📸 Screenshots
-
-> تصاویر واقعی پروژه در این بخش قرار خواهند گرفت.
-
-### 🔐 Authentication
-
-<!-- screenshot -->
-
-### 🏠 Home
-
-<!-- screenshot -->
-
-### 🛍️ Product
-
-<!-- screenshot -->
-
-### 🛒 Cart
-
-<!-- screenshot -->
-
-### 📦 Orders
-
-<!-- screenshot -->
-
-### 👤 Profile
-
-<!-- screenshot -->
-
-### 🔔 Notifications
-
-<!-- screenshot -->
+* [ ] Unit Tests
+* [ ] UI Tests
 
 ---
 
@@ -1575,7 +1589,7 @@ Kotlin / Jetpack Compose / Supabase
 
 # 📄 License
 
-مجوز استفاده از پروژه در نسخه نهایی Repository مشخص خواهد شد.
+این پروژه در حال حاضر License مشخصی ندارد. شرایط استفاده، انتشار و مجوز کد در نسخه نهایی Repository تعیین خواهد شد.
 
 ---
 

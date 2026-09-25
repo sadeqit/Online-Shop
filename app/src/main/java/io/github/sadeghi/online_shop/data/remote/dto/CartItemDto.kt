@@ -1,0 +1,20 @@
+package io.github.sadeghi.online_shop.data.remote.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CartItemDto(
+    val id: Long,
+
+    @SerialName("user_id")
+    val userId: String,
+
+    @SerialName("product_id")
+    val productId: Int,
+
+    val quantity: Int,
+
+    @SerialName("created_at")
+    val createdAt: String
+)

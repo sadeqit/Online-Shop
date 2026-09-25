@@ -6,8 +6,8 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
-import io.github.sadeghi.online_shop.data.local.datastore.UserPreferences
-import io.github.sadeghi.online_shop.data.remote.model.ProfileDto
+import io.github.sadeghi.online_shop.data.remote.dto.ProfileDto
+import io.github.sadeghi.online_shop.domain.repository.IProfileRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

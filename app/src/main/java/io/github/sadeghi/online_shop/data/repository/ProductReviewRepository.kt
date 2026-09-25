@@ -3,10 +3,10 @@ package io.github.sadeghi.online_shop.data.repository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.sadeghi.online_shop.data.remote.model.CreateProductReviewDto
-import io.github.sadeghi.online_shop.data.remote.model.ProductReviewDto
-import io.github.sadeghi.online_shop.data.remote.model.UpdateProductReviewDto
-import io.github.sadeghi.online_shop.ui.screens.productScreen.screen.ProductReview
+import io.github.sadeghi.online_shop.data.remote.dto.CreateProductReviewDto
+import io.github.sadeghi.online_shop.data.remote.dto.ProductReviewDto
+import io.github.sadeghi.online_shop.domain.repository.IProductReviewRepository
+import io.github.sadeghi.online_shop.domain.model.ProductReview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.buildJsonObject
@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 class ProductReviewRepository @Inject constructor(
     private val supabaseClient: SupabaseClient
-) : IProductReviewRepository {
+) : IProductReviewRepository
+{
 
     private fun parseCreatedAt(value: String): Long {
         return try {
@@ -124,24 +125,6 @@ class ProductReviewRepository @Inject constructor(
         )
     }
 
-    /*override suspend fun updateReview(
-        reviewId: Long,
-        rating: Int,
-        comment: String
-    ) {
-        supabaseClient
-            .from("product_reviews")
-            .update(
-                UpdateProductReviewDto(
-                    rating = rating,
-                    comment = comment.trim()
-                )
-            ) {
-                filter {
-                    eq("id", reviewId)
-                }
-            }
-    }*/
 
     override suspend fun deleteReview(
         reviewId: Long

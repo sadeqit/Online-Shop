@@ -4,9 +4,10 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
-import io.github.sadeghi.online_shop.data.remote.model.CartItemDto
-import io.github.sadeghi.online_shop.data.remote.model.CartItemUpsertDto
-import io.github.sadeghi.online_shop.ui.screens.cartScreen.CartItems
+import io.github.sadeghi.online_shop.data.remote.dto.CartItemDto
+import io.github.sadeghi.online_shop.data.remote.dto.CartItemUpsertDto
+import io.github.sadeghi.online_shop.domain.repository.IProductRepository
+import io.github.sadeghi.online_shop.domain.model.CartItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class CartRepository @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val productRepository: IProductRepository
-) {
+)
+{
 
     val cartItems: Flow<List<CartItems>> = flow {
 
@@ -156,24 +158,3 @@ class CartRepository @Inject constructor(
             }
     }
 }
-/*
-class CartRepository @Inject constructor(
-    private val cartDataStore: CartDataStore
-) {
-
-    val cartItems: Flow<List<CartItems>> =
-        cartDataStore.cartItems.map { json ->
-            cartDataStore.fromJson(json)
-        }
-
-    suspend fun saveCartItems(
-        cartItems: List<CartItems>
-    ) {
-        val json = cartDataStore.toJson(cartItems)
-        cartDataStore.saveCartItems(json)
-    }
-
-    suspend fun clearCart() {
-        cartDataStore.clearCart()
-    }
-}*/

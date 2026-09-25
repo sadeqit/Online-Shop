@@ -4,8 +4,8 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
-import io.github.sadeghi.online_shop.data.remote.model.AddressDto
-import io.github.sadeghi.online_shop.ui.screens.profilescreen.address.Address
+import io.github.sadeghi.online_shop.data.remote.dto.AddressDto
+import io.github.sadeghi.online_shop.domain.model.Address
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -5,9 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.github.sadeghi.online_shop.ui.screens.LoginScreen
-import io.github.sadeghi.online_shop.ui.screens.SplashScreen
-import io.github.sadeghi.online_shop.ui.screens.MainScreen
+import io.github.sadeghi.online_shop.feature.auth.LoginScreen
+import io.github.sadeghi.online_shop.feature.splash.SplashScreen
+import io.github.sadeghi.online_shop.feature.main.MainScreen
 
 
 @Composable

@@ -2,8 +2,9 @@ package io.github.sadeghi.online_shop.data.repository
 
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
-import io.github.sadeghi.online_shop.data.remote.model.ProductDto
-import io.github.sadeghi.online_shop.ui.screens.productScreen.product.Product
+import io.github.sadeghi.online_shop.data.remote.dto.ProductDto
+import io.github.sadeghi.online_shop.domain.repository.IProductRepository
+import io.github.sadeghi.online_shop.domain.model.Product
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(

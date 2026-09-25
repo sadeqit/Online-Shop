@@ -65,14 +65,13 @@ android {
     }
 
     //noinspection WrongGradleMethod
-    kotlin{
+    kotlin {
         jvmToolchain(21)
     }
     buildFeatures {
         compose = true
         buildConfig = true
     }
-
 
 
 }
@@ -100,9 +99,7 @@ dependencies {
     implementation(libs.data)
     implementation(libs.navigation)
     implementation(libs.hilt.navigation.compose)
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    implementation(libs.androidx.work)
+
     implementation(libs.okhttp)
 
     implementation(libs.androidx.compose.material.icons.extended)
@@ -112,17 +109,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.benchmark.traceprocessor)
 
-    ksp(libs.room.compiler)
+
     ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.constraintlayout)
     // To use constraintlayout in compose
     implementation(libs.androidx.constraintlayout.compose)
-
-    implementation("com.github.yalantis:ucrop:2.2.11")
-    implementation("androidx.transition:transition:1.6.0")
-
-    implementation("io.github.alirezajavan:shamsi-picker:1.6.0")
+    implementation(libs.ucrop)
+    implementation(libs.androidx.transition)
+    implementation(libs.shamsi.picker)
 
     configurations.all {
         resolutionStrategy {
@@ -146,7 +141,6 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.kotlinx.serialization)
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -2,13 +2,15 @@ package io.github.sadeghi.online_shop.data.repository
 
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
-import io.github.sadeghi.online_shop.data.model.SubCategory
-import io.github.sadeghi.online_shop.data.remote.model.SubCategoryDto
+import io.github.sadeghi.online_shop.domain.model.SubCategory
+import io.github.sadeghi.online_shop.data.remote.dto.SubCategoryDto
+import io.github.sadeghi.online_shop.domain.repository.ISubCategoryRepository
 import javax.inject.Inject
 
 class SubCategoryRepository @Inject constructor(
     private val supabaseClient: SupabaseClient
-) : ISubCategoryRepository {
+) : ISubCategoryRepository
+{
 
     override suspend fun getSubCategories(): List<SubCategory> {
 

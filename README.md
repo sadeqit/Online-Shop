@@ -1,6 +1,6 @@
 # 🛍️ Online Shop
 
-> یک اپلیکیشن فروشگاه آنلاین اندروید با رابط کاربری مدرن، معماری لایه‌ای، Jetpack Compose و Backend مبتنی بر Supabase
+> یک اپلیکیشن فروشگاه آنلاین Android با رابط کاربری مدرن، معماری لایه‌ای، Jetpack Compose و Backend مبتنی بر Supabase
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.10-7F52FF?logo=kotlin\&logoColor=white)](https://kotlinlang.org/)
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-2026.08-4285F4?logo=jetpackcompose\&logoColor=white)](https://developer.android.com/compose)
@@ -14,7 +14,7 @@
 
 **Online Shop** یک اپلیکیشن فروشگاه آنلاین برای سیستم‌عامل Android است که با زبان **Kotlin** و رابط کاربری **Jetpack Compose** توسعه داده شده است.
 
-این پروژه با هدف پیاده‌سازی یک ساختار قابل توسعه و تفکیک‌شده طراحی شده و علاوه بر رابط کاربری، شامل Backend واقعی مبتنی بر **Supabase**، احراز هویت کاربران، پایگاه داده PostgreSQL، ذخیره‌سازی تصاویر، مدیریت سفارش‌ها، سبد خرید، علاقه‌مندی‌ها، نظرات و اعلان‌ها است.
+این پروژه با هدف پیاده‌سازی یک ساختار قابل توسعه و تفکیک‌شده طراحی شده و شامل Backend واقعی مبتنی بر **Supabase**، احراز هویت کاربران، پایگاه داده PostgreSQL، ذخیره‌سازی تصاویر، مدیریت سفارش‌ها، سبد خرید، علاقه‌مندی‌ها، نظرات، اعلان‌ها و مدیریت اطلاعات کاربران است.
 
 ساختار پروژه بر پایه جداسازی مسئولیت‌ها طراحی شده و لایه‌های UI، Domain و Data از یکدیگر تفکیک شده‌اند.
 
@@ -29,7 +29,7 @@
 * تأیید اطلاعات کاربر
 * تغییر رمز عبور
 * مدیریت Session
-* اتصال مستقیم به Supabase Authentication
+* اتصال به Supabase Authentication
 
 ---
 
@@ -52,6 +52,16 @@
 * انتخاب دسته و زیردسته
 * Navigation بین صفحات مرتبط
 
+ساختار Catalog:
+
+```text
+Category
+   │
+   └── Sub Category
+          │
+          └── Product
+```
+
 ---
 
 ## 🛍️ محصولات
@@ -60,7 +70,7 @@
 * نمایش جزئیات محصول
 * نمایش تصاویر محصول
 * نمایش توضیحات
-* نمایش ویژگی‌های محصول
+* نمایش اطلاعات محصول
 * افزودن محصول به سبد خرید
 * افزودن محصول به علاقه‌مندی‌ها
 * مشاهده نظرات کاربران
@@ -84,7 +94,7 @@
 * افزودن محصول به علاقه‌مندی‌ها
 * حذف محصول از علاقه‌مندی‌ها
 * نمایش محصولات موردعلاقه
-* نگهداری اطلاعات علاقه‌مندی‌ها در Local Storage
+* نگهداری علاقه‌مندی‌ها با Jetpack DataStore
 
 ---
 
@@ -95,7 +105,7 @@
 * مشاهده خریدهای کاربر
 * مشاهده آیتم‌های سفارش
 * نمایش اطلاعات سفارش
-* ارتباط سفارش‌ها با اطلاعات کاربر و محصولات
+* ارتباط سفارش‌ها با کاربر و محصولات
 
 ---
 
@@ -104,8 +114,9 @@
 * مشاهده نظرات کاربران
 * ثبت نظر درباره محصول
 * نمایش تجربه‌های خرید
-* اتصال نظرات به محصول و کاربر
+* ثبت Rating و Comment
 * مدیریت اطلاعات Review در Backend
+* امکان پاسخ مدیریتی به Review
 
 ---
 
@@ -116,6 +127,7 @@
 * نمایش وضعیت خوانده‌شدن
 * علامت‌گذاری اعلان به‌عنوان خوانده‌شده
 * دریافت اطلاعات اعلان از Backend
+* پشتیبانی دیتابیس از اعلان‌های عمومی و اختصاصی
 
 ---
 
@@ -126,6 +138,7 @@
 * تغییر رمز عبور
 * مدیریت اطلاعات شخصی
 * مدیریت آدرس‌ها
+* مدیریت تصویر پروفایل
 
 ---
 
@@ -134,6 +147,8 @@
 * مشاهده آدرس‌های کاربر
 * افزودن آدرس
 * ویرایش آدرس
+* حذف آدرس
+* انتخاب آدرس پیش‌فرض
 * انتخاب آدرس هنگام ثبت سفارش
 
 ---
@@ -153,13 +168,13 @@
                ▼
 ┌──────────────────────────────┐
 │          ViewModel           │
-│    State / Business Logic    │
+│    State / Presentation Logic │
 └──────────────┬───────────────┘
                │
                ▼
 ┌──────────────────────────────┐
 │      Domain Repository       │
-│        Interfaces            │
+│         Interfaces           │
 └──────────────┬───────────────┘
                │
                ▼
@@ -182,8 +197,9 @@
 * قابلیت تست بهتر
 * قابلیت توسعه و نگهداری آسان‌تر
 * جلوگیری از وابستگی مستقیم UI به Data Source
-* مدیریت متمرکز وابستگی‌ها
+* مدیریت متمرکز Dependencyها
 * تفکیک مدل‌های Domain و DTOهای Remote
+* جداسازی Local و Remote Data Source
 
 ---
 
@@ -214,11 +230,9 @@ app/
 └── OnlineShopApplication.kt
 ```
 
-Application اصلی پروژه در این بخش قرار دارد.
-
 ---
 
-## `core`
+# 🧰 Core
 
 کدهای عمومی و قابل استفاده مجدد در کل پروژه در این بخش قرار گرفته‌اند.
 
@@ -308,7 +322,7 @@ DTOهای پروژه شامل مدل‌هایی برای:
 
 # 💾 Local Data
 
-برای نگهداری برخی اطلاعات محلی از **Jetpack DataStore** استفاده شده است.
+برای نگهداری برخی اطلاعات محلی از **Jetpack DataStore Preferences** استفاده شده است.
 
 ```text
 data/local/datastore/
@@ -322,7 +336,7 @@ data/local/datastore/
 
 # 🧩 Repository Layer
 
-Repositoryها واسط بین لایه Data و سایر بخش‌های برنامه هستند.
+Repositoryها واسط بین Domain و منابع داده هستند.
 
 ```text
 data/repository/
@@ -370,7 +384,7 @@ domain/
 
 قراردادهای Repository نیز در Domain تعریف شده‌اند.
 
-به این ترتیب لایه Domain به پیاده‌سازی مستقیم Backend وابسته نیست.
+به این ترتیب Domain به پیاده‌سازی مستقیم Backend وابسته نیست.
 
 ---
 
@@ -394,7 +408,7 @@ feature/
 └── splash/
 ```
 
-این ساختار باعث می‌شود کدهای مربوط به هر قابلیت در یک محدوده مشخص قرار داشته باشند.
+این ساختار باعث می‌شود کدهای مربوط به هر قابلیت در محدوده مشخص خود قرار داشته باشند.
 
 ---
 
@@ -407,8 +421,6 @@ feature/auth/
 ├── component/
 └── model/
 ```
-
-فرآیندهای مختلف ورود و احراز هویت در این Feature مدیریت می‌شوند.
 
 ---
 
@@ -484,7 +496,7 @@ navigation/
 └── Screens.kt
 ```
 
-Navigation بین Featureهای مختلف برنامه از طریق Navigation Compose مدیریت می‌شود.
+Navigation بین Featureهای مختلف برنامه با Navigation Compose مدیریت می‌شود.
 
 ---
 
@@ -509,19 +521,20 @@ Hilt برای مدیریت وابستگی‌هایی مانند:
 
 استفاده می‌شود.
 
-این روش باعث کاهش Coupling و ساده‌تر شدن مدیریت وابستگی‌های پروژه می‌شود.
+---
+
+# ☁️ Supabase Backend
+
+این پروژه از **Supabase** به‌عنوان Backend اصلی استفاده می‌کند و از قابلیت‌های زیر استفاده می‌کند:
+
+* Supabase Authentication
+* PostgreSQL
+* Row Level Security
+* Supabase Storage
 
 ---
 
-## ☁️ Supabase Backend
-
-این پروژه از **Supabase** به‌عنوان Backend اصلی استفاده می‌کند و بخش‌های Authentication، PostgreSQL Database، Row Level Security (RLS) و Storage را پوشش می‌دهد.
-
-معماری Backend به‌گونه‌ای طراحی شده است که داده‌های حساس کاربر در سطح PostgreSQL نیز با استفاده از RLS محافظت شوند و عملیات مهمی مانند ثبت سفارش در سمت Database به‌صورت اتمیک انجام شوند.
-
----
-
-### 🏗️ Backend Architecture
+## 🏗️ Backend Architecture
 
 ```text
 ┌──────────────────────────────────────────┐
@@ -552,19 +565,19 @@ Hilt برای مدیریت وابستگی‌هایی مانند:
 
 ---
 
-## 🔐 Authentication
+# 🔐 Authentication
 
 احراز هویت کاربران توسط **Supabase Auth** انجام می‌شود.
 
-در دیتابیس، شناسه کاربر احراز هویت‌شده از طریق:
+در Policyهای RLS، شناسه کاربر احراز هویت‌شده با:
 
 ```sql
 auth.uid()
 ```
 
-در Policyهای RLS استفاده می‌شود.
+در PostgreSQL بررسی می‌شود.
 
-جدول `profiles` نیز اطلاعات تکمیلی کاربر را نگهداری می‌کند و `profiles.id` با شناسه کاربر احراز هویت‌شده مرتبط است.
+جدول `profiles` اطلاعات تکمیلی کاربر را نگهداری می‌کند.
 
 ```text
 Supabase Auth
@@ -605,37 +618,74 @@ Database پروژه شامل **۱۲ جدول اصلی** در Schema عمومی `
 
 # 🧩 Database Relationships
 
-ساختار ارتباطی اصلی دیتابیس:
+روابط Foreign Key واقعی دیتابیس:
 
 ```text
 profiles
 │
 ├── addresses
-│
-├── user_roles
-│
 ├── cart_items
-│      └── products
-│
 ├── orders
-│      └── order_items
-│              └── products
-│
 ├── notifications
-│      └── notification_reads
-│
-└── product_reviews
-       └── products
-
+├── notification_reads
+└── user_roles
 
 categories
 └── sub_categories
        └── products
+            ├── cart_items
+            ├── order_items
+            └── product_reviews
+
+orders
+└── order_items
+
+notifications
+└── notification_reads
 ```
+
+### Foreign Keys
+
+```text
+cart_items.product_id
+        └── products.id
+
+cart_items.user_id
+        └── profiles.id
+
+notification_reads.notification_id
+        └── notifications.id
+
+notification_reads.user_id
+        └── profiles.id
+
+notifications.user_id
+        └── profiles.id
+
+order_items.order_id
+        └── orders.id
+
+order_items.product_id
+        └── products.id
+
+orders.user_id
+        └── profiles.id
+
+product_reviews.product_id
+        └── products.id
+
+products.sub_category_id
+        └── sub_categories.id
+
+sub_categories.category_id
+        └── categories.id
+```
+
+> `product_reviews.user_id` در جدول وجود دارد، اما در ساختار فعلی Database برای آن Foreign Key به `profiles` تعریف نشده است.
 
 ---
 
-## 📊 ER Diagram
+# 📊 ER Diagram
 
 ```mermaid
 erDiagram
@@ -723,7 +773,7 @@ erDiagram
     PRODUCT_REVIEWS {
         bigint id PK
         integer product_id FK
-        uuid user_id FK
+        uuid user_id
         integer rating
         text comment
         timestamptz created_at
@@ -751,7 +801,6 @@ erDiagram
     PROFILES ||--o{ ORDERS : places
     PROFILES ||--o{ NOTIFICATIONS : receives
     PROFILES ||--o{ NOTIFICATION_READS : marks
-    PROFILES ||--o{ PRODUCT_REVIEWS : writes
     PROFILES ||--o| USER_ROLES : has
 
     CATEGORIES ||--o{ SUB_CATEGORIES : contains
@@ -770,7 +819,7 @@ erDiagram
 
 # 🛒 Order Management
 
-فرآیند سفارش در Backend با استفاده از تابع PostgreSQL زیر پیاده‌سازی شده است:
+فرآیند ثبت سفارش در Backend دارای PostgreSQL Function زیر است:
 
 ```text
 create_order_atomic(
@@ -783,118 +832,7 @@ create_order_atomic(
 )
 ```
 
-این تابع:
-
-* سفارش را ایجاد می‌کند.
-* اقلام سفارش را ایجاد می‌کند.
-* اطلاعات سفارش را در ارتباط با کاربر ثبت می‌کند.
-* اعلان مرتبط با سفارش را ایجاد می‌کند.
-* نتیجه را به‌صورت `bigint` برمی‌گرداند.
-
-استفاده از یک تابع Database برای این عملیات باعث می‌شود عملیات اصلی ثبت سفارش در یک مسیر اتمیک در PostgreSQL انجام شود.
-
-```text
-Android
-   │
-   ▼
-OrderRepository
-   │
-   ▼
-create_order_atomic()
-   │
-   ├── orders
-   │
-   ├── order_items
-   │
-   └── notifications
-```
-
----
-
-# 🔒 Row Level Security (RLS)
-
-برای جداول حساس پروژه از **Row Level Security** استفاده شده است.
-
-الگوی اصلی امنیتی پروژه بر اساس:
-
-```sql
-auth.uid()
-```
-
-است.
-
-یعنی دسترسی کاربر به داده‌ها بر اساس شناسه کاربر احراز هویت‌شده در PostgreSQL کنترل می‌شود.
-
-### User-scoped Data
-
-کاربر تنها می‌تواند داده‌های متعلق به خودش را در بخش‌هایی مانند موارد زیر مشاهده یا مدیریت کند:
-
-* Addresses
-* Cart Items
-* Orders
-* Order Items
-* Notification Reads
-* Profile
-* User Role
-* Reviews مربوط به خودش
-
-به‌عنوان نمونه، Policy مربوط به آدرس‌ها از چنین منطقی استفاده می‌کند:
-
-```sql
-auth.uid() = user_id
-```
-
-در نتیجه یک کاربر نمی‌تواند صرفاً با تغییر شناسه کاربر، به آدرس کاربر دیگری دسترسی پیدا کند.
-
----
-
-## 🛡️ RLS Policy Overview
-
-| Table                | Access Control                               |
-| -------------------- | -------------------------------------------- |
-| `addresses`          | فقط داده‌های کاربر جاری                      |
-| `cart_items`         | فقط سبد کاربر جاری                           |
-| `categories`         | خواندن توسط کاربران احراز هویت‌شده           |
-| `notification_reads` | فقط وضعیت اعلان‌های کاربر جاری               |
-| `notifications`      | خواندن اعلان‌ها + ایجاد اعلان متعلق به کاربر |
-| `order_items`        | فقط آیتم‌های سفارش‌های متعلق به کاربر        |
-| `orders`             | ایجاد و مشاهده سفارش‌های کاربر               |
-| `product_reviews`    | مشاهده نظرات + ایجاد/حذف نظر خود کاربر       |
-| `products`           | خواندن توسط کاربران احراز هویت‌شده           |
-| `profiles`           | مشاهده + ایجاد/ویرایش پروفایل                |
-| `sub_categories`     | خواندن توسط کاربران احراز هویت‌شده           |
-| `user_roles`         | فقط Role کاربر جاری                          |
-
-### Order Item Security
-
-برای `order_items`، مالکیت فقط با یک `user_id` مستقیم بررسی نمی‌شود.
-
-Policy بررسی می‌کند که `order_id` مربوط به سفارشی باشد که متعلق به کاربر فعلی است:
-
-```text
-auth.uid()
-    │
-    ▼
-orders.user_id
-    │
-    ▼
-orders.id
-    │
-    ▼
-order_items.order_id
-```
-
-این ساختار باعث می‌شود دسترسی به آیتم سفارش نیز به مالکیت خود سفارش وابسته باشد.
-
----
-
-# ⚙️ Database Functions
-
-Backend شامل توابع PostgreSQL زیر است:
-
-### `create_order_atomic`
-
-ثبت اتمیک سفارش و عملیات مرتبط با آن.
+مشخصات Function:
 
 ```text
 Arguments:
@@ -909,11 +847,110 @@ Returns:
 bigint
 ```
 
+این Function ورودی‌های مربوط به سفارش، آیتم‌های سفارش و اطلاعات اعلان مرتبط را دریافت می‌کند و شناسه سفارش را به‌صورت `bigint` برمی‌گرداند.
+
+استفاده از Database Function برای عملیات ثبت سفارش، منطق حساس این فرآیند را در PostgreSQL متمرکز می‌کند.
+
+```text
+Android
+   │
+   ▼
+OrderRepository
+   │
+   ▼
+create_order_atomic()
+   │
+   ├── Order Data
+   ├── Order Items
+   └── Notification Data
+```
+
+---
+
+# 🔒 Row Level Security (RLS)
+
+برای جداول مختلف پروژه **Row Level Security** فعال شده و Policyهای اختصاصی تعریف شده‌اند.
+
+الگوی اصلی بسیاری از Policyها بر اساس:
+
+```sql
+auth.uid()
+```
+
+است.
+
+برای مثال، Policyهای `addresses`، `cart_items` و `orders` مالکیت داده را نسبت به کاربر جاری بررسی می‌کنند.
+
+---
+
+## 🛡️ RLS Policy Overview
+
+| Table                | Policy Behavior                                             |
+| -------------------- | ----------------------------------------------------------- |
+| `addresses`          | مشاهده، ایجاد، ویرایش و حذف داده‌های متعلق به کاربر جاری    |
+| `cart_items`         | مشاهده، ایجاد، ویرایش و حذف اقلام متعلق به کاربر جاری       |
+| `categories`         | خواندن توسط کاربران احراز هویت‌شده                          |
+| `notification_reads` | مشاهده و مدیریت وضعیت خواندن مربوط به کاربر جاری            |
+| `notifications`      | Policyهای خواندن عمومی/اختصاصی و ایجاد اعلان متعلق به کاربر |
+| `order_items`        | دسترسی بر اساس مالکیت Order مربوطه                          |
+| `orders`             | ایجاد و مشاهده سفارش‌های کاربر                              |
+| `product_reviews`    | مشاهده نظرات + ایجاد و حذف نظر توسط کاربر                   |
+| `products`           | خواندن توسط کاربران احراز هویت‌شده                          |
+| `profiles`           | مشاهده + ایجاد + ویرایش پروفایل                             |
+| `sub_categories`     | خواندن توسط کاربران احراز هویت‌شده                          |
+| `user_roles`         | مشاهده Role مربوط به کاربر جاری                             |
+
+### Order Item Security
+
+دسترسی به `order_items` از طریق مالکیت سفارش کنترل می‌شود.
+
+```text
+auth.uid()
+    │
+    ▼
+orders.user_id
+    │
+    ▼
+orders.id
+    │
+    ▼
+order_items.order_id
+```
+
+یعنی Policy ابتدا بررسی می‌کند Order متعلق به کاربر جاری باشد و سپس دسترسی به `order_items` همان سفارش را کنترل می‌کند.
+
+### Notification Security
+
+در ساختار فعلی Policyهای `notifications` شامل Policyهای permissive برای کاربران authenticated است؛ بنابراین دسترسی به اعلان‌ها باید با توجه به Policyهای فعال در Database در نظر گرفته شود.
+
+همچنین `notifications.user_id` می‌تواند `NULL` باشد که برای اعلان‌های عمومی استفاده می‌شود.
+
+---
+
+# ⚙️ Database Functions
+
+Backend شامل Functions زیر است:
+
+### `create_order_atomic`
+
+ثبت عملیات مرتبط با سفارش.
+
+```text
+create_order_atomic(
+    p_user_id uuid,
+    p_total_price bigint,
+    p_status text,
+    p_items jsonb,
+    p_notification_subject text,
+    p_notification_message text
+) → bigint
+```
+
 ---
 
 ### `reply_to_product_review`
 
-برای ثبت پاسخ به نظر محصول:
+برای پاسخ به Review:
 
 ```text
 reply_to_product_review(
@@ -926,7 +963,7 @@ reply_to_product_review(
 
 ### `update_product_review`
 
-برای بروزرسانی نظر و امتیاز محصول:
+برای بروزرسانی Rating و Comment:
 
 ```text
 update_product_review(
@@ -940,7 +977,7 @@ update_product_review(
 
 ### `set_default_address`
 
-برای مدیریت آدرس پیش‌فرض کاربر:
+برای مدیریت آدرس پیش‌فرض:
 
 ```text
 set_default_address(
@@ -952,13 +989,13 @@ set_default_address(
 
 ### `rls_auto_enable`
 
-یک PostgreSQL **Event Trigger Function** است که برای مدیریت فعال‌سازی RLS در سطح Database تعریف شده است.
+یک PostgreSQL **Event Trigger Function** است که در Schema `public` تعریف شده است.
 
 ---
 
 # 🔔 Notifications
 
-سیستم اعلان در دو جدول اصلی طراحی شده است:
+سیستم اعلان از دو جدول اصلی استفاده می‌کند:
 
 ```text
 notifications
@@ -966,14 +1003,18 @@ notifications
        └── notification_reads
 ```
 
-جدول `notifications` شامل اعلان‌هایی است که می‌توانند:
+جدول `notifications` شامل:
 
-* عمومی باشند (`user_id = NULL`)
-* یا متعلق به یک کاربر مشخص باشند.
+* `subject`
+* `message`
+* `created_at`
+* `user_id`
 
-و جدول `notification_reads` وضعیت خوانده‌شدن اعلان توسط کاربر را نگهداری می‌کند.
+است.
 
-این طراحی امکان مدیریت اعلان‌های عمومی و اعلان‌های اختصاصی کاربر را فراهم می‌کند.
+`user_id` می‌تواند `NULL` باشد و امکان نگهداری اعلان‌های عمومی را فراهم می‌کند.
+
+جدول `notification_reads` نیز وضعیت خوانده‌شدن اعلان توسط کاربر را نگهداری می‌کند.
 
 ---
 
@@ -987,7 +1028,7 @@ product_reviews
 
 نگهداری می‌شوند.
 
-هر Review شامل:
+اطلاعات Review شامل:
 
 * Product ID
 * User ID
@@ -999,24 +1040,21 @@ product_reviews
 
 است.
 
-ارتباط:
+ارتباط مستقیم Database:
 
 ```text
-profiles
+products
     │
     └── product_reviews
-             │
-             ▼
-          products
 ```
 
-برای مدیریت Review نیز توابع اختصاصی PostgreSQL در Backend وجود دارد.
+`product_reviews.user_id` شناسه کاربری Review را نگهداری می‌کند، اما در ساختار فعلی Foreign Key مستقیمی به `profiles` ندارد.
 
 ---
 
 # 📦 Storage
 
-تصاویر پروژه در Supabase Storage نگهداری می‌شوند.
+تصاویر پروژه در **Supabase Storage** نگهداری می‌شوند.
 
 Bucketهای فعلی:
 
@@ -1028,9 +1066,9 @@ Bucketهای فعلی:
 | `product-images`     | تصاویر محصولات         |
 | `subcategory-images` | تصاویر زیردسته‌ها      |
 
-تمام Bucketهای فعلی طبق تنظیمات Database به‌صورت `public` تعریف شده‌اند.
+طبق وضعیت فعلی Supabase، این پنج Bucket به‌صورت `public` تعریف شده‌اند.
 
-آدرس تصاویر در جداول مربوطه با فیلدهایی مانند:
+در Database، URL تصاویر در فیلدهایی مانند:
 
 ```text
 avatar_url
@@ -1079,24 +1117,23 @@ image_url
 
 # 🔐 Security Principles
 
-امنیت Backend بر اساس چند اصل اصلی طراحی شده است:
+اصول امنیتی Backend شامل موارد زیر است:
 
-* استفاده از Supabase Authentication برای هویت کاربران
-* استفاده از `auth.uid()` برای تشخیص کاربر جاری
-* استفاده از Row Level Security برای محدود کردن دسترسی به داده‌ها
-* محدود کردن داده‌های شخصی به مالک آن‌ها
-* کنترل دسترسی به سفارش‌ها از طریق مالکیت Order
-* جداسازی Role کاربر در جدول `user_roles`
-* انجام عملیات حساس ثبت سفارش در Database Function
-* عدم نیاز به قرار دادن Service Role Key در اپلیکیشن Android
+* استفاده از Supabase Authentication
+* استفاده از `auth.uid()` در RLS
+* محدود کردن دسترسی داده‌های شخصی بر اساس کاربر جاری
+* کنترل دسترسی Order Items از طریق مالکیت Order
+* استفاده از جدول `user_roles` برای نگهداری Role
+* متمرکز کردن منطق ثبت سفارش در Database Function
+* عدم قرار دادن Service Role Key در اپلیکیشن Android
 
-> **نکته امنیتی:** کلیدهای خصوصی، Service Role Key، Secretها و اطلاعات حساس محیطی نباید در Repository عمومی GitHub یا README قرار بگیرند.
+> **هشدار امنیتی:** Secretها، Service Role Key و سایر اطلاعات حساس نباید در Repository عمومی GitHub یا README قرار گیرند.
 
 ---
 
-# 🧱 Database Design Principles
+# 🧱 Database Design
 
-ساختار Backend پروژه بر پایه جداسازی مسئولیت‌ها طراحی شده است:
+ساختار Backend بر اساس تفکیک موجودیت‌های اصلی فروشگاه طراحی شده است:
 
 ```text
 Authentication
@@ -1107,7 +1144,6 @@ User Profile
       ├── Address
       ├── Cart
       ├── Orders
-      ├── Reviews
       ├── Notifications
       └── Role
 
@@ -1118,20 +1154,26 @@ Catalog
         └── Sub Category
              │
              └── Product
+                  ├── Cart Items
+                  ├── Order Items
+                  └── Reviews
 
 Order
    │
    └── Order Items
+
+Notification
+   │
+   └── Notification Reads
 ```
 
-این ساختار باعث می‌شود موجودیت‌های اصلی فروشگاه از یکدیگر تفکیک شده و روابط بین آن‌ها به‌صورت Foreign Key در PostgreSQL تعریف شوند.
-.
+روابط بین موجودیت‌ها در PostgreSQL با Foreign Keyهای مشخص پیاده‌سازی شده‌اند.
 
 ---
 
 # 🔄 جریان داده
 
-جریان کلی درخواست‌ها در برنامه:
+جریان کلی درخواست‌ها:
 
 ```text
 User
@@ -1161,33 +1203,15 @@ StateFlow
 Compose UI
 ```
 
-این ساختار باعث می‌شود UI از جزئیات مربوط به Backend و نحوه ذخیره‌سازی داده مستقل باشد.
-
----
-
-# 📡 Network Layer
-
-برای ارتباطات شبکه‌ای و سرویس‌های مورد نیاز پروژه از ابزارهای Kotlin و کتابخانه‌های مرتبط با HTTP استفاده شده است.
-
-کتابخانه‌های موجود در پروژه شامل:
-
-* Ktor Client
-* OkHttp
-* Retrofit
-* Kotlin Serialization
-* Gson
-
-هستند.
-
-در قسمت‌هایی که از Supabase Kotlin SDK استفاده می‌شود، ارتباط با سرویس‌های Supabase از طریق Client مربوط به Supabase انجام می‌شود.
+این ساختار UI را از جزئیات مربوط به منبع داده جدا نگه می‌دارد.
 
 ---
 
 # 🧵 Coroutines & StateFlow
 
-برای عملیات asynchronous از Kotlin Coroutines استفاده شده است.
+برای عملیات asynchronous از **Kotlin Coroutines** استفاده شده است.
 
-و برای مدیریت وضعیت Reactive در ViewModelها از `StateFlow` استفاده می‌شود.
+برای مدیریت State در ViewModelها از `StateFlow` استفاده می‌شود.
 
 الگوی کلی:
 
@@ -1213,13 +1237,13 @@ Compose
 
 برای بارگذاری تصاویر در رابط کاربری از **Coil** استفاده شده است.
 
-همچنین برای برش تصاویر از **uCrop** استفاده می‌شود.
+برای برش تصاویر نیز **uCrop** در پروژه قرار گرفته است.
 
 ---
 
 # 🎨 رابط کاربری
 
-UI پروژه با **Jetpack Compose** پیاده‌سازی شده است.
+UI پروژه با **Jetpack Compose** و **Material 3** پیاده‌سازی شده است.
 
 ویژگی‌های اصلی:
 
@@ -1229,10 +1253,9 @@ UI پروژه با **Jetpack Compose** پیاده‌سازی شده است.
 * Custom Components
 * Custom Theme
 * Animation
-* Responsive Layout
-* مدیریت State در Compose
+* State-driven UI
 
-کامپوننت‌های عمومی پروژه در:
+کامپوننت‌های عمومی در:
 
 ```text
 core/ui/
@@ -1242,7 +1265,7 @@ core/ui/
 
 ---
 
-# 🧰 تکنولوژی‌ها و کتابخانه‌ها
+# 🧰 تکنولوژی‌ها
 
 ## Android
 
@@ -1258,32 +1281,22 @@ core/ui/
 
 ## Architecture
 
-| تکنولوژی           | کاربرد                |
-| ------------------ | --------------------- |
-| MVVM               | معماری UI             |
-| Repository Pattern | جداسازی Data Source   |
-| Hilt               | Dependency Injection  |
-| Coroutines         | عملیات asynchronous   |
-| StateFlow          | مدیریت Reactive State |
+| تکنولوژی           | کاربرد               |
+| ------------------ | -------------------- |
+| MVVM               | معماری Presentation  |
+| Repository Pattern | جداسازی Data Source  |
+| Hilt               | Dependency Injection |
+| Coroutines         | عملیات Asynchronous  |
+| StateFlow          | Reactive State       |
 
 ## Backend
 
-| تکنولوژی          | کاربرد           |
-| ----------------- | ---------------- |
-| Supabase Auth     | احراز هویت       |
-| PostgreSQL        | پایگاه داده      |
-| Supabase Storage  | ذخیره فایل       |
-| Supabase Realtime | داده‌های بلادرنگ |
-
-## Network & Serialization
-
-| تکنولوژی             | کاربرد             |
-| -------------------- | ------------------ |
-| Ktor                 | HTTP Client        |
-| OkHttp               | Network            |
-| Retrofit             | REST API           |
-| Kotlin Serialization | Serialization      |
-| Gson                 | JSON Serialization |
+| تکنولوژی           | کاربرد               |
+| ------------------ | -------------------- |
+| Supabase Auth      | احراز هویت           |
+| PostgreSQL         | پایگاه داده          |
+| Supabase Storage   | ذخیره فایل و تصاویر  |
+| Row Level Security | کنترل دسترسی داده‌ها |
 
 ## UI & Media
 
@@ -1312,15 +1325,13 @@ Dependencyهای پروژه از طریق **Gradle Version Catalog** مدیری�
 gradle/libs.versions.toml
 ```
 
-مرجع مرکزی نسخه‌های کتابخانه‌ها و Pluginهای پروژه است.
+مرجع مرکزی نسخه‌های Libraryها و Pluginهای پروژه است.
 
-این روش باعث می‌شود مدیریت نسخه‌ها متمرکز و قابل نگهداری باشد.
+این روش باعث متمرکز شدن مدیریت نسخه‌ها و ساده‌تر شدن نگهداری Dependencyها می‌شود.
 
 ---
 
-# 🔒 امنیت
-
-در طراحی پروژه تلاش شده اطلاعات حساس مستقیماً در کد عمومی Repository قرار نگیرند.
+# 🔒 امنیت Android
 
 موارد امنیتی پروژه شامل:
 
@@ -1330,8 +1341,6 @@ gradle/libs.versions.toml
 * استفاده از Release Build
 * فعال بودن R8 / ProGuard در Release
 * استفاده از Signed APK برای نسخه Release
-
-> **نکته:** کلیدهای حساس Supabase مانند Service Role Key نباید در Repository عمومی GitHub قرار گیرند.
 
 ---
 
@@ -1355,11 +1364,11 @@ buildTypes {
 
 ---
 
-# 🧪 تست و بررسی Release
+# 🧪 Release Testing
 
-نسخه Release پروژه پس از فعال‌سازی Minification ساخته شده و APK امضاشده روی دستگاه واقعی بررسی شده است.
+نسخه Release پروژه با Minification فعال ساخته و روی دستگاه واقعی بررسی شده است.
 
-موارد اصلی برنامه در Release بررسی شده‌اند، از جمله:
+موارد اصلی بررسی‌شده شامل:
 
 * Authentication
 * ارتباط با Supabase
@@ -1377,8 +1386,6 @@ buildTypes {
 
 # 🚀 اجرای پروژه
 
-برای اجرای پروژه:
-
 ### 1. Clone کردن Repository
 
 ```bash
@@ -1389,7 +1396,7 @@ git clone <REPOSITORY_URL>
 
 پروژه را در Android Studio باز کنید.
 
-### 3. Sync کردن Gradle
+### 3. Gradle Sync
 
 اجازه دهید Gradle Dependencyهای پروژه را دریافت و Sync کند.
 
@@ -1397,7 +1404,7 @@ git clone <REPOSITORY_URL>
 
 اطلاعات مورد نیاز Supabase را طبق Configuration پروژه تنظیم کنید.
 
-> اطلاعات حساس مانند Secret Key یا Service Role Key نباید داخل GitHub Commit شوند.
+> اطلاعات حساس مانند Service Role Key نباید در GitHub Commit شوند.
 
 ### 5. اجرای پروژه
 
@@ -1407,37 +1414,33 @@ git clone <REPOSITORY_URL>
 
 # 🏗️ Build
 
-برای ساخت نسخه Debug:
+نسخه Debug:
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-برای ساخت نسخه Release:
+نسخه Release:
 
 ```bash
 ./gradlew assembleRelease
 ```
 
-نسخه Release با R8/ProGuard ساخته می‌شود.
-
 ---
 
 # 📱 Release
 
-نسخه Release پروژه با:
+نسخه Release پروژه با موارد زیر ساخته شده است:
 
 * R8 / ProGuard
 * Minification
 * Signed APK
 
-ساخته و روی دستگاه واقعی تست شده است.
+و روی دستگاه واقعی آزمایش شده است.
 
 ---
 
-# 🗺️ Roadmap
-
-وضعیت قابلیت‌های اصلی فعلی:
+# 🗺️ وضعیت قابلیت‌ها
 
 * [x] Authentication
 * [x] Home
@@ -1461,7 +1464,11 @@ git clone <REPOSITORY_URL>
 * [x] Release Build
 * [x] R8 / ProGuard
 
-قابلیت‌های آینده، در صورت توسعه پروژه، می‌توانند شامل مواردی مانند:
+---
+
+# 🗺️ Roadmap
+
+قابلیت‌های احتمالی آینده:
 
 * [ ] اتصال به درگاه پرداخت واقعی
 * [ ] پنل مدیریت
@@ -1469,16 +1476,6 @@ git clone <REPOSITORY_URL>
 * [ ] سیستم پیشرفته مدیریت سفارش
 * [ ] گزارش‌گیری و Analytics
 * [ ] Push Notification پیشرفته
-
-باشند.
-
----
-
-# ⚠️ محدودیت‌های فعلی
-
-این بخش برای مستندسازی صادقانه وضعیت پروژه در نظر گرفته شده است.
-
-هر قابلیتی که هنوز در پروژه پیاده‌سازی نشده باشد، باید به‌عنوان Future Work یا Roadmap معرفی شود و نه به‌عنوان قابلیت فعلی سیستم.
 
 ---
 
@@ -1563,7 +1560,7 @@ git clone <REPOSITORY_URL>
 * State-driven UI
 * Separation of Domain Models and DTOs
 * Local / Remote Data Separation
-* Modular and Maintainable Structure
+* Maintainable Project Structure
 
 ---
 
@@ -1584,6 +1581,6 @@ Kotlin / Jetpack Compose / Supabase
 
 ## ⭐ درباره پروژه
 
-این پروژه با تمرکز بر طراحی و پیاده‌سازی یک سیستم فروشگاه آنلاین واقعی توسعه داده شده است و علاوه بر رابط کاربری Android، شامل Backend، احراز هویت، پایگاه داده، ذخیره‌سازی فایل، مدیریت سفارش، سبد خرید، نظرات، اعلان‌ها و مدیریت اطلاعات کاربران است.
+این پروژه با تمرکز بر پیاده‌سازی یک سیستم فروشگاه آنلاین واقعی توسعه داده شده است و علاوه بر رابط کاربری Android، شامل Backend، احراز هویت، پایگاه داده PostgreSQL، Storage، مدیریت سفارش، سبد خرید، نظرات، اعلان‌ها و مدیریت اطلاعات کاربران است.
 
 هدف اصلی پروژه، پیاده‌سازی یک ساختار قابل توسعه و قابل نگهداری با استفاده از تکنولوژی‌های مدرن Android و یک Backend ابری است.

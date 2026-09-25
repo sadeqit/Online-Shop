@@ -513,75 +513,619 @@ Hilt برای مدیریت وابستگی‌هایی مانند:
 
 ---
 
-# ☁️ Backend — Supabase
+## ☁️ Supabase Backend
 
-Backend پروژه با **Supabase** پیاده‌سازی شده است.
+این پروژه از **Supabase** به‌عنوان Backend اصلی استفاده می‌کند و بخش‌های Authentication، PostgreSQL Database، Row Level Security (RLS) و Storage را پوشش می‌دهد.
 
-Supabase بخش‌های مختلف Backend را فراهم می‌کند:
+معماری Backend به‌گونه‌ای طراحی شده است که داده‌های حساس کاربر در سطح PostgreSQL نیز با استفاده از RLS محافظت شوند و عملیات مهمی مانند ثبت سفارش در سمت Database به‌صورت اتمیک انجام شوند.
+
+---
+
+### 🏗️ Backend Architecture
 
 ```text
-                    Android Application
-                            │
-                            ▼
-                    Supabase Client
-                            │
-            ┌───────────────┼───────────────┐
-            │               │               │
-            ▼               ▼               ▼
-        Auth            PostgreSQL       Storage
-            │               │               │
-            │               ▼               │
-            │          Database Data        │
-            │                               │
-            └──────────────┬────────────────┘
-                           ▼
-                       Realtime
+┌──────────────────────────────────────────┐
+│              Android App                │
+│                                          │
+│ Jetpack Compose                         │
+│ ViewModel                               │
+│ Repository                              │
+└────────────────────┬─────────────────────┘
+                     │
+                     │ Supabase SDK
+                     ▼
+┌──────────────────────────────────────────┐
+│                Supabase                 │
+│                                          │
+│ ┌──────────────┐  ┌───────────────────┐ │
+│ │ Supabase Auth│  │ PostgreSQL        │ │
+│ │              │  │ + RLS             │ │
+│ └──────────────┘  └───────────────────┘ │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Storage                              │ │
+│ │ avatars / banners / product-images   │ │
+│ │ category-images / subcategory-images │ │
+│ └──────────────────────────────────────┘ │
+└──────────────────────────────────────────┘
 ```
 
 ---
 
-# 🔐 Supabase Authentication
+## 🔐 Authentication
 
-احراز هویت کاربران از طریق Supabase Auth انجام می‌شود.
+احراز هویت کاربران توسط **Supabase Auth** انجام می‌شود.
 
-بخش Android از Supabase Auth SDK برای مدیریت عملیات مرتبط با حساب کاربری استفاده می‌کند.
+در دیتابیس، شناسه کاربر احراز هویت‌شده از طریق:
 
----
+```sql
+auth.uid()
+```
 
-# 🗄️ PostgreSQL
+در Policyهای RLS استفاده می‌شود.
 
-اطلاعات اصلی فروشگاه در PostgreSQL نگهداری می‌شوند.
+جدول `profiles` نیز اطلاعات تکمیلی کاربر را نگهداری می‌کند و `profiles.id` با شناسه کاربر احراز هویت‌شده مرتبط است.
 
-داده‌های مرتبط با بخش‌هایی مانند:
-
-* کاربران
-* محصولات
-* دسته‌بندی‌ها
-* سبد خرید
-* سفارش‌ها
-* آیتم‌های سفارش
-* نظرات
-* اعلان‌ها
-* آدرس‌ها
-* نقش کاربران
-
-در Backend مدیریت می‌شوند.
-
-ساختار دقیق جداول و روابط آن‌ها در مستندات Database پروژه قابل ارائه است.
-
----
-
-# 🖼️ Supabase Storage
-
-برای نگهداری فایل‌ها و تصاویر از Supabase Storage استفاده می‌شود.
-
-این بخش برای مواردی مانند تصاویر مرتبط با محصولات و اطلاعات تصویری کاربران کاربرد دارد.
+```text
+Supabase Auth
+      │
+      │ auth.uid()
+      ▼
+   profiles
+      │
+      ├── addresses
+      ├── cart_items
+      ├── orders
+      ├── notifications
+      └── user_roles
+```
 
 ---
 
-# ⚡ Supabase Realtime
+# 🗄️ PostgreSQL Database
 
-پروژه از قابلیت Realtime Supabase برای دریافت داده‌های بلادرنگ در بخش‌هایی که نیاز به به‌روزرسانی لحظه‌ای دارند استفاده می‌کند.
+Database پروژه شامل **۱۲ جدول اصلی** در Schema عمومی `public` است:
+
+| Table                | مسئولیت                   |
+| -------------------- | ------------------------- |
+| `profiles`           | اطلاعات پروفایل کاربران   |
+| `user_roles`         | نقش کاربران               |
+| `addresses`          | آدرس‌های کاربران          |
+| `categories`         | دسته‌بندی محصولات         |
+| `sub_categories`     | زیردسته‌های محصولات       |
+| `products`           | اطلاعات محصولات           |
+| `cart_items`         | اقلام سبد خرید            |
+| `orders`             | سفارش‌های ثبت‌شده         |
+| `order_items`        | اقلام هر سفارش            |
+| `product_reviews`    | نظرات و امتیازهای محصولات |
+| `notifications`      | اعلان‌های سیستم           |
+| `notification_reads` | وضعیت خوانده‌شدن اعلان‌ها |
+
+---
+
+# 🧩 Database Relationships
+
+ساختار ارتباطی اصلی دیتابیس:
+
+```text
+profiles
+│
+├── addresses
+│
+├── user_roles
+│
+├── cart_items
+│      └── products
+│
+├── orders
+│      └── order_items
+│              └── products
+│
+├── notifications
+│      └── notification_reads
+│
+└── product_reviews
+       └── products
+
+
+categories
+└── sub_categories
+       └── products
+```
+
+---
+
+## 📊 ER Diagram
+
+```mermaid
+erDiagram
+
+    PROFILES {
+        uuid id PK
+        text full_name
+        text phone_number
+        text birth_date
+        text gender
+        text avatar_url
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    USER_ROLES {
+        uuid user_id PK
+        text role
+    }
+
+    ADDRESSES {
+        uuid id PK
+        uuid user_id FK
+        text receiver
+        text address
+        text postal_code
+        text phone_number
+        boolean is_default
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CATEGORIES {
+        integer id PK
+        text title
+        text image_url
+        timestamptz created_at
+    }
+
+    SUB_CATEGORIES {
+        integer id PK
+        integer category_id FK
+        text title
+        text image_url
+        timestamptz created_at
+    }
+
+    PRODUCTS {
+        integer id PK
+        integer sub_category_id FK
+        text title
+        text image_url
+        bigint price
+        bigint old_price
+        integer discount_percent
+        text description
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CART_ITEMS {
+        bigint id PK
+        uuid user_id FK
+        integer product_id FK
+        integer quantity
+        timestamptz created_at
+    }
+
+    ORDERS {
+        bigint id PK
+        uuid user_id FK
+        bigint total_price
+        text status
+        timestamptz created_at
+    }
+
+    ORDER_ITEMS {
+        bigint id PK
+        bigint order_id FK
+        integer product_id FK
+        integer quantity
+        bigint price
+    }
+
+    PRODUCT_REVIEWS {
+        bigint id PK
+        integer product_id FK
+        uuid user_id FK
+        integer rating
+        text comment
+        timestamptz created_at
+        text admin_reply
+        timestamptz admin_reply_at
+    }
+
+    NOTIFICATIONS {
+        bigint id PK
+        text subject
+        text message
+        timestamptz created_at
+        uuid user_id FK
+    }
+
+    NOTIFICATION_READS {
+        bigint id PK
+        bigint notification_id FK
+        uuid user_id FK
+        timestamptz read_at
+    }
+
+    PROFILES ||--o{ ADDRESSES : has
+    PROFILES ||--o{ CART_ITEMS : owns
+    PROFILES ||--o{ ORDERS : places
+    PROFILES ||--o{ NOTIFICATIONS : receives
+    PROFILES ||--o{ NOTIFICATION_READS : marks
+    PROFILES ||--o{ PRODUCT_REVIEWS : writes
+    PROFILES ||--o| USER_ROLES : has
+
+    CATEGORIES ||--o{ SUB_CATEGORIES : contains
+    SUB_CATEGORIES ||--o{ PRODUCTS : contains
+
+    PRODUCTS ||--o{ CART_ITEMS : added_to
+    PRODUCTS ||--o{ ORDER_ITEMS : purchased_as
+    PRODUCTS ||--o{ PRODUCT_REVIEWS : receives
+
+    ORDERS ||--o{ ORDER_ITEMS : contains
+
+    NOTIFICATIONS ||--o{ NOTIFICATION_READS : tracked_by
+```
+
+---
+
+# 🛒 Order Management
+
+فرآیند سفارش در Backend با استفاده از تابع PostgreSQL زیر پیاده‌سازی شده است:
+
+```text
+create_order_atomic(
+    p_user_id,
+    p_total_price,
+    p_status,
+    p_items,
+    p_notification_subject,
+    p_notification_message
+)
+```
+
+این تابع:
+
+* سفارش را ایجاد می‌کند.
+* اقلام سفارش را ایجاد می‌کند.
+* اطلاعات سفارش را در ارتباط با کاربر ثبت می‌کند.
+* اعلان مرتبط با سفارش را ایجاد می‌کند.
+* نتیجه را به‌صورت `bigint` برمی‌گرداند.
+
+استفاده از یک تابع Database برای این عملیات باعث می‌شود عملیات اصلی ثبت سفارش در یک مسیر اتمیک در PostgreSQL انجام شود.
+
+```text
+Android
+   │
+   ▼
+OrderRepository
+   │
+   ▼
+create_order_atomic()
+   │
+   ├── orders
+   │
+   ├── order_items
+   │
+   └── notifications
+```
+
+---
+
+# 🔒 Row Level Security (RLS)
+
+برای جداول حساس پروژه از **Row Level Security** استفاده شده است.
+
+الگوی اصلی امنیتی پروژه بر اساس:
+
+```sql
+auth.uid()
+```
+
+است.
+
+یعنی دسترسی کاربر به داده‌ها بر اساس شناسه کاربر احراز هویت‌شده در PostgreSQL کنترل می‌شود.
+
+### User-scoped Data
+
+کاربر تنها می‌تواند داده‌های متعلق به خودش را در بخش‌هایی مانند موارد زیر مشاهده یا مدیریت کند:
+
+* Addresses
+* Cart Items
+* Orders
+* Order Items
+* Notification Reads
+* Profile
+* User Role
+* Reviews مربوط به خودش
+
+به‌عنوان نمونه، Policy مربوط به آدرس‌ها از چنین منطقی استفاده می‌کند:
+
+```sql
+auth.uid() = user_id
+```
+
+در نتیجه یک کاربر نمی‌تواند صرفاً با تغییر شناسه کاربر، به آدرس کاربر دیگری دسترسی پیدا کند.
+
+---
+
+## 🛡️ RLS Policy Overview
+
+| Table                | Access Control                               |
+| -------------------- | -------------------------------------------- |
+| `addresses`          | فقط داده‌های کاربر جاری                      |
+| `cart_items`         | فقط سبد کاربر جاری                           |
+| `categories`         | خواندن توسط کاربران احراز هویت‌شده           |
+| `notification_reads` | فقط وضعیت اعلان‌های کاربر جاری               |
+| `notifications`      | خواندن اعلان‌ها + ایجاد اعلان متعلق به کاربر |
+| `order_items`        | فقط آیتم‌های سفارش‌های متعلق به کاربر        |
+| `orders`             | ایجاد و مشاهده سفارش‌های کاربر               |
+| `product_reviews`    | مشاهده نظرات + ایجاد/حذف نظر خود کاربر       |
+| `products`           | خواندن توسط کاربران احراز هویت‌شده           |
+| `profiles`           | مشاهده + ایجاد/ویرایش پروفایل                |
+| `sub_categories`     | خواندن توسط کاربران احراز هویت‌شده           |
+| `user_roles`         | فقط Role کاربر جاری                          |
+
+### Order Item Security
+
+برای `order_items`، مالکیت فقط با یک `user_id` مستقیم بررسی نمی‌شود.
+
+Policy بررسی می‌کند که `order_id` مربوط به سفارشی باشد که متعلق به کاربر فعلی است:
+
+```text
+auth.uid()
+    │
+    ▼
+orders.user_id
+    │
+    ▼
+orders.id
+    │
+    ▼
+order_items.order_id
+```
+
+این ساختار باعث می‌شود دسترسی به آیتم سفارش نیز به مالکیت خود سفارش وابسته باشد.
+
+---
+
+# ⚙️ Database Functions
+
+Backend شامل توابع PostgreSQL زیر است:
+
+### `create_order_atomic`
+
+ثبت اتمیک سفارش و عملیات مرتبط با آن.
+
+```text
+Arguments:
+p_user_id uuid
+p_total_price bigint
+p_status text
+p_items jsonb
+p_notification_subject text
+p_notification_message text
+
+Returns:
+bigint
+```
+
+---
+
+### `reply_to_product_review`
+
+برای ثبت پاسخ به نظر محصول:
+
+```text
+reply_to_product_review(
+    p_review_id bigint,
+    p_reply text
+)
+```
+
+---
+
+### `update_product_review`
+
+برای بروزرسانی نظر و امتیاز محصول:
+
+```text
+update_product_review(
+    p_review_id bigint,
+    p_rating integer,
+    p_comment text
+)
+```
+
+---
+
+### `set_default_address`
+
+برای مدیریت آدرس پیش‌فرض کاربر:
+
+```text
+set_default_address(
+    address_id uuid
+)
+```
+
+---
+
+### `rls_auto_enable`
+
+یک PostgreSQL **Event Trigger Function** است که برای مدیریت فعال‌سازی RLS در سطح Database تعریف شده است.
+
+---
+
+# 🔔 Notifications
+
+سیستم اعلان در دو جدول اصلی طراحی شده است:
+
+```text
+notifications
+       │
+       └── notification_reads
+```
+
+جدول `notifications` شامل اعلان‌هایی است که می‌توانند:
+
+* عمومی باشند (`user_id = NULL`)
+* یا متعلق به یک کاربر مشخص باشند.
+
+و جدول `notification_reads` وضعیت خوانده‌شدن اعلان توسط کاربر را نگهداری می‌کند.
+
+این طراحی امکان مدیریت اعلان‌های عمومی و اعلان‌های اختصاصی کاربر را فراهم می‌کند.
+
+---
+
+# ⭐ Product Reviews
+
+نظرات محصولات در جدول:
+
+```text
+product_reviews
+```
+
+نگهداری می‌شوند.
+
+هر Review شامل:
+
+* Product ID
+* User ID
+* Rating
+* Comment
+* Creation Time
+* Admin Reply
+* Admin Reply Time
+
+است.
+
+ارتباط:
+
+```text
+profiles
+    │
+    └── product_reviews
+             │
+             ▼
+          products
+```
+
+برای مدیریت Review نیز توابع اختصاصی PostgreSQL در Backend وجود دارد.
+
+---
+
+# 📦 Storage
+
+تصاویر پروژه در Supabase Storage نگهداری می‌شوند.
+
+Bucketهای فعلی:
+
+| Bucket               | کاربرد                 |
+| -------------------- | ---------------------- |
+| `avatars`            | تصاویر پروفایل کاربران |
+| `banners`            | تصاویر Banner          |
+| `category-images`    | تصاویر دسته‌بندی‌ها    |
+| `product-images`     | تصاویر محصولات         |
+| `subcategory-images` | تصاویر زیردسته‌ها      |
+
+تمام Bucketهای فعلی طبق تنظیمات Database به‌صورت `public` تعریف شده‌اند.
+
+آدرس تصاویر در جداول مربوطه با فیلدهایی مانند:
+
+```text
+avatar_url
+image_url
+```
+
+ذخیره می‌شود.
+
+---
+
+# 🔄 Backend Data Flow
+
+```text
+┌─────────────────────┐
+│   Jetpack Compose   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│     ViewModel       │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│     Repository      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────────────┐
+│       Supabase SDK          │
+├─────────────────────────────┤
+│ Auth                        │
+│ PostgreSQL / PostgREST      │
+│ Storage                     │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│       PostgreSQL            │
+│                             │
+│ RLS → Policies → Data       │
+└─────────────────────────────┘
+```
+
+---
+
+# 🔐 Security Principles
+
+امنیت Backend بر اساس چند اصل اصلی طراحی شده است:
+
+* استفاده از Supabase Authentication برای هویت کاربران
+* استفاده از `auth.uid()` برای تشخیص کاربر جاری
+* استفاده از Row Level Security برای محدود کردن دسترسی به داده‌ها
+* محدود کردن داده‌های شخصی به مالک آن‌ها
+* کنترل دسترسی به سفارش‌ها از طریق مالکیت Order
+* جداسازی Role کاربر در جدول `user_roles`
+* انجام عملیات حساس ثبت سفارش در Database Function
+* عدم نیاز به قرار دادن Service Role Key در اپلیکیشن Android
+
+> **نکته امنیتی:** کلیدهای خصوصی، Service Role Key، Secretها و اطلاعات حساس محیطی نباید در Repository عمومی GitHub یا README قرار بگیرند.
+
+---
+
+# 🧱 Database Design Principles
+
+ساختار Backend پروژه بر پایه جداسازی مسئولیت‌ها طراحی شده است:
+
+```text
+Authentication
+      │
+      ▼
+User Profile
+      │
+      ├── Address
+      ├── Cart
+      ├── Orders
+      ├── Reviews
+      ├── Notifications
+      └── Role
+
+Catalog
+   │
+   └── Category
+        │
+        └── Sub Category
+             │
+             └── Product
+
+Order
+   │
+   └── Order Items
+```
+
+این ساختار باعث می‌شود موجودیت‌های اصلی فروشگاه از یکدیگر تفکیک شده و روابط بین آن‌ها به‌صورت Foreign Key در PostgreSQL تعریف شوند.
+.
 
 ---
 
